@@ -1,0 +1,8 @@
+{
+	"user": "USER",
+	"password": "PASSWORD",
+	"database": "chain",
+	"host": "127.0.0.1",
+	"dialect": "mysql"
+
+}
