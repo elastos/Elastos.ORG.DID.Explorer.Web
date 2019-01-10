@@ -1,0 +1,88 @@
+.table_tr td:nth-child(1) span{
+	display:block;
+	width:45px;
+}
+.table_tr td:nth-child(2) span{
+	display:block;
+	width:45px;
+}
+.table_tr td:nth-child(3) span{
+	display:block;
+	width:15px;
+}
+.table_tr td:nth-child(4) span{
+	display:block;
+	width:15px;
+}
+.table_tr td:nth-child(5) span{
+	display:block;
+	width:50px;
+}
+
+@media (min-width: 768px){
+	.table_tr td:nth-child(1) span{
+		display:block;
+		width:180px;
+	}
+	.table_tr td:nth-child(2) span{
+		display:block;
+		width:180px;
+	}
+	.table_tr td:nth-child(3) span{
+		display:block;
+		width:33px;
+	}
+	.table_tr td:nth-child(4) span{
+		display:block;
+		width:33px;
+	}
+	.table_tr td:nth-child(5) span{
+		display:block;
+		width:133px;
+	}
+}
+
+@media (min-width: 992px){
+	.table_tr td:nth-child(1) span{
+		display:block;
+		width:240px;
+	}
+	.table_tr td:nth-child(2) span{
+		display:block;
+		width:240px;
+	}
+	.table_tr td:nth-child(3) span{
+		display:block;
+		width:40px;
+	}
+	.table_tr td:nth-child(4) span{
+		display:block;
+		width:40px;
+	}
+	.table_tr td:nth-child(5) span{
+		display:block;
+		width:160px;
+	}
+}
+@media (min-width: 1200px){
+	.table_tr td:nth-child(1) span{
+		display:block;
+		width:300px;
+	}
+	.table_tr td:nth-child(2) span{
+		display:block;
+		width:300px;
+	}
+	.table_tr td:nth-child(3) span{
+		display:block;
+		width:50px;
+	}
+	.table_tr td:nth-child(4) span{
+		display:block;
+		width:50px;
+	}
+	.table_tr td:nth-child(5) span{
+		display:block;
+		width:200px;
+	}
+}

@@ -1,0 +1,122 @@
+@import '~antd/dist/antd.css';
+.ant-layout{
+  background: #fff;
+}
+span{
+  white-space:nowrap;
+  text-overflow:ellipsis;
+  overflow:hidden;
+}
+li{list-style: none}
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  animation: App-logo-spin infinite 20s linear;
+  height: 40vmin;
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.navbarHeader{
+  width:150px;
+  height: 64px;
+}
+.container {
+    min-height: 500px;
+}
+@media (min-width: 768px)
+.navbar-header {
+    float: left;
+}
+
+@media (min-width: 768px){
+  .container {
+      width: 750px;
+  }
+}
+
+@media (min-width: 992px){
+  .container {
+      width: 970px;
+  }
+}
+
+@media (min-width: 1200px){
+  .container {
+      width: 1170px;
+  }
+}
+
+.floatLeft{
+  float:left;
+}
+.floatRight{
+  float:right;
+}
+.pullLeft{
+  text-align: left
+}
+.pullRight{
+  text-align: right;
+}
+.bold{
+  color:#555;
+  font-weight: 800;
+}
+
+@media (max-width: 768px){
+  .bold{
+    color:#555;
+    font-weight: 400;
+  }
+}
+.tint{
+  color:#999999;
+  font-weight: 600;
+}
+.width_50{
+  width:50%;
+}
+.width_30{
+  width:30%;
+}
+.width_70{
+  width:70%;
+}
+
+.span_txid{
+  display: block;
+  width:280px;
+  font-size: 16px;
+}
+@media (min-width: 992px){
+  .span_txid{
+    display: block;
+    width:700px;
+    font-size: 18px;
+  }
+}

@@ -1,0 +1,102 @@
+.table_propty span{
+	white-space: normal;
+}
+.table_propty td:nth-child(1) span{
+	display:block;
+	width:30px;
+}
+.table_propty td:nth-child(2) span{
+	display:block;
+	width:30px;
+}
+.table_propty td:nth-child(3) span{
+	display:block;
+	width:30px;
+}
+.table_propty td:nth-child(4) span{
+	display:block;
+	width:30px;
+}
+.table_propty td:nth-child(5) span{
+	display:block;
+	width:8px;
+}
+.span_did{
+	display: block;
+	width:280px;
+	font-size: 16px;
+}
+
+@media (min-width: 768px){
+	.table_propty td:nth-child(1) span{
+		display:block;
+		width:60px;
+	}
+	.table_propty td:nth-child(2) span{
+		display:block;
+		width:210px;
+	}
+	.table_propty td:nth-child(3) span{
+		display:block;
+		width:120px;
+	}
+	.table_propty td:nth-child(4) span{
+		display:block;
+		width:120px;
+	}
+	.table_propty td:nth-child(5) span{
+		display:block;
+		width:30px;
+	}
+}
+
+@media (min-width: 992px){
+	.table_propty td:nth-child(1) span{
+		display:block;
+		width:80px;
+	}
+	.table_propty td:nth-child(2) span{
+		display:block;
+		width:280px;
+	}
+	.table_propty td:nth-child(3) span{
+		display:block;
+		width:160px;
+	}
+	.table_propty td:nth-child(4) span{
+		display:block;
+		width:160px;
+	}
+	.table_propty td:nth-child(5) span{
+		display:block;
+		width:40px;
+	}
+	.span_did{
+		display: block;
+		width:500px;
+		font-size: 18px;
+	}
+
+}
+@media (min-width: 1200px){
+	.table_propty td:nth-child(1) span{
+		display:block;
+		width:100px;
+	}
+	.table_propty td:nth-child(2) span{
+		display:block;
+		width:350px;
+	}
+	.table_propty td:nth-child(3) span{
+		display:block;
+		width:200px;
+	}
+	.table_propty td:nth-child(4) span{
+		display:block;
+		width:200px;
+	}
+	.table_propty td:nth-child(5) span{
+		display:block;
+		width:50px;
+	}
+}
