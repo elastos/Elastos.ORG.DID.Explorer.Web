@@ -2,8 +2,16 @@ var express = require('express');
 var router = express.Router();
 var DB = new (require('../db'));
 DB.connect();
+function setHeaders(res){
+	res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Content-Type,Content-Length, Authorization, Accept,X-Requested-With");
+    res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
+    res.header("Content-Type", "application/json;charset=utf-8");
+    res.header("X-Powered-By",' 3.2.1')
+}
 /* GET users listing. */
 router.get('/v1/block/current', function(req, res, next) {
+	setHeaders(res);
 	try{
 		var db =  DB.connection;
 		db.query('SELECT * FROM `chain_block_transaction_history` WHERE `txType` = "TransferAsset" ORDER BY `id` desc LIMIT 1', function (error, results, fields) {
@@ -20,6 +28,7 @@ router.get('/v1/block/current', function(req, res, next) {
 	}
 });
 router.get('/v1/block/height', function(req, res, next) {
+	setHeaders(res);
 	try{
 		var db =  DB.connection;
 		db.query('SELECT `height` FROM `chain_block_transaction_history` WHERE `txType` = "TransferAsset" ORDER BY `id` desc LIMIT 1', function (error, results, fields) {
@@ -35,6 +44,7 @@ router.get('/v1/block/height', function(req, res, next) {
 	}
 });
 router.get('/v1/block/info', function(req, res, next) {
+	setHeaders(res);
 	try{
 		var db =  DB.connection;
 		var height = req.query.height;
@@ -51,6 +61,7 @@ router.get('/v1/block/info', function(req, res, next) {
 	}
 });
 router.get('/v1/block/transactions/txids_height', function(req, res, next) {
+	setHeaders(res);
 	try{
 		var db =  DB.connection;
 		var height = req.query.height;
@@ -68,6 +79,7 @@ router.get('/v1/block/transactions/txids_height', function(req, res, next) {
 });
 
 router.get('/v1/block/transactions/height', function(req, res, next) {
+	setHeaders(res);
 	try{
 		var db =  DB.connection;
 		var height = req.query.height;
@@ -84,6 +96,7 @@ router.get('/v1/block/transactions/height', function(req, res, next) {
 	}
 });
 router.get('/v1/block/transactions/txid', function(req, res, next) {
+	setHeaders(res);
 	try{
 		var db =  DB.connection;
 		var txid = req.query.txid;
@@ -101,6 +114,7 @@ router.get('/v1/block/transactions/txid', function(req, res, next) {
 });
 
 router.get('/v1/block/transactions', function(req, res, next) {
+	setHeaders(res);
 	try{
 		var db =  DB.connection;
 		var start = req.query.start;
@@ -119,6 +133,7 @@ router.get('/v1/block/transactions', function(req, res, next) {
 	}
 });
 router.get('/v1/block/transactions/count', function(req, res, next) {
+	setHeaders(res);
 	try{
 		var db =  DB.connection;
 		db.query('SELECT COUNT(*) AS count FROM ( SELECT `txid`,`txType` FROM `chain_block_transaction_history` WHERE `txType` = "TransferAsset" GROUP BY `txid`) AS a ', function (error, results, fields) {
@@ -135,6 +150,7 @@ router.get('/v1/block/transactions/count', function(req, res, next) {
 });
 
 router.get('/v1/block/transactions/info', function(req, res, next) {
+	setHeaders(res);
 	try{
 		var db =  DB.connection;
 		var txid = req.query.txid;
@@ -152,6 +168,7 @@ router.get('/v1/block/transactions/info', function(req, res, next) {
 });
 
 router.get('/v1/block/transactions/did', function(req, res, next) {
+	setHeaders(res);
 	try{
 		var db =  DB.connection;
 		var did = req.query.did;
@@ -168,6 +185,7 @@ router.get('/v1/block/transactions/did', function(req, res, next) {
 	}
 });
 router.get('/v1/block/properteis/did', function(req, res, next) {
+	setHeaders(res);
 	try{
 		var db =  DB.connection;
 		var did = req.query.did;
@@ -185,6 +203,7 @@ router.get('/v1/block/properteis/did', function(req, res, next) {
 });
 
 router.get('/v1/block/properteis/history', function(req, res, next) {
+	setHeaders(res);
 	try{
 		var db =  DB.connection;
 		var key = req.query.key;
