@@ -17,7 +17,9 @@ class DB{
 			console.log("connecting mysql")
 		});
 		connection.on("error",function(e){
+			//console.log("db error ",e);
 			if (e.code === 'PROTOCOL_CONNECTION_LOST') {
+				console.log("error PROTOCOL_CONNECTION_LOST111111");
 				self.connect();
 	        } else {
 	            throw e;

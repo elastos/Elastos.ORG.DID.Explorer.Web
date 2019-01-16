@@ -22,9 +22,43 @@ Install npm yarn
 Install packages
 ```bash
 >$ yarn install
+
+>$ cd server
+
+>$ yarn install
+
+>$ cd ../
 ```
 
-Run 
+Run development
+
+change server/db/config.json
+```
+{
+	"user": "ROOT",
+	"password": "PASSWORD",
+	"database": "chain",
+	"host": "127.0.0.1",
+	"dialect": "mysql"
+}
+```
+
 ```bash
 >$ yarn start
 ```
+
+Run production 
+
+change config/config.js
+```
+module.exports = {
+  apiUrl:"THE HOST OF API:8080"
+};
+```
+
+```bash
+>$ yarn build
+
+>$ yarn prod
+```
+
