@@ -17,6 +17,39 @@ export function getCurrentBlock(){
 	});
 }
 
+export function getCurrentHeight(){
+	return new Promise(function(resolve, reject) {
+	   	let path = addr + '/api/v1/block/current/height'
+	    let xhr = new XMLHttpRequest();
+	    xhr.open('GET',path );
+	    xhr.onload = function() {
+	      if (xhr.status === 200) {
+	        resolve(JSON.parse(xhr.responseText));
+	      } 
+	    };
+	    xhr.onerror = function() {
+	      reject(new Error(xhr.statusText));
+	    };
+	    xhr.send();
+	});
+}
+export function getValuesFromTxid(txid){
+	return new Promise(function(resolve, reject) {
+	   	let path = addr + '/api/v1/block/values?txid='+txid
+	    let xhr = new XMLHttpRequest();
+	    xhr.open('GET',path );
+	    xhr.onload = function() {
+	      if (xhr.status === 200) {
+	        resolve(JSON.parse(xhr.responseText));
+	      } 
+	    };
+	    xhr.onerror = function() {
+	      reject(new Error(xhr.statusText));
+	    };
+	    xhr.send();
+	});
+}
+
 export function getHeight(){
 	return new Promise(function(resolve, reject) {
 	   	let path = addr + '/api/v1/block/height'
@@ -51,6 +84,38 @@ export function getBlockInfo(height){
 
 }
 
+export function getBlocksCount(){
+	return new Promise(function(resolve, reject) {
+	   	let path = addr + '/api/v1/block/blocks/count'
+	    let xhr = new XMLHttpRequest();
+	    xhr.open('GET',path );
+	    xhr.onload = function() {
+	      if (xhr.status === 200) {
+	        resolve(JSON.parse(xhr.responseText));
+	      } 
+	    };
+	    xhr.onerror = function() {
+	      reject(new Error(xhr.statusText));
+	    };
+	    xhr.send();
+	});
+}
+export function getBlocks(start,pageSize){
+	return new Promise(function(resolve, reject) {
+	   	let path = addr + '/api/v1/block/blocks?start='+start+'&pageSize='+pageSize;
+	    let xhr = new XMLHttpRequest();
+	    xhr.open('GET',path );
+	    xhr.onload = function() {
+	      if (xhr.status === 200) {
+	        resolve(JSON.parse(xhr.responseText));
+	      } 
+	    };
+	    xhr.onerror = function() {
+	      reject(new Error(xhr.statusText));
+	    };
+	    xhr.send();
+	});
+}
 export function getTransactionsCount(){
 	return new Promise(function(resolve, reject) {
 	   	let path = addr + '/api/v1/block/transactions/count'

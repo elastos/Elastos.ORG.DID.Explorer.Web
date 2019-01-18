@@ -25,6 +25,7 @@
 	"property":"属性",
 	"searchPlaceholder":"DID、DID:属性、交易hash、区块高度",
 	"transactions_list":"交易列表",
+	"latest_blocks":"最新区块",
 	"memo_size":"memo 大小",
 	"byte":"字节",
 	"property_name":"属性名称",

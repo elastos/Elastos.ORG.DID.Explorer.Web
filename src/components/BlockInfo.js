@@ -1,7 +1,7 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
 import "./BlockInfo.css";
-import { getCurrentBlock, getTransactionsFromHeight, getTxDetailFromTxid, getBlockInfo} from '../request/request';
+import { getCurrentBlock, getTransactionsFromHeight, getTxDetailFromTxid, getBlockInfo,getCurrentHeight,getValuesFromTxid} from '../request/request';
 import { Icon } from 'antd';
 class BlockInfo extends React.Component {
     constructor(props){
@@ -10,6 +10,7 @@ class BlockInfo extends React.Component {
           height:'...',
           length:'0',
           transactions:[],
+          currentHeight:0,
           blockinfo:{
             hash:"...",
             height:"...",
@@ -34,7 +35,6 @@ class BlockInfo extends React.Component {
             const blockinfo = await getBlockInfo(height);
             this.setState({
                 height:height,
-                fee:data[0].fee,
                 length:transactions.length,
                 transactions:transactions,
                 blockinfo:blockinfo[0] ? blockinfo[0] : this.state.blockinfo,
@@ -42,6 +42,10 @@ class BlockInfo extends React.Component {
             Object.keys(transactions).map((transaction,k) => {
                 return this.GetTransactions(k,transactions[k].txid)                
             });
+            const currentHeight = await getCurrentHeight();
+            this.setState({
+                currentHeight:currentHeight[0].height
+            })
         }catch(err){
           console.log(err)
         }
@@ -49,11 +53,15 @@ class BlockInfo extends React.Component {
     GetTransactions = async (k,txid) => {
         try{
             const properties = await getTxDetailFromTxid(txid);
+            const values = await getValuesFromTxid(txid)
+            
             let transaction = this.state.transactions;
             transaction[k].properties = properties;
             transaction[k].did = properties[0].did;
             transaction[k].didstatus = properties[0].did_status;
+            transaction[k].values = values[0].value;
             this.setState({transactions:transaction})
+
         }catch(err){
             console.log(err)
         }
@@ -67,17 +75,22 @@ class BlockInfo extends React.Component {
         this.GetInfo();
     }
     timestampToTime(timestamp) {
-      let date = new Date(timestamp * 1000);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
-      let Y = date.getFullYear() + '-';
-      let M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
-      let D = date.getDate() + ' ';
-      let h = date.getHours() + ':';
-      let m = date.getMinutes() + ':';
+      let date = new Date(timestamp * 1000);
+      let Y = date.getFullYear();
+      let M = date.getMonth()+1;
+      let D = date.getDate() ;
+      let h = date.getHours();
+      let m = date.getMinutes();
       let s = date.getSeconds();
-      return Y + M + D + h + m + s;
+      return Y + '-' +
+      (M < 10 ? '0'+ M : M ) + '-' + 
+      (D < 10 ? '0'+ D : D ) + ' ' + 
+      (h < 10 ? '0'+ h : h ) + ':' + 
+      (m < 10 ? '0'+ m : m ) + ':' + 
+      (s < 10 ? '0'+ s : s );
     }
     render() {
-        const { height, length, transactions, blockinfo} = this.state;
+        const { height, length, transactions, blockinfo,currentHeight} = this.state;
         const  lang  = this.props.lang;
         const width = document.body.clientWidth;
         const iconType = (width > 760) ? "caret-right" : "caret-down";
@@ -102,7 +115,7 @@ class BlockInfo extends React.Component {
                                 <span><Link to={'/txinfo/'+tx.txid} >{tx.txid}</Link></span>
                             </div>
                             <div className="floatRight">
-                                <span className="tint">{tx.local_system_time}</span>
+                                <span className="tint">{this.timestampToTime(tx.createTime)}</span>
                             </div>
                         </li>
                         <li className = "liContent">
@@ -124,9 +137,9 @@ class BlockInfo extends React.Component {
                                 <span>{lang.primitive_memo_binary} : </span><span> {tx.memo}</span>
                             </div>
                             <div className="content3">
-                                <span>{lang.fee}:{tx.fee / 100000000}</span>
-                                <span>...ELA</span>
-                                <span>...{lang.confirmations}</span>
+                                <span>{lang.fee}:{tx.fee / 100000000} ELA</span>
+                                <span>{tx.values / 100000000} ELA</span>
+                                <span>{currentHeight - tx.height + 1 }{lang.confirmations}</span>
                             </div>
                         </li>
                     </ul>
@@ -161,7 +174,7 @@ class BlockInfo extends React.Component {
                                */} 
                 				<li>
                                     <span className = "pullLeft floatLeft width_30 bold">{lang.time}</span>
-                                    <span className = "pullRight floatLeft width_70 tint">{this.timestampToTime(blockinfo.time)}</span>
+                                    <span className = "pullRight floatLeft width_70 tint">{blockinfo.time === "..." ? "..." : this.timestampToTime(blockinfo.time)}</span>
                                 </li>
                                 <li>
                                     <span className = "pullLeft floatLeft width_30 bold">{lang.miner}</span>
