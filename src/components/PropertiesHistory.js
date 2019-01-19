@@ -39,15 +39,29 @@ class PropertiesHistory extends React.Component {
         })
         this.GetInfo(did,key);
     }
-
+    timestampToTime(timestamp) {
+      let date = new Date(timestamp * 1000);
+      let Y = date.getFullYear();
+      let M = date.getMonth()+1;
+      let D = date.getDate() ;
+      let h = date.getHours();
+      let m = date.getMinutes();
+      let s = date.getSeconds();
+      return Y + '-' +
+      (M < 10 ? '0'+ M : M ) + '-' + 
+      (D < 10 ? '0'+ D : D ) + ' ' + 
+      (h < 10 ? '0'+ h : h ) + ':' + 
+      (m < 10 ? '0'+ m : m ) + ':' + 
+      (s < 10 ? '0'+ s : s );
+    }
     render() {
     	const { propertyChanges } = this.state;
         const lang = this.props.lang;
     	const propertyHtml = propertyChanges.map((property,k) => {
         	return(
         		<tr className="ant-table-row ant-table-row-level-0 " data-row-key="1" key={k}>
-	        		{k !== 0 || <td width="20%" rowSpan={propertyChanges.length} style={{"borderRight":"1px solid #e8e8e8","textAlign":"center"}}><span>{property.property_key}</span></td>}
-	        		<td width="20%"><span>{property.local_system_time}</span></td>
+	        	    <td width="20%" style={{"borderRight":"1px solid #e8e8e8","textAlign":"center"}}><span>{property.property_key}</span></td>
+	        		<td width="20%"><span>{this.timestampToTime(property.block_time)}</span></td>
 	        		<td width="30%"><span>{property.txid}</span></td>
 	        		<td width="30%"><span>{property.property_value}</span></td>
 				</tr>

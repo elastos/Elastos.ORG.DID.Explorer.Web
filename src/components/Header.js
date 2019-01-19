@@ -14,7 +14,7 @@ class About extends React.Component {
         this.state={
         	height:"...",
             showMenu:showMenu,
-            showLangMenu:false,
+            showLangMenu:"none",
             iconType:"caret-down"
         }
         this.onKeyDown = this.onKeyDown.bind(this);
@@ -23,8 +23,10 @@ class About extends React.Component {
         this.search_did = this.search_did.bind(this);
         this.search_did_property = this.search_did_property.bind(this);
         this.onClick = this.onClick.bind(this);
-        this.changeLanguage = this.changeLanguage.bind(this);
         this.changeLang = this.changeLang.bind(this);
+        this.showLanguage = this.showLanguage.bind(this);
+        this.hideLanguage = this.hideLanguage.bind(this);
+        
     }
     componentWillMount (){
         getHeight().then((data)=>{
@@ -67,18 +69,24 @@ class About extends React.Component {
             this.setState({showMenu:status});
         }
     }
-    changeLanguage(){
-        let status = this.state.showLangMenu;
-        let type = this.state.iconType;
-        type = (type === "caret-down") ? "caret-up":"caret-down";
-        status = status ? false : true;
-        this.setState({showLangMenu:status,iconType:type});
+    showLanguage(e){
+        this.setState({showLangMenu:"block",iconType:"caret-up"});
+    }
+    hideLanguage(e){
+       
+        this.setState({showLangMenu:"none",iconType:"caret-down"});
     }
     changeLang(event){
-        localStorage.setItem("lang",event.target.type); 
+        localStorage.setItem("lang",event.target.type);
         this.props.onChange("change_language",event.target.type);
-        this.setState({showLangMenu:false,iconType:"caret-down"});
+        this.setState({showLangMenu:"none",iconType:"caret-down"});
         this.onClick ();
+        var div = document.getElementsByClassName("ant-pagination-options-quick-jumper");
+        if (event.target.type === "en") {
+            div[0].childNodes[0].data = "Goto" 
+        }else{
+            div[0].childNodes[0].data = "跳转" 
+        }
     }
     render() {
     	const { showMenu, showLangMenu, iconType} = this.state;
@@ -96,7 +104,7 @@ class About extends React.Component {
 			         <div className = "navbarCollapse">
 			        	{showMenu &&<ul className="navbarNav">
 			        		<li className="navScope" onClick={this.onClick}>
-			                    <Link to={'/'}> {lang.block}</Link>
+			                    <Link to={'/blocks'}> {lang.block}</Link>
 			                </li>
 			                <li className="navScope" onClick={this.onClick}>
 			                    <Link to={'/list'}> {lang.transactions}</Link>
@@ -105,14 +113,16 @@ class About extends React.Component {
 			            <div className="navbarHeight">
 				           {lang.block_height}：{this.state.height}
 						</div>
-                        {showMenu &&<div className="navbarLang">
-                            <span  onClick={this.changeLanguage}>Language</span> 
+                        {showMenu &&
+                        <div className="navbarMenu">
+                            <div className="navbarLang" onMouseOver={this.showLanguage} onMouseOut = {this.hideLanguage}>
+                                <span>Language</span> 
+                                <ul style={{"display":showLangMenu}}>
+                                   <li onClick={this.changeLang} type="en">English</li>
+                                   <li onClick={this.changeLang} type="cn">中文</li>
+                                </ul>
+                            </div>
                             <Icon type={iconType} />
-                            {showLangMenu && 
-                            <ul>
-                               <li onClick={this.changeLang} type="en">English</li>
-                               <li onClick={this.changeLang} type="cn">中文</li>
-                            </ul>}
                         </div>}
                         
 			            <div className="navbarRight">

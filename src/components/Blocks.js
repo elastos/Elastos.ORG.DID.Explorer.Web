@@ -1,17 +1,17 @@
 import React from 'react';
-import { getTransactions , getTransactionsCount } from '../request/request';
+import { getBlocks, getBlocksCount } from '../request/request';
 import {Link} from 'react-router-dom';
 import { Pagination } from 'antd';
-import './TransactionList.css';
+import './Blocks.css';
 import loadingImg from '../public/images/loading.gif';
-class TransactionList extends React.Component {
+class Blocks extends React.Component {
 	 constructor(props){
         super(props);
         this.state = {
             count:0,
             size: 20,
             current:1,
-            transactions:[],
+            blocks:[],
             loading:false
         }
         this.onChange = this.onChange.bind(this);
@@ -20,21 +20,23 @@ class TransactionList extends React.Component {
         const { current, size }= this.state;
         this.GetInfo(current,size);
     }
-    
     GetInfo = async (current,size) => {
         try{
-            const count = await getTransactionsCount();
+            const count = await getBlocksCount();
+            console.log(count)
             const start = ( current - 1) * size;
-            const transactions = await getTransactions(start,size);
+            const blocks = await getBlocks(start,size);
+            console.log(blocks)
             this.setState({
                 count:count[0].count,
-                transactions:transactions,
+                blocks:blocks,
                 loading:false
             })
         }catch(err){
           console.log(err)
         }
     }
+	
     onChange(pageNumber) {
         this.setState({
             loading:true,
@@ -59,22 +61,22 @@ class TransactionList extends React.Component {
       (s < 10 ? '0'+ s : s );
     }
     render() {
-    	const { transactions, count, size, current, loading } = this.state;
+    	const { blocks, count, size, current, loading } = this.state;
         const  lang  = this.props.lang;
-        const txHtml = transactions.map((tx,k) => {
+        const txHtml = blocks.map((block,k) => {
         	return(
-        		<tr className="ant-table-row ant-table-row-level-0 table_tr" data-row-key="1" key={k}>
-	        		<td width="30%"><Link to={'/properties_list/'+tx.did}><span>{tx.did}</span></Link></td>
-	        		<td width="40%"><Link to={'/txinfo/'+tx.txid}><span>{tx.txid}</span></Link></td>
-	        		<td width="10%"><Link to={'/height/'+tx.height}><span>{tx.height}</span></Link></td>
-	        		<td width="10%"><span>{tx.length_memo}</span></td>
-	        		<td width="10%"><span>{this.timestampToTime(tx.createTime)}</span></td>
+        		<tr className="ant-table-row ant-table-row-level-0 table_tr1" data-row-key="1" key={k}>
+	        		<td width="30%"><Link to={'/height/'+block.height}><span>{block.height}</span></Link></td>
+	        		<td width="40%"><span>{block.time ? this.timestampToTime(block.time) : "" }</span></td>
+	        		<td width="10%"><span>{block.count}</span></td>
+	        		<td width="10%"><span>{block.miner_info}</span></td>
+	        		<td width="10%"><span>{block.bits}</span></td>
 				</tr>
         	)
         });
         return (
                 <div className="container">
-                	<div style={{"marginTop":"20px","borderBottom":"1px #ccc solid","paddingBottom":"15px","textAlign":"left","paddingLeft":"10px"}}><span style={{"fontSize":"25px"}}>{lang.transactions_list}</span></div>
+                	<div style={{"marginTop":"20px","borderBottom":"1px #ccc solid","paddingBottom":"15px","textAlign":"left","paddingLeft":"10px"}}><span style={{"fontSize":"25px"}}>{lang.latest_blocks}</span></div>
 					<div className="ant-table ant-table-default ant-table-scroll-position-left">
 						<div className="ant-table-content">
 							<div className="ant-table-body">
@@ -82,19 +84,19 @@ class TransactionList extends React.Component {
 									<thead className="ant-table-thead">
 										<tr>
 											<th className="">
-												<div>DID</div>
-											</th>
-											<th className="">
-												<div>{lang.tx_hash}</div>
-											</th>
-											<th className="">
 												<div>{lang.block_height}</div>
 											</th>
 											<th className="">
-												<div>{lang.memo_size}({lang.byte})</div>
+												<div>{lang.time}</div>
 											</th>
 											<th className="">
-												<div>{lang.time}</div>
+												<div>{lang.transactions}</div>
+											</th>
+											<th className="">
+												<div>{lang.miner}</div>
+											</th>
+											<th className="">
+												<div>{lang.size}</div>
 											</th>
 										</tr>
 									</thead>
@@ -117,4 +119,4 @@ class TransactionList extends React.Component {
     }
 }
 
-export default TransactionList;
+export default Blocks;

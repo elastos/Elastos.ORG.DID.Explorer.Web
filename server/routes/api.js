@@ -14,7 +14,24 @@ router.get('/v1/block/current', function(req, res, next) {
 	setHeaders(res);
 	try{
 		var db =  DB.connection;
-		db.query('SELECT * FROM `chain_block_transaction_history` WHERE `txType` = "TransferAsset" ORDER BY `id` desc LIMIT 1', function (error, results, fields) {
+		db.query('SELECT * FROM `chain_did_property` ORDER BY `height` desc LIMIT 1', function (error, results, fields) {
+			if(error){
+				console.log("mysql error")
+				console.log(error)
+				//db = DB.connect();
+			}else{
+				res.send(results);
+			}
+		})
+	}catch(err){
+		console.log(err)
+	}
+});
+router.get('/v1/block/current/height', function(req, res, next) {
+	setHeaders(res);
+	try{
+		var db =  DB.connection;
+		db.query('SELECT height FROM `chain_block_header` ORDER BY `id` desc LIMIT 1', function (error, results, fields) {
 			if(error){
 				console.log("mysql error")
 				console.log(error)
@@ -31,7 +48,7 @@ router.get('/v1/block/height', function(req, res, next) {
 	setHeaders(res);
 	try{
 		var db =  DB.connection;
-		db.query('SELECT `height` FROM `chain_block_transaction_history` WHERE `txType` = "TransferAsset" ORDER BY `id` desc LIMIT 1', function (error, results, fields) {
+		db.query('SELECT `height` FROM `chain_did_property`  ORDER BY `height` desc LIMIT 1', function (error, results, fields) {
 			if(error){
 				console.log("mysql error")
 				console.log(error);
@@ -60,6 +77,42 @@ router.get('/v1/block/info', function(req, res, next) {
 		console.log(err)
 	}
 });
+
+router.get('/v1/block/blocks/count', function(req, res, next) {
+	setHeaders(res);
+	try{
+		var db =  DB.connection;
+		db.query('SELECT COUNT(*) AS count FROM ( SELECT `height` FROM `chain_did_property` GROUP BY `height`) AS a ', function (error, results, fields) {
+			if(error){
+				console.log("mysql error")
+				console.log(error);
+			}else{
+				res.send(results);
+			}
+		})
+	}catch(err){
+		console.log(err)
+	}
+});
+router.get('/v1/block/blocks', function(req, res, next) {
+	setHeaders(res);
+	try{
+		var db =  DB.connection;
+		var start = req.query.start;
+		var pageSize = req.query.pageSize;
+		db.query('SELECT a.height,b.time,b.miner_info,b.bits,d.count FROM `chain_did_property` AS a LEFT JOIN `chain_block_header` AS b ON a.height = b.height LEFT JOIN (SELECT height,COUNT(*) AS count FROM (SELECT height,txid FROM chain_did_property GROUP BY txid ) AS c GROUP BY height) AS d ON a.height = d.height GROUP BY a.height ORDER BY a.height DESC LIMIT ' + start + ',' + pageSize, function (error, results, fields) {
+			if(error){
+				console.log("mysql error")
+				console.log(error);
+			}else{
+				res.send(results);
+			}
+		})
+	}catch(err){
+		console.log(err)
+	}
+});
+
 router.get('/v1/block/transactions/txids_height', function(req, res, next) {
 	setHeaders(res);
 	try{
@@ -95,6 +148,24 @@ router.get('/v1/block/transactions/height', function(req, res, next) {
 		console.log(err)
 	}
 });
+router.get('/v1/block/values', function(req, res, next) {
+	setHeaders(res);
+	try{
+		var db =  DB.connection;
+		var txid = req.query.txid;
+		db.query('SELECT sum(a.value) value FROM `chain_block_transaction_history` a  WHERE a.txid = "' + txid + '" AND a.type = "spend"', function (error, results, fields) {
+			if(error){
+				console.log("mysql error")
+				console.log(error)
+			}else{
+				res.send(results);
+			}
+		})
+	}catch(err){
+		console.log(err)
+	}
+});
+
 router.get('/v1/block/transactions/txid', function(req, res, next) {
 	setHeaders(res);
 	try{
@@ -119,15 +190,16 @@ router.get('/v1/block/transactions', function(req, res, next) {
 		var db =  DB.connection;
 		var start = req.query.start;
 		var pageSize = req.query.pageSize;
-		console.log('SELECT `id`,`txid`,`createTime`,`height`,length(`memo`) as `length_memo` ,`local_system_time` FROM `chain_block_transaction_history` WHERE `txType` = "TransferAsset" GROUP BY `txid` ORDER BY `id` DESC LIMIT ' + start + ',' + pageSize )
-		db.query('SELECT `id`,`txid`,`createTime`,`height`,length(`memo`) as `length_memo` ,`local_system_time` FROM `chain_block_transaction_history` WHERE `txType` = "TransferAsset" GROUP BY `txid` ORDER BY `id` DESC LIMIT ' + start + ',' + pageSize, function (error, results, fields) {
-			if(error){
-				console.log("mysql error")
-				console.log(error)
-			}else{
-				res.send(results);
-			}
-		})
+		db.query('SELECT a.id, a.did, a.txid,b.type, b.createTime, a.height, length(b.memo) as `length_memo` , b.createTime FROM `chain_did_property` AS a LEFT JOIN `chain_block_transaction_history` AS b ON (a.txid = b.txid)  WHERE b.type = "spend" GROUP BY a.txid ORDER BY a.id DESC LIMIT ' + start + ',' + pageSize
+				, function (error, results, fields) {
+					if(error){
+						console.log("mysql error")
+						console.log(error)
+					}else{
+						
+						res.send(results);
+					}
+				})
 	}catch(err){
 		console.log(err)
 	}
@@ -136,7 +208,7 @@ router.get('/v1/block/transactions/count', function(req, res, next) {
 	setHeaders(res);
 	try{
 		var db =  DB.connection;
-		db.query('SELECT COUNT(*) AS count FROM ( SELECT `txid`,`txType` FROM `chain_block_transaction_history` WHERE `txType` = "TransferAsset" GROUP BY `txid`) AS a ', function (error, results, fields) {
+		db.query('SELECT COUNT(*) AS count FROM ( SELECT `txid` FROM `chain_did_property` GROUP BY `txid`) AS a ', function (error, results, fields) {
 			if(error){
 				console.log("mysql error")
 				console.log(error)
@@ -154,7 +226,7 @@ router.get('/v1/block/transactions/info', function(req, res, next) {
 	try{
 		var db =  DB.connection;
 		var txid = req.query.txid;
-		db.query('SELECT * FROM `chain_did_property`  WHERE `txid` = "' + txid + '"', function (error, results, fields) {
+		db.query('SELECT * FROM `chain_did_property`  WHERE `txid` = "' + txid + '" ORDER BY height DESC', function (error, results, fields) {
 			if(error){
 				console.log("mysql error")
 				console.log(error)
@@ -189,7 +261,7 @@ router.get('/v1/block/properteis/did', function(req, res, next) {
 	try{
 		var db =  DB.connection;
 		var did = req.query.did;
-		db.query('SELECT * FROM `chain_did_property`  WHERE `did` = "' + did + '" GROUP BY `property_key` ORDER BY `id` DESC ', function (error, results, fields) {
+		db.query('SELECT * FROM (SELECT * FROM `chain_did_property` WHERE did = "'+ did +'" ORDER BY `block_time` DESC) a GROUP BY `property_key ', function (error, results, fields) {
 			if(error){
 				console.log("mysql error")
 				console.log(error)

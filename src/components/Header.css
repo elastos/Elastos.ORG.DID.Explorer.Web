@@ -89,6 +89,12 @@
 		width:100%;
 		margin:0;
 	}
+	.navbarCollapse .navbarMenu {
+		background: #555;
+		width:100%;
+		height:100px;
+	}
+	
 	.navbarCollapse .navbarHeight{
 		display: none
 	}
@@ -108,7 +114,8 @@
 		display: none
 	}
 	.navbarCollapse .navbarLang ul{
-		width: 100%
+		width: 100%;
+		margin:0;
 	}
 }
 
@@ -139,9 +146,10 @@
 }
 .navbarNav a{
 	color:#fff;
+	font-size:16px;
 }
 .navScope{
-	width:auto;
+	width:32px;
 	height:50px;
 	line-height:50px;
 	float:left;
@@ -164,13 +172,22 @@
 	float:right;
 
 }
-.navbarLang{
+.navbarMenu{
 	width:100px;
 	height:50px;
 	line-height: 50px;
 	color:#fff;
 	font-size:16px;
 	float:right;
+}
+.navbarLang{
+	width:80px;
+	height:50px;
+	line-height: 50px;
+	text-align:center;
+	color:#fff;
+	font-size:16px;
+	float:left;
 }
 .navbarLang span{
 	cursor:pointer;
@@ -186,7 +203,7 @@
     margin: 0;
     padding: 0;
     width: 100px;
-
+    margin-top:50px;
 }
 .navbarLang ul li{
 	cursor: pointer;

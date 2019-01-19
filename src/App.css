@@ -120,3 +120,6 @@ li{list-style: none}
     font-size: 18px;
   }
 }
+th div{
+  white-space: nowrap;
+}

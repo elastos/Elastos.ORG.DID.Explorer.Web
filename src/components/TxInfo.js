@@ -1,12 +1,13 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
-import { getTxDetailFromTxid ,getTransactionsFromTxid} from '../request/request';
+import { getTxDetailFromTxid ,getTransactionsFromTxid,getCurrentHeight,getValuesFromTxid} from '../request/request';
 import { Icon } from 'antd';
 class TxInfo extends React.Component {
     constructor(props){
         super(props);
         this.state = {
 	        txid:"",
+            currentHeight:0,
 	        transactions:[]
         }
     }
@@ -21,13 +22,35 @@ class TxInfo extends React.Component {
         try{
             const transactions = await getTransactionsFromTxid(txid);
             const properties = await getTxDetailFromTxid(txid);
+            const values = await getValuesFromTxid(txid)
             transactions[0].properties = properties;
             transactions[0].did = properties[0].did;
             transactions[0].didstatus = properties[0].did_status;
+            transactions[0].values = values[0].value;
             this.setState({transactions:transactions})
+            const currentHeight = await getCurrentHeight();
+            this.setState({
+                currentHeight:currentHeight[0].height
+            })
+            
         }catch(err){
           console.log(err)
         }
+    }
+     timestampToTime(timestamp) {
+      let date = new Date(timestamp * 1000);
+      let Y = date.getFullYear();
+      let M = date.getMonth()+1;
+      let D = date.getDate() ;
+      let h = date.getHours();
+      let m = date.getMinutes();
+      let s = date.getSeconds();
+      return Y + '-' +
+      (M < 10 ? '0'+ M : M ) + '-' + 
+      (D < 10 ? '0'+ D : D ) + ' ' + 
+      (h < 10 ? '0'+ h : h ) + ':' + 
+      (m < 10 ? '0'+ m : m ) + ':' + 
+      (s < 10 ? '0'+ s : s );
     }
     componentWillReceiveProps(nextProps) {
     	const txid =nextProps.match.params.txid ;
@@ -38,7 +61,7 @@ class TxInfo extends React.Component {
     }
     render() {
         const txid = this.props.match.params.txid;
-        const { transactions } = this.state;
+        const { transactions,currentHeight } = this.state;
         const  lang  = this.props.lang;
          const width = document.body.clientWidth;
         const iconType = (width > 760) ? "caret-right" : "caret-down";
@@ -62,7 +85,7 @@ class TxInfo extends React.Component {
                                 <span>{tx.txid}</span>
                             </div>
                             <div className="floatRight">
-                                <span className="tint">{tx.local_system_time}</span>
+                                <span className="tint">{this.timestampToTime(tx.createTime)}</span>
                             </div>
                         </li>
                         <li className = "liContent">
@@ -84,9 +107,9 @@ class TxInfo extends React.Component {
                                 <span>{lang.primitive_memo_binary} : </span><span  style={{"whiteSpace":"normal"}}> {tx.memo}</span>
                             </div>
                             <div className="content3">
-                                <span>{lang.fee}:{tx.fee / 100000000}</span>
-                                <span>...ELA</span>
-                                <span>...{lang.confirmations}</span>
+                                <span>{lang.fee}:{tx.fee / 100000000} ELA</span>
+                                <span>{tx.values / 100000000} ELA</span>
+                                <span>{currentHeight - tx.height + 1 }{lang.confirmations}</span>
                             </div>
                         </li>
                     </ul>
