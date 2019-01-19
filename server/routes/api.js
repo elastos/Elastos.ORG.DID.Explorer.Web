@@ -10,6 +10,29 @@ function setHeaders(res){
     res.header("X-Powered-By",' 3.2.1')
 }
 /* GET users listing. */
+router.get('/v1/block/select', function(req, res, next) {
+	setHeaders(res);
+	try{
+		var db =  DB.connection;
+		var fields = req.query.fields;
+		var table = req.query.table;
+		var order = req.query.order
+		var limit = req.query.limit;
+		db.query('SELECT '+ fields + ' FROM ' + table + ' ORDER BY ' +order+ ' LIMIT ' + limit, function (error, results, fields) {
+			if(error){
+				console.log("mysql error")
+				console.log(error)
+				//db = DB.connect();
+			}else{
+				res.send(results);
+			}
+		})
+	}catch(err){
+		console.log(err)
+	}
+});
+
+
 router.get('/v1/block/current', function(req, res, next) {
 	setHeaders(res);
 	try{
@@ -261,7 +284,7 @@ router.get('/v1/block/properteis/did', function(req, res, next) {
 	try{
 		var db =  DB.connection;
 		var did = req.query.did;
-		db.query('SELECT * FROM (SELECT * FROM `chain_did_property` WHERE did = "'+ did +'" ORDER BY `block_time` DESC) a GROUP BY `property_key ', function (error, results, fields) {
+		db.query('SELECT * FROM (SELECT * FROM `chain_did_property` WHERE did = "'+ did +'" ORDER BY `block_time` DESC) a GROUP BY `property_key`', function (error, results, fields) {
 			if(error){
 				console.log("mysql error")
 				console.log(error)
