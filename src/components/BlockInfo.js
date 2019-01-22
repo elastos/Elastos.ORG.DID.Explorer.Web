@@ -54,14 +54,12 @@ class BlockInfo extends React.Component {
         try{
             const properties = await getTxDetailFromTxid(txid);
             const values = await getValuesFromTxid(txid)
-            
             let transaction = this.state.transactions;
             transaction[k].properties = properties;
             transaction[k].did = properties[0].did;
             transaction[k].didstatus = properties[0].did_status;
             transaction[k].values = values[0].value;
             this.setState({transactions:transaction})
-
         }catch(err){
             console.log(err)
         }
@@ -94,15 +92,16 @@ class BlockInfo extends React.Component {
         const  lang  = this.props.lang;
         const width = document.body.clientWidth;
         const iconType = (width > 760) ? "caret-right" : "caret-down";
+
         const txHtml = transactions.map((tx,k) => {
             const proHtml = (typeof tx.properties != "undefined") ? (tx.properties.map((property,k)=>{
+                
                 return(
                     <li key={k}>
                         <Link to={'/did/'+tx.did+'/property_history/'+ property.property_key} >
                             <span className="floatLeft" >{ property.property_key}</span>
                             <span className="floatRight" >{property.property_key_status === 1 ? "("+lang.available+")" : "("+lang.disused+")"}</span>
                             <span className="floatRight" >{ property.property_value}</span>
-                            
                         </Link>
                     </li>
                 )
@@ -120,7 +119,6 @@ class BlockInfo extends React.Component {
                         </li>
                         <li className = "liContent">
                             <div className="content1">
-                            {tx.txType === "TransferAsset" &&
                                 <ul>
                                     <li className="left"><Link to={'/properties_list/'+tx.did} >{tx.did}</Link> {tx.didstatus === 1 ? "("+lang.available+")" : "("+lang.disused+")"}</li>
                                     <li className="center"><Icon  type={iconType} /></li>
@@ -130,7 +128,6 @@ class BlockInfo extends React.Component {
                                         </ul>
                                     </li>
                                 </ul>
-                            }
                             </div>
                            
                             <div className="content2" >
@@ -139,7 +136,7 @@ class BlockInfo extends React.Component {
                             <div className="content3">
                                 <span>{lang.fee}:{tx.fee / 100000000} ELA</span>
                                 <span>{tx.values / 100000000} ELA</span>
-                                <span>{currentHeight - tx.height + 1 }{lang.confirmations}</span>
+                                <span>{currentHeight - tx.height + 1 } {lang.confirmations}</span>
                             </div>
                         </li>
                     </ul>

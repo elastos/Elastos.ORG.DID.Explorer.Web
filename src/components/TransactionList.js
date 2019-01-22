@@ -19,6 +19,17 @@ class TransactionList extends React.Component {
     componentWillMount (){
         const { current, size }= this.state;
         this.GetInfo(current,size);
+       
+    }
+    componentDidMount(){
+        const lang = localStorage.getItem("lang");
+        var div = document.getElementsByClassName("ant-pagination-options-quick-jumper");
+        if (lang === "en" && typeof div[0] != "undefined") {
+            div[0].childNodes[0].data = "Goto" 
+        }
+        if(lang === "cn" && typeof div[0] != "undefined"){
+            div[0].childNodes[0].data = "跳转" 
+        } 
     }
     
     GetInfo = async (current,size) => {

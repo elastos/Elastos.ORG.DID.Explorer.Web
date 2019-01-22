@@ -71,7 +71,7 @@ class TxInfo extends React.Component {
                     <li key={k}>
                         <Link to={'/did/'+tx.did+'/property_history/'+ property.property_key} >
                             <span className="floatLeft" style={{"width":"100px"}}>{ property.property_key}</span>
-                            <span className="floatRight" style={{"width":"40px"}}>{property.property_key_status === 1 ? "("+lang.available+")" : "("+lang.disused+")"}</span>
+                            <span className="floatRight" style={{"width":"75px","textAlign":"right"}}>{property.property_key_status === 1 ? "("+lang.available+")" : "("+lang.disused+")"}</span>
                             <span className="floatRight" style={{"width":"360px"}}>{ property.property_value}</span>
                         </Link>
                     </li>
@@ -109,7 +109,7 @@ class TxInfo extends React.Component {
                             <div className="content3">
                                 <span>{lang.fee}:{tx.fee / 100000000} ELA</span>
                                 <span>{tx.values / 100000000} ELA</span>
-                                <span>{currentHeight - tx.height + 1 }{lang.confirmations}</span>
+                                <span>{currentHeight - tx.height + 1 } {lang.confirmations}</span>
                             </div>
                         </li>
                     </ul>

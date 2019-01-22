@@ -14,7 +14,6 @@ class DidDetails extends React.Component {
     GetInfo = async () => {
         try{
             const transactions = await getTransactionsFromDid(this.props.match.params.did);
-            console.log()
             this.setState({
                 transactions:transactions
             })
