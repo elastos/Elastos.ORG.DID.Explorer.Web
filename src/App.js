@@ -38,7 +38,7 @@ class App extends Component {
                 <Content style={{"background":"#fff"}}>
                   <Router info = {this.state}/>
                 </Content>
-              <Footer info = {this.state}/>
+              <Footer info = {this.state} />
             </Layout>
           </div>
         </HashRouter>

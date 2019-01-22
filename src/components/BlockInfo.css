@@ -168,7 +168,8 @@
 	width:100px;
 }
 .liContent .content1 .right li span:nth-child(2){
-	width:40px;
+	width:75px;
+	text-align:right;
 }
 .liContent .content1 .right li span:nth-child(3){
 	width:360px;
@@ -182,7 +183,8 @@
 		width:80px;
 	}
 	.liContent .content1 .right li span:nth-child(2){
-		width:40px;
+		width:75px;
+		text-align:right;
 	}
 	.liContent .content1 .right li span:nth-child(3){
 		width:180px;
@@ -234,7 +236,8 @@
 
 .liContent .content3 span:nth-child(2){
 	height:30px;
-	width:70px;
+	padding-left:10px;
+	padding-right:10px;
 	line-height: 30px;
 	color:#fff;
 	display: block;
@@ -247,7 +250,8 @@
 }
 .liContent .content3 span:nth-child(3){
 	height:30px;
-	width:70px;
+	padding-left:10px;
+	padding-right:10px;
 	line-height: 30px;
 	color:#fff;
 	display: block;
@@ -260,14 +264,16 @@
 
 @media (min-width: 768px){
 	.liContent .content3 span:nth-child(2){
-		width:120px;
+		padding-left:10px;
+		padding-right:10px;
 		height:40px;
 		line-height: 40px;
 		margin-top:0px;
 		border-radius:5px;
 		}
 	.liContent .content3 span:nth-child(3){
-		width:120px;
+		padding-left:10px;
+		padding-right:10px;
 		height:40px;
 		line-height: 40px;
 		margin-top:0px;

@@ -43,6 +43,8 @@ class About extends React.Component {
     	txt.length === 64 && this.search_txid(event,txt);
     	txt.length === 34 && this.search_did(event,txt);
     	/:/.test(txt) && txt.indexOf(":") === 34 && this.search_did_property(event,txt);
+        if(event.keyCode === 13)  event.target.value = "";
+         
     }
     search_block(event,txt) {
   		//event.keyCode == "13" && this.setState({redirect: true,path:"/height/"+txt}) ;
@@ -82,9 +84,10 @@ class About extends React.Component {
         this.setState({showLangMenu:"none",iconType:"caret-down"});
         this.onClick ();
         var div = document.getElementsByClassName("ant-pagination-options-quick-jumper");
-        if (event.target.type === "en") {
+        if (event.target.type === "en" && typeof div[0] != "undefined") {
             div[0].childNodes[0].data = "Goto" 
-        }else{
+        }
+        if(event.target.type === "cn" && typeof div[0] != "undefined"){
             div[0].childNodes[0].data = "跳转" 
         }
     }
