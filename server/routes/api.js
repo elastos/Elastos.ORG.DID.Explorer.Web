@@ -123,7 +123,7 @@ router.get('/v1/block/blocks', function(req, res, next) {
 		var db =  DB.connection;
 		var start = req.query.start;
 		var pageSize = req.query.pageSize;
-		db.query('SELECT a.height,b.time,b.miner_info,b.bits,d.count FROM `chain_did_property` AS a LEFT JOIN `chain_block_header` AS b ON a.height = b.height LEFT JOIN (SELECT height,COUNT(*) AS count FROM (SELECT height,txid FROM chain_did_property GROUP BY txid ) AS c GROUP BY height) AS d ON a.height = d.height GROUP BY a.height ORDER BY a.height DESC LIMIT ' + start + ',' + pageSize, function (error, results, fields) {
+		db.query('SELECT a.height,b.time,b.miner_info,b.size,d.count FROM `chain_did_property` AS a LEFT JOIN `chain_block_header` AS b ON a.height = b.height LEFT JOIN (SELECT height,COUNT(*) AS count FROM (SELECT height,txid FROM chain_did_property GROUP BY txid ) AS c GROUP BY height) AS d ON a.height = d.height GROUP BY a.height ORDER BY a.height DESC LIMIT ' + start + ',' + pageSize, function (error, results, fields) {
 			if(error){
 				console.log("mysql error")
 				console.log(error);
@@ -252,7 +252,7 @@ router.get('/v1/block/transactions/info', function(req, res, next) {
 	try{
 		var db =  DB.connection;
 		var txid = req.query.txid;
-		db.query('SELECT * FROM `chain_did_property`  WHERE `txid` = "' + txid + '" ORDER BY height DESC', function (error, results, fields) {
+		db.query('SELECT * FROM (SELECT * FROM `chain_did_property` WHERE txid = "'+ txid +'" ORDER BY `block_time` DESC) a GROUP BY `property_key`', function (error, results, fields) {
 			if(error){
 				console.log("mysql error")
 				console.log(error)

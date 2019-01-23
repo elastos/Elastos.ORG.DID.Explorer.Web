@@ -38,12 +38,13 @@ class About extends React.Component {
     onKeyDown(event){
 		const txt = event.target.value;
 		if(txt === "") return;
+        if(event.keyCode === 13)  event.target.value = "";
     	const reg_height = /^[0-9]*$/;
     	reg_height.test(txt) && this.search_block(event,txt);
     	txt.length === 64 && this.search_txid(event,txt);
     	txt.length === 34 && this.search_did(event,txt);
     	/:/.test(txt) && txt.indexOf(":") === 34 && this.search_did_property(event,txt);
-        if(event.keyCode === 13)  event.target.value = "";
+        
          
     }
     search_block(event,txt) {
