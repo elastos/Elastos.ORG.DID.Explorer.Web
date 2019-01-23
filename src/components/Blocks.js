@@ -78,7 +78,7 @@ class Blocks extends React.Component {
 	        		<td width="40%"><span>{block.time ? this.timestampToTime(block.time) : "" }</span></td>
 	        		<td width="10%"><span>{block.count}</span></td>
 	        		<td width="10%"><span>{block.miner_info}</span></td>
-	        		<td width="10%"><span>{block.bits}</span></td>
+	        		<td width="10%"><span>{block.size}</span></td>
 				</tr>
         	)
         });

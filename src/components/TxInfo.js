@@ -104,10 +104,10 @@ class TxInfo extends React.Component {
                             </div>
                            
                             <div className="content2" >
-                                <span>{lang.primitive_memo_binary} : </span><span  style={{"whiteSpace":"normal"}}> {tx.memo}</span>
+                                <span>{lang.primitive_memo_binary} : </span><span  style={{"whiteSpace":"normal","paddingLeft":"5px"}}> {tx.memo}</span>
                             </div>
                             <div className="content3">
-                                <span>{lang.fee}:{tx.fee / 100000000} ELA</span>
+                                <span>{lang.fee} : {tx.fee / 100000000} ELA</span>
                                 <span>{tx.values / 100000000} ELA</span>
                                 <span>{currentHeight - tx.height + 1 } {lang.confirmations}</span>
                             </div>
