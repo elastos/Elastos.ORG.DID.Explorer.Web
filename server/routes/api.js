@@ -197,7 +197,7 @@ router.get('/v1/block/transactions/txid', function(req, res, next) {
 	try{
 		var db =  DB.connection;
 		var txid = req.query.txid;
-		db.query('SELECT * FROM `chain_block_transaction_history`  WHERE `txid` = "' + txid + '" AND `txType` = "TransferAsset" GROUP BY `txid` ORDER BY `id` DESC', function (error, results, fields) {
+		db.query('SELECT * FROM `chain_block_transaction_history`  WHERE `txid` = "' + txid + '" AND `txType` = "TransferAsset" AND `type` = "spend" GROUP BY `txid` ORDER BY `id` DESC', function (error, results, fields) {
 			if(error){
 				console.log("mysql error")
 				console.log(error)

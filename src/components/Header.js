@@ -115,7 +115,7 @@ class About extends React.Component {
 			                </li>		         
 			            </ul> }
 			            <div className="navbarHeight">
-				           {lang.block_height}：{this.state.height}
+				           <span>{lang.block_height}：{this.state.height}</span>
 						</div>
                         {showMenu &&
                         <div className="navbarMenu">
