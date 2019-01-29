@@ -129,33 +129,7 @@ router.get('/v1/block/blocks', function(req, res, next) {
 				console.log("mysql error")
 				console.log(error);
 			}else{
-				results.map((v,k)=>{
-					db.query('SELECT time,miner_info ,size  FROM `chain_block_header` WHERE `height` = '+ v.height 
-					, function (error, result1, fields) {
-						if(error){
-							console.log("mysql error")
-							console.log(error)
-						}else{
-							db.query('SELECT `height`,`txid` FROM chain_did_property  WHERE `height` = '+ v.height +' GROUP BY `txid`'
-							, function (error, result2, fields) {
-								if(error){
-									console.log("mysql error")
-									console.log(error)
-								}else{
-									if(result1[0]){
-										results[k].time = result1[0].time;
-										results[k].miner_info = result1[0].miner_info;
-										results[k].size = result1[0].size;
-									}
-									results[k].count = result2.length
-									if(k == results.length - 1){
-										res.send(results);
-									}
-								}
-							})
-						}
-					})
-				})
+				res.send(results);
 			}
 		})
 	}catch(err){
@@ -163,6 +137,44 @@ router.get('/v1/block/blocks', function(req, res, next) {
 	}
 });
 
+router.get('/v1/block/blocks_info',function(req, res, next){
+	setHeaders(res);
+	try{
+		var db =  DB.connection;
+		var height = req.query.height;
+		db.query('SELECT time,miner_info ,size  FROM `chain_block_header` WHERE `height` = '+ height 
+		, function (error, results, fields) {
+			if(error){
+				console.log("mysql error")
+				console.log(error)
+			}else{
+				res.send(results);
+			}
+		})
+	}catch(err){
+		console.log(err)
+	}
+
+})
+
+router.get('/v1/block/transactions_count', function(req, res, next) {
+	setHeaders(res);
+	try{
+		var db =  DB.connection;
+		var height = req.query.height;
+		db.query('SELECT `height`,`txid` FROM chain_did_property  WHERE `height` = '+ height +' GROUP BY `txid`'
+		, function (error, results, fields) {
+			if(error){
+				console.log("mysql error")
+				console.log(error)
+			}else{
+				res.send([{count:results.length}]);
+			}
+		})
+	}catch(err){
+		console.log(err)
+	}
+});
 router.get('/v1/block/transactions/txids_height', function(req, res, next) {
 	setHeaders(res);
 	try{
@@ -247,25 +259,7 @@ router.get('/v1/block/transactions', function(req, res, next) {
 				console.log("mysql error")
 				console.log(error)
 			}else{
-				results.map((v,k)=>{
-					db.query('SELECT createTime,length(memo) as `length_memo` FROM `chain_block_transaction_history` WHERE `type` = "spend" and `txid` = "'+ v.txid +'"'
-					, function (error, result, fields) {
-						if(error){
-							console.log("mysql error")
-							console.log(error)
-						}else{
-							if(result[0]){
-								results[k].createTime = result[0].createTime;
-								results[k].length_memo = result[0].length_memo;
-							}
-							if(k == results.length - 1){
-								res.send(results);
-							}
-						}
-					})
-					
-				})
-				
+				res.send(results);
 			}
 		})
 
@@ -273,6 +267,27 @@ router.get('/v1/block/transactions', function(req, res, next) {
 		console.log(err)
 	}
 });
+router.get('/v1/block/transactions_info', function(req, res, next) {
+	setHeaders(res);
+	try{
+		var db =  DB.connection;
+		var txid = req.query.txid;
+		db.query('SELECT createTime,length(memo) as `length_memo` FROM `chain_block_transaction_history` WHERE `type` = "spend" and `txid` = "'+ txid +'"'
+		, function (error, results, fields) {
+			if(error){
+				console.log("mysql error")
+				console.log(error)
+			}else{
+				res.send(results);
+			}
+		})
+	}catch(err){
+		console.log(err)
+	}
+});
+
+
+
 router.get('/v1/block/transactions/count', function(req, res, next) {
 	setHeaders(res);
 	try{

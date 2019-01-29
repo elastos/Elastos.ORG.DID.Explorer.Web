@@ -83,6 +83,41 @@ export function getBlockInfo(height){
 	});
 
 }
+export function getBlocksInfo(height){
+	return new Promise(function(resolve, reject) {
+	   	let path = addr + '/api/v1/block/blocks_info?height='+height
+	    let xhr = new XMLHttpRequest();
+	    xhr.open('GET',path );
+	    xhr.onload = function() {
+	      if (xhr.status === 200) {
+	        resolve(JSON.parse(xhr.responseText));
+	      } 
+	    };
+	    xhr.onerror = function() {
+	      reject(new Error(xhr.statusText));
+	    };
+	    xhr.send();
+	});
+
+}
+export function getTransactionsCountFromHeight(height){
+	return new Promise(function(resolve, reject) {
+	   	let path = addr + '/api/v1/block/transactions_count?height='+height
+	    let xhr = new XMLHttpRequest();
+	    xhr.open('GET',path );
+	    xhr.onload = function() {
+	      if (xhr.status === 200) {
+	        resolve(JSON.parse(xhr.responseText));
+	      } 
+	    };
+	    xhr.onerror = function() {
+	      reject(new Error(xhr.statusText));
+	    };
+	    xhr.send();
+	});
+
+}
+
 
 export function getBlocksCount(){
 	return new Promise(function(resolve, reject) {
@@ -135,6 +170,22 @@ export function getTransactionsCount(){
 export function getTransactions(start,pageSize){
 	return new Promise(function(resolve, reject) {
 	   	let path = addr + '/api/v1/block/transactions?start='+start+'&pageSize='+pageSize;
+	    let xhr = new XMLHttpRequest();
+	    xhr.open('GET',path );
+	    xhr.onload = function() {
+	      if (xhr.status === 200) {
+	        resolve(JSON.parse(xhr.responseText));
+	      } 
+	    };
+	    xhr.onerror = function() {
+	      reject(new Error(xhr.statusText));
+	    };
+	    xhr.send();
+	});
+}
+export function getTransactionsInfo(txid){
+	return new Promise(function(resolve, reject) {
+	   	let path = addr + '/api/v1/block/transactions_info?txid='+txid;
 	    let xhr = new XMLHttpRequest();
 	    xhr.open('GET',path );
 	    xhr.onload = function() {

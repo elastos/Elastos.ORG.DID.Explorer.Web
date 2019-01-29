@@ -1,5 +1,5 @@
 import React from 'react';
-import { getTransactions , getTransactionsCount } from '../request/request';
+import { getTransactions , getTransactionsCount, getTransactionsInfo } from '../request/request';
 import {Link} from 'react-router-dom';
 import { Pagination } from 'antd';
 import './TransactionList.css';
@@ -41,12 +41,26 @@ class TransactionList extends React.Component {
                 transactions:transactions,
                 loading:false
             })
+            Object.keys(transactions).map((transaction,k) => {
+                return this.GetTransactionsInfo(k,transactions[k].txid)                
+            });
             const count = await getTransactionsCount();
              this.setState({
                 count:count[0].count
             })
         }catch(err){
           console.log(err)
+        }
+    }
+    GetTransactionsInfo = async (k,txid)=>{
+        try{
+            const transaction = await getTransactionsInfo(txid);
+            let transactions = this.state.transactions;
+            transactions[k].createTime = transaction[0].createTime;
+            transactions[k].length_memo = transaction[0].length_memo;
+            this.setState({transactions:transactions})
+        }catch(err){
+            console.log(err)
         }
     }
     onChange(pageNumber) {
@@ -82,7 +96,7 @@ class TransactionList extends React.Component {
 	        		<td width="40%"><Link to={'/txinfo/'+tx.txid}><span>{tx.txid}</span></Link></td>
 	        		<td width="10%"><Link to={'/height/'+tx.height}><span>{tx.height}</span></Link></td>
 	        		<td width="10%"><span>{tx.length_memo}</span></td>
-	        		<td width="10%"><span>{this.timestampToTime(tx.createTime)}</span></td>
+	        		<td width="10%"><span>{tx.createTime ? this.timestampToTime(tx.createTime) : ''}</span></td>
 				</tr>
         	)
         });
