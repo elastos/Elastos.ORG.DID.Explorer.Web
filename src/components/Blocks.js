@@ -32,13 +32,16 @@ class Blocks extends React.Component {
     }
     GetInfo = async (current,size) => {
         try{
-            const count = await getBlocksCount();
+            
             const start = ( current - 1) * size;
             const blocks = await getBlocks(start,size);
             this.setState({
-                count:count[0].count,
                 blocks:blocks,
                 loading:false
+            })
+            const count = await getBlocksCount();
+            this.setState({
+                count:count[0].count,
             })
         }catch(err){
           console.log(err)
