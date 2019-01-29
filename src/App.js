@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {HashRouter} from 'react-router-dom';
+import {BrowserRouter} from 'react-router-dom';
 import './App.css';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -31,7 +31,7 @@ class App extends Component {
     const {Content} = Layout;
     return (
       <div className="App">
-        <HashRouter>
+        <BrowserRouter>
           <div>
            <Layout>
               <Header onChange = {this.onChange} info = {this.state}/>
@@ -41,7 +41,7 @@ class App extends Component {
               <Footer info = {this.state} />
             </Layout>
           </div>
-        </HashRouter>
+        </BrowserRouter>
       </div>
     );
   }

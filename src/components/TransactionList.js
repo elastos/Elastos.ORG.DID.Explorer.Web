@@ -34,13 +34,16 @@ class TransactionList extends React.Component {
     
     GetInfo = async (current,size) => {
         try{
-            const count = await getTransactionsCount();
+            
             const start = ( current - 1) * size;
             const transactions = await getTransactions(start,size);
             this.setState({
-                count:count[0].count,
                 transactions:transactions,
                 loading:false
+            })
+            const count = await getTransactionsCount();
+             this.setState({
+                count:count[0].count
             })
         }catch(err){
           console.log(err)
