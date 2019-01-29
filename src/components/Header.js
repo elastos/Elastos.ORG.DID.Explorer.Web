@@ -49,20 +49,20 @@ class About extends React.Component {
     }
     search_block(event,txt) {
   		//event.keyCode == "13" && this.setState({redirect: true,path:"/height/"+txt}) ;
-  		event.keyCode === 13 && (window.location.href = "/#/height/"+txt);
+  		event.keyCode === 13 && (window.location.href = "/height/"+txt);
   		
     }
     search_txid(event,txt) {
-    	event.keyCode === 13 && (window.location.href = "/#/txinfo/"+txt);
+    	event.keyCode === 13 && (window.location.href = "/txinfo/"+txt);
     }
     search_did(event,txt) {
-    	event.keyCode === 13 && (window.location.href = "/#/properties_list/"+txt);
+    	event.keyCode === 13 && (window.location.href = "/properties_list/"+txt);
 
     }
     search_did_property(event,txt) {
     	const did = txt.substring(0,txt.indexOf(":"));
     	const property = txt.substring(txt.indexOf(":") + 1);
-    	event.keyCode === 13 && (window.location.href = "/#/did/"+did+"/property_history/"+property);
+    	event.keyCode === 13 && (window.location.href = "/did/"+did+"/property_history/"+property);
     }
     onClick (){
          const width = document.body.clientWidth;

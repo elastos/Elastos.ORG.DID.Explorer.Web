@@ -1,5 +1,5 @@
 import React from 'react';
-import { getBlocks, getBlocksCount } from '../request/request';
+import { getBlocks, getBlocksCount, getBlocksInfo, getTransactionsCountFromHeight} from '../request/request';
 import {Link} from 'react-router-dom';
 import { Pagination } from 'antd';
 import './Blocks.css';
@@ -32,19 +32,37 @@ class Blocks extends React.Component {
     }
     GetInfo = async (current,size) => {
         try{
-            
             const start = ( current - 1) * size;
             const blocks = await getBlocks(start,size);
             this.setState({
                 blocks:blocks,
                 loading:false
             })
+            Object.keys(blocks).map((block,k) => {
+                return this.GetBlockInfo(k,blocks[k].height)                
+            });
             const count = await getBlocksCount();
             this.setState({
                 count:count[0].count,
             })
         }catch(err){
           console.log(err)
+        }
+    }
+    GetBlockInfo = async (k,height)=>{
+        try{
+            const blockInfo = await getBlocksInfo(height);
+            let blocks = this.state.blocks;
+            blocks[k].time = blockInfo[0].time;
+            blocks[k].miner_info = blockInfo[0].miner_info;
+            blocks[k].size = blockInfo[0].size;
+            this.setState({blocks:blocks})
+            const count = await getTransactionsCountFromHeight(height);
+            blocks[k].count = count[0].count;
+            this.setState({blocks:blocks})
+           
+        }catch(err){
+            console.log(err)
         }
     }
 	
