@@ -1,5 +1,6 @@
 .table_propty span{
 	white-space: normal;
+	word-break: break-all;
 }
 .table_propty td:nth-child(1) span{
 	display:block;
