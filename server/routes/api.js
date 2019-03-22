@@ -253,7 +253,7 @@ router.get('/v1/block/transactions', function(req, res, next) {
 		var db =  DB.connection;
 		var start = req.query.start;
 		var pageSize = req.query.pageSize;
-		db.query('SELECT id, did, txid, height FROM `chain_did_property` GROUP BY txid ORDER BY id DESC LIMIT ' + start + ',' + pageSize
+		db.query('SELECT distinct did, txid, height FROM `chain_did_property`  ORDER BY id DESC LIMIT ' + start + ',' + pageSize
 		, function (error, results, fields) {
 			if(error){
 				console.log("mysql error")
