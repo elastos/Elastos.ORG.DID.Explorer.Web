@@ -105,12 +105,12 @@ router.get('/v1/block/blocks/count', function(req, res, next) {
 	setHeaders(res);
 	try{
 		var db =  DB.connection;
-		db.query('SELECT `height` FROM `chain_did_property` GROUP BY `height`', function (error, results, fields) {
+		db.query('SELECT count(distinct `height`) FROM `chain_did_property`', function (error, results, fields) {
 			if(error){
 				console.log("mysql error")
 				console.log(error);
 			}else{
-				res.send([{"count":results.length}]);
+				res.send([{"count":results}]);
 			}
 		})
 	}catch(err){
@@ -253,7 +253,7 @@ router.get('/v1/block/transactions', function(req, res, next) {
 		var db =  DB.connection;
 		var start = req.query.start;
 		var pageSize = req.query.pageSize;
-		db.query('SELECT id, did, txid, height FROM `chain_did_property` GROUP BY txid ORDER BY id DESC LIMIT ' + start + ',' + pageSize
+		db.query('SELECT distinct did, txid, height FROM `chain_did_property`  ORDER BY id DESC LIMIT ' + start + ',' + pageSize
 		, function (error, results, fields) {
 			if(error){
 				console.log("mysql error")
@@ -293,12 +293,12 @@ router.get('/v1/block/transactions/count', function(req, res, next) {
 	try{
 		var db =  DB.connection;
 
-		db.query('SELECT `txid` FROM `chain_did_property` GROUP BY `txid`', function (error, results, fields) {
+		db.query('SELECT count(distinct `txid` ) FROM `chain_did_property`', function (error, results, fields) {
 			if(error){
 				console.log("mysql error")
 				console.log(error)
 			}else{
-				res.send([{"count":results.length}]);
+				res.send([{"count":results}]);
 			}
 		})
 	}catch(err){
