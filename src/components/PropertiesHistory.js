@@ -1,14 +1,20 @@
 import React from 'react';
 import './PropertiesHistory.css'
-import { getPropertyChanges } from '../request/request';
+import { getPropertyChanges,getPropertiesHistoryCount } from '../request/request';
+import { Pagination } from 'antd';
+import loadingImg from '../public/images/loading.gif';
 class PropertiesHistory extends React.Component {
 	 constructor(props){
         super(props);
         this.state = {
         	did:"",
         	key:"",
-        	propertyChanges:[]
+			size: 20,
+			current:1,
+        	propertyChanges:[],
+			loading:false
         }
+		this.onChange = this.onChange.bind(this);
     }
     componentWillMount (){
     	const did = this.props.match.params.did;
@@ -17,13 +23,19 @@ class PropertiesHistory extends React.Component {
     		did:did,
     		key:key
     	})
-        this.GetInfo(did,key);
+         const { current, size }= this.state;
+        this.GetInfo(did,key,current,size);
     }
-    GetInfo = async (did,key) => {
+    GetInfo = async (did,key,current,size) => {
         try{
-            const propertyChanges = await getPropertyChanges(key,did);
+			const start = ( current - 1) * size;
+            const count = await getPropertiesHistoryCount(key,did);
+           
+            const propertyChanges = await getPropertyChanges(key,did,start,size);
             this.setState({
-                propertyChanges:propertyChanges
+				count:count[0].count,
+                propertyChanges:propertyChanges,
+				loading:false
             })
             
         }catch(err){
@@ -37,7 +49,18 @@ class PropertiesHistory extends React.Component {
             did:did,
     		key:key
         })
-        this.GetInfo(did,key);
+        const { current, size }= this.state;
+        this.GetInfo(did,key,current,size);
+    }
+	 onChange(pageNumber) {
+        this.setState({
+            loading:true,
+            current : pageNumber
+        })
+        const { size }= this.state;
+        const did = this.props.match.params.did;
+        const key = this.props.match.params.key;
+        this.GetInfo(did,key,pageNumber,size);
     }
     timestampToTime(timestamp) {
       let date = new Date(timestamp * 1000);
@@ -55,7 +78,7 @@ class PropertiesHistory extends React.Component {
       (s < 10 ? '0'+ s : s );
     }
     render() {
-    	const { propertyChanges } = this.state;
+    	const { count,current, size, propertyChanges,loading } = this.state;
         const lang = this.props.lang;
     	const propertyHtml = propertyChanges.map((property,k) => {
         	return(
@@ -95,6 +118,12 @@ class PropertiesHistory extends React.Component {
 										{propertyHtml}
 									</tbody>
 								</table>
+								<div style={{"marginTop":"50px"}}>
+								  { count > size && <Pagination showQuickJumper defaultCurrent={current} total={count} defaultPageSize = {size} showLessItems onChange={this.onChange} 
+									  style={{"float":"right"}}
+								  />}
+								  {loading && <img style={{"float":"right","marginRight":"30px","marginTop":"5px","width":"20px"}} src={loadingImg} alt="loading"/>}
+								</div>
 								
 							</div>
 						</div>
