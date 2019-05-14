@@ -1,3 +1,3 @@
 module.exports = {
-  apiUrl:"THE HOST OF API:8080"
+  apiUrl:"https://idchain.elastos.org"
 };

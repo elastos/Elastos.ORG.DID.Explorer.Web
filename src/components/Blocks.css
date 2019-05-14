@@ -1,88 +1,35 @@
-.table_tr1 td:nth-child(1) span{
-	display:block;
-	width:35px;
+/*blocks*/
+
+
+
+.blocks_list_table{
+	width:100%;
 }
-.table_tr1 td:nth-child(2) span{
-	display:block;
-	width:35px;
+.blocks_list_table .ant-table-thead{
+	
+	background: #E1E5EA;
 }
-.table_tr1 td:nth-child(3) span{
-	display:block;
-	width:35px;
-}
-.table_tr1 td:nth-child(4) span{
-	display:block;
-	width:35px;
-}
-.table_tr1 td:nth-child(5) span{
-	display:block;
-	width:35px;
+.blocks_list_table .ant-table-thead tr{
+	height:64px;
+	font-size:14px;
+	color:#364458;
 }
 
-@media (min-width: 768px){
-	.table_tr1 td:nth-child(1) span{
-		display:block;
-		width:150px;
-	}
-	.table_tr1 td:nth-child(2) span{
-		display:block;
-		width:150px;
-	}
-	.table_tr1 td:nth-child(3) span{
-		display:block;
-		width:150px;
-	}
-	.table_tr1 td:nth-child(4) span{
-		display:block;
-		width:150px;
-	}
-	.table_tr1 td:nth-child(5) span{
-		display:block;
-		width:150px;
-	}
+
+.blocks_list_table .ant-table-thead th{
+	padding:0px 30px;
 }
 
-@media (min-width: 992px){
-	.table_tr1 td:nth-child(1) span{
-		display:block;
-		width:200px;
-	}
-	.table_tr1 td:nth-child(2) span{
-		display:block;
-		width:200px;
-	}
-	.table_tr1 td:nth-child(3) span{
-		display:block;
-		width:200px;
-	}
-	.table_tr1 td:nth-child(4) span{
-		display:block;
-		width:200px;
-	}
-	.table_tr1 td:nth-child(5) span{
-		display:block;
-		width:200px;
-	}
+.blocks_list_table .ant-table-tbody tr{
+	border-bottom:1px solid #DCE0E7;;
 }
-@media (min-width: 1200px){
-	.table_tr1 td:nth-child(1) span{
-		display:block;
-		width:200px;
-	}
-	.table_tr1 td:nth-child(2) span{
-		display:block;
-		width:200px;
-	}
-	.table_tr1 td:nth-child(3) span{
-		display:block;
-		width:200px;
-	}
-	.table_tr1 td:nth-child(4) span{
-		display:block;
-		width:200px;
-	}
-	.table_tr1 td:nth-child(5) span{
-		display:block;
-		width:200px;
-	}
+.blocks_list_table .ant-table-tbody td{
+	padding:0px 30px;
+	height:64px;
+	color:#364458;
+	word-wrap: break-word;
+    word-break: break-all;
+}
+.blocks_list_table .ant-table-tbody td a{
+	color:#31B59D;
 }

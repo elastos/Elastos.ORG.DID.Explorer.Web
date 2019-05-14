@@ -1,0 +1,53 @@
+/*didList*/
+
+.list_top{
+	width:100%;
+	height:40px;
+	margin-top:60px;
+	margin-bottom: 40px;
+}
+.list_top .list_title{
+	float:left;
+}
+.list_top .list_search{
+	float:right;
+	width:400px;
+	height:40px;
+	border-radius: 40px;
+	background: #fff;
+}
+
+.did_list_table{
+	width:100%;
+}
+.did_list_table .ant-table-thead{
+	
+	background: #E1E5EA;
+}
+.did_list_table .ant-table-thead tr{
+	height:64px;
+	font-size:14px;
+	color:#364458;
+}
+
+
+.did_list_table .ant-table-thead th{
+	padding:0px 30px;
+}
+
+
+
+
+.did_list_table .ant-table-tbody tr{
+	border-bottom:1px solid #DCE0E7;;
+}
+.did_list_table .ant-table-tbody td{
+	padding:0px 30px;
+	height:64px;
+	color:#364458;
+	word-wrap: break-word;
+    word-break: break-all;
+}
+.did_list_table .ant-table-tbody td a{
+	color:#31B59D;
+}

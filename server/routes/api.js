@@ -10,7 +10,7 @@ function setHeaders(res){
     res.header("X-Powered-By",' 3.2.1')
 }
 /* GET users listing. */
-router.get('/v1/block/select', function(req, res, next) {
+router.get('/block/select', function(req, res, next) {
 	setHeaders(res);
 	try{
 		var db =  DB.connection;
@@ -33,7 +33,7 @@ router.get('/v1/block/select', function(req, res, next) {
 });
 
 
-router.get('/v1/block/current', function(req, res, next) {
+router.get('/block/current', function(req, res, next) {
 	setHeaders(res);
 	try{
 		var db =  DB.connection;
@@ -50,7 +50,7 @@ router.get('/v1/block/current', function(req, res, next) {
 		console.log(err)
 	}
 });
-router.get('/v1/block/current/height', function(req, res, next) {
+router.get('/block/current/height', function(req, res, next) {
 	setHeaders(res);
 	try{
 		var db =  DB.connection;
@@ -67,7 +67,7 @@ router.get('/v1/block/current/height', function(req, res, next) {
 		console.log(err)
 	}
 });
-router.get('/v1/block/height', function(req, res, next) {
+router.get('/block/height', function(req, res, next) {
 	setHeaders(res);
 	try{
 		var db =  DB.connection;
@@ -83,7 +83,7 @@ router.get('/v1/block/height', function(req, res, next) {
 		console.log(err)
 	}
 });
-router.get('/v1/block/info', function(req, res, next) {
+router.get('/block/info', function(req, res, next) {
 	setHeaders(res);
 	try{
 		var db =  DB.connection;
@@ -101,7 +101,7 @@ router.get('/v1/block/info', function(req, res, next) {
 	}
 });
 
-router.get('/v1/block/blocks/count', function(req, res, next) {
+router.get('/block/blocks/count', function(req, res, next) {
 	setHeaders(res);
 	try{
 		var db =  DB.connection;
@@ -117,14 +117,14 @@ router.get('/v1/block/blocks/count', function(req, res, next) {
 		console.log(err)
 	}
 });
-router.get('/v1/block/blocks', function(req, res, next) {
+router.get('/block/blocks', function(req, res, next) {
 	setHeaders(res);
 	try{
 		var db =  DB.connection;
 		var start = req.query.start;
 		var pageSize = req.query.pageSize;
 
-		db.query('SELECT `height` FROM `chain_did_property` GROUP BY `height` ORDER BY `height` DESC LIMIT ' + start + ',' + pageSize, function(error, results, fields){
+		db.query('SELECT distinct `height` FROM `chain_did_property` ORDER BY `height` DESC LIMIT ' + start + ',' + pageSize, function(error, results, fields){
 			if(error){
 				console.log("mysql error")
 				console.log(error);
@@ -137,7 +137,7 @@ router.get('/v1/block/blocks', function(req, res, next) {
 	}
 });
 
-router.get('/v1/block/blocks_info',function(req, res, next){
+router.get('/block/blocks_info',function(req, res, next){
 	setHeaders(res);
 	try{
 		var db =  DB.connection;
@@ -157,7 +157,7 @@ router.get('/v1/block/blocks_info',function(req, res, next){
 
 })
 
-router.get('/v1/block/transactions_count', function(req, res, next) {
+router.get('/block/transactions_count', function(req, res, next) {
 	setHeaders(res);
 	try{
 		var db =  DB.connection;
@@ -175,7 +175,7 @@ router.get('/v1/block/transactions_count', function(req, res, next) {
 		console.log(err)
 	}
 });
-router.get('/v1/block/transactions/txids_height', function(req, res, next) {
+router.get('/block/transactions/txids_height', function(req, res, next) {
 	setHeaders(res);
 	try{
 		var db =  DB.connection;
@@ -193,7 +193,7 @@ router.get('/v1/block/transactions/txids_height', function(req, res, next) {
 	}
 });
 
-router.get('/v1/block/transactions/height', function(req, res, next) {
+router.get('/block/transactions/height', function(req, res, next) {
 	setHeaders(res);
 	try{
 		var db =  DB.connection;
@@ -211,7 +211,7 @@ router.get('/v1/block/transactions/height', function(req, res, next) {
 		console.log(err)
 	}
 });
-router.get('/v1/block/values', function(req, res, next) {
+router.get('/block/values', function(req, res, next) {
 	setHeaders(res);
 	try{
 		var db =  DB.connection;
@@ -229,7 +229,7 @@ router.get('/v1/block/values', function(req, res, next) {
 	}
 });
 
-router.get('/v1/block/transactions/txid', function(req, res, next) {
+router.get('/block/transactions/txid', function(req, res, next) {
 	setHeaders(res);
 	try{
 		var db =  DB.connection;
@@ -247,13 +247,23 @@ router.get('/v1/block/transactions/txid', function(req, res, next) {
 	}
 });
 
-router.get('/v1/block/transactions', function(req, res, next) {
+router.get('/block/transactions', function(req, res, next) {
 	setHeaders(res);
 	try{
 		var db =  DB.connection;
 		var start = req.query.start;
 		var pageSize = req.query.pageSize;
-		db.query('SELECT distinct did, txid, height FROM `chain_did_property`  ORDER BY id DESC LIMIT ' + start + ',' + pageSize
+		/*db.query('SELECT id, did, txid, height FROM `chain_did_property` GROUP BY `txid`ORDER BY id DESC LIMIT ' + start + ',' + pageSize
+		, function (error, results, fields) {
+			if(error){
+				console.log("mysql error")
+				console.log(error)
+			}else{
+				res.send(results);
+			}
+		})*/
+
+		db.query('SELECT  distinct did , txid, height FROM `chain_did_property` ORDER BY id DESC LIMIT ' + start + ',' + pageSize
 		, function (error, results, fields) {
 			if(error){
 				console.log("mysql error")
@@ -267,7 +277,7 @@ router.get('/v1/block/transactions', function(req, res, next) {
 		console.log(err)
 	}
 });
-router.get('/v1/block/transactions_info', function(req, res, next) {
+router.get('/block/transactions_info', function(req, res, next) {
 	setHeaders(res);
 	try{
 		var db =  DB.connection;
@@ -288,7 +298,7 @@ router.get('/v1/block/transactions_info', function(req, res, next) {
 
 
 
-router.get('/v1/block/transactions/count', function(req, res, next) {
+router.get('/block/transactions/count', function(req, res, next) {
 	setHeaders(res);
 	try{
 		var db =  DB.connection;
@@ -306,7 +316,7 @@ router.get('/v1/block/transactions/count', function(req, res, next) {
 	}
 });
 
-router.get('/v1/block/transactions/info', function(req, res, next) {
+router.get('/block/transactions/info', function(req, res, next) {
 	setHeaders(res);
 	try{
 		var db =  DB.connection;
@@ -324,7 +334,7 @@ router.get('/v1/block/transactions/info', function(req, res, next) {
 	}
 });
 
-router.get('/v1/block/transactions/did', function(req, res, next) {
+router.get('/block/transactions/did', function(req, res, next) {
 	setHeaders(res);
 	try{
 		var db =  DB.connection;
@@ -341,7 +351,7 @@ router.get('/v1/block/transactions/did', function(req, res, next) {
 		console.log(err)
 	}
 });
-router.get('/v1/block/properteis/did', function(req, res, next) {
+router.get('/block/properteis/did', function(req, res, next) {
 	setHeaders(res);
 	try{
 		var db =  DB.connection;
@@ -359,15 +369,13 @@ router.get('/v1/block/properteis/did', function(req, res, next) {
 	}
 });
 
-router.get('/v1/block/properteis/history', function(req, res, next) {
+router.get('/block/properteis/history', function(req, res, next) {
 	setHeaders(res);
 	try{
 		var db =  DB.connection;
 		var key = req.query.key;
 		var did = req.query.did;
-		var start = req.query.start;
-		var pageSize = req.query.pageSize;
-		db.query('SELECT * FROM `chain_did_property`  WHERE `did` = "' + did + '" AND `property_key` = "' + key + '" ORDER BY `id` DESC LIMIT ' + start + ',' + pageSize, function (error, results, fields) {
+		db.query('SELECT * FROM `chain_did_property`  WHERE `did` = "' + did + '" AND `property_key` = "' + key + '" ORDER BY `id` DESC LIMIT 20', function (error, results, fields) {
 			if(error){
 				console.log("mysql error")
 				console.log(error)
@@ -379,24 +387,6 @@ router.get('/v1/block/properteis/history', function(req, res, next) {
 		console.log(err)
 	}
 });
-router.get('/v1/block/properteis/history/count', function(req, res, next) {
-	setHeaders(res);
-	try{
-		var db =  DB.connection;
-		var key = req.query.key;
-		var did = req.query.did;
-		db.query('SELECT count(*) AS count FROM `chain_did_property`  WHERE `did` = "' + did + '" AND `property_key` = "' + key +'"', function (error, results, fields) {
-			if(error){
-				console.log("mysql error")
-				console.log(error)
-			}else{
-				console.log(results)
-				res.send(results);
-			}
-		})
-	}catch(err){
-		console.log(err)
-	}
-});
+
 
 module.exports = router;
