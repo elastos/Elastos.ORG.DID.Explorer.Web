@@ -1,8 +1,27 @@
 const addr = process.env.API_URL
+//const addr = "https://idchain.elastos.org"
+
 console.log(addr)
+const current_version = "v2"
+export function getServerInfo(){
+	return new Promise(function(resolve, reject) {
+	   	let path = addr + '/api/'+current_version+'/serverInfo'
+	    let xhr = new XMLHttpRequest();
+	    xhr.open('GET',path );
+	    xhr.onload = function() {
+	      if (xhr.status === 200) {
+	        resolve(JSON.parse(xhr.responseText));
+	      } 
+	    };
+	    xhr.onerror = function() {
+	      reject(new Error(xhr.statusText));
+	    };
+	    xhr.send();
+	});
+}
 export function getCurrentBlock(){
 	return new Promise(function(resolve, reject) {
-	   	let path = addr + '/api/v1/block/current'
+	   	let path = addr + '/api/'+current_version+'/block/current'
 	    let xhr = new XMLHttpRequest();
 	    xhr.open('GET',path );
 	    xhr.onload = function() {
@@ -19,7 +38,7 @@ export function getCurrentBlock(){
 
 export function getCurrentHeight(){
 	return new Promise(function(resolve, reject) {
-	   	let path = addr + '/api/v1/block/current/height'
+	   	let path = addr + '/api/'+current_version+'/block/current/height'
 	    let xhr = new XMLHttpRequest();
 	    xhr.open('GET',path );
 	    xhr.onload = function() {
@@ -35,7 +54,7 @@ export function getCurrentHeight(){
 }
 export function getValuesFromTxid(txid){
 	return new Promise(function(resolve, reject) {
-	   	let path = addr + '/api/v1/block/values?txid='+txid
+	   	let path = addr + '/api/'+current_version+'/block/values?txid='+txid
 	    let xhr = new XMLHttpRequest();
 	    xhr.open('GET',path );
 	    xhr.onload = function() {
@@ -49,10 +68,9 @@ export function getValuesFromTxid(txid){
 	    xhr.send();
 	});
 }
-
 export function getHeight(){
 	return new Promise(function(resolve, reject) {
-	   	let path = addr + '/api/v1/block/height'
+	   	let path = addr + '/api/'+current_version+'/block/height'
 	    let xhr = new XMLHttpRequest();
 	    xhr.open('GET',path );
 	    xhr.onload = function() {
@@ -68,7 +86,7 @@ export function getHeight(){
 }
 export function getBlockInfo(height){
 	return new Promise(function(resolve, reject) {
-	   	let path = addr + '/api/v1/block/info?height='+height
+	   	let path = addr + '/api/'+current_version+'/block/info?height='+height
 	    let xhr = new XMLHttpRequest();
 	    xhr.open('GET',path );
 	    xhr.onload = function() {
@@ -85,7 +103,7 @@ export function getBlockInfo(height){
 }
 export function getBlocksInfo(height){
 	return new Promise(function(resolve, reject) {
-	   	let path = addr + '/api/v1/block/blocks_info?height='+height
+	   	let path = addr + '/api/'+current_version+'/block/blocks_info?height='+height
 	    let xhr = new XMLHttpRequest();
 	    xhr.open('GET',path );
 	    xhr.onload = function() {
@@ -102,7 +120,7 @@ export function getBlocksInfo(height){
 }
 export function getTransactionsCountFromHeight(height){
 	return new Promise(function(resolve, reject) {
-	   	let path = addr + '/api/v1/block/transactions_count?height='+height
+	   	let path = addr + '/api/'+current_version+'/block/transactions_count?height='+height
 	    let xhr = new XMLHttpRequest();
 	    xhr.open('GET',path );
 	    xhr.onload = function() {
@@ -121,7 +139,7 @@ export function getTransactionsCountFromHeight(height){
 
 export function getBlocksCount(){
 	return new Promise(function(resolve, reject) {
-	   	let path = addr + '/api/v1/block/blocks/count'
+	   	let path = addr + '/api/'+current_version+'/block/blocks/count'
 	    let xhr = new XMLHttpRequest();
 	    xhr.open('GET',path );
 	    xhr.onload = function() {
@@ -137,7 +155,7 @@ export function getBlocksCount(){
 }
 export function getBlocks(start,pageSize){
 	return new Promise(function(resolve, reject) {
-	   	let path = addr + '/api/v1/block/blocks?start='+start+'&pageSize='+pageSize;
+	   	let path = addr + '/api/'+current_version+'/block/blocks?start='+start+'&pageSize='+pageSize;
 	    let xhr = new XMLHttpRequest();
 	    xhr.open('GET',path );
 	    xhr.onload = function() {
@@ -153,7 +171,7 @@ export function getBlocks(start,pageSize){
 }
 export function getTransactionsCount(){
 	return new Promise(function(resolve, reject) {
-	   	let path = addr + '/api/v1/block/transactions/count'
+	   	let path = addr + '/api/'+current_version+'/block/transactions/count'
 	    let xhr = new XMLHttpRequest();
 	    xhr.open('GET',path );
 	    xhr.onload = function() {
@@ -169,7 +187,7 @@ export function getTransactionsCount(){
 }
 export function getTransactions(start,pageSize){
 	return new Promise(function(resolve, reject) {
-	   	let path = addr + '/api/v1/block/transactions?start='+start+'&pageSize='+pageSize;
+	   	let path = addr + '/api/'+current_version+'/block/transactions?start='+start+'&pageSize='+pageSize;
 	    let xhr = new XMLHttpRequest();
 	    xhr.open('GET',path );
 	    xhr.onload = function() {
@@ -185,7 +203,7 @@ export function getTransactions(start,pageSize){
 }
 export function getTransactionsInfo(txid){
 	return new Promise(function(resolve, reject) {
-	   	let path = addr + '/api/v1/block/transactions_info?txid='+txid;
+	   	let path = addr + '/api/'+current_version+'/block/transactions_info?txid='+txid;
 	    let xhr = new XMLHttpRequest();
 	    xhr.open('GET',path );
 	    xhr.onload = function() {
@@ -203,7 +221,7 @@ export function getTransactionsInfo(txid){
 
 export function getTxidsFromHeight(height){
 	return new Promise(function(resolve, reject) {
-		let path = addr + '/api/v1/block/transactions/txids_height?height='+height
+		let path = addr + '/api/'+current_version+'/block/transactions/txids_height?height='+height
 	    let xhr = new XMLHttpRequest();
 	    xhr.open('GET',path );
 	    xhr.onload = function() {
@@ -218,9 +236,9 @@ export function getTxidsFromHeight(height){
 	});
 
 }
-export function getTransactionsFromHeight(height){
+export function getTransactionsFromHeight(height,start,pageSize){
 	return new Promise(function(resolve, reject) {
-		let path = addr + '/api/v1/block/transactions/height?height='+height
+		let path = addr + '/api/'+current_version+'/block/transactions/height?height='+height+'&start='+start+'&pageSize='+pageSize
 	    let xhr = new XMLHttpRequest();
 	    xhr.open('GET',path );
 	    xhr.onload = function() {
@@ -236,7 +254,7 @@ export function getTransactionsFromHeight(height){
 }
 export function getTransactionsFromDid(did){
 	return new Promise(function(resolve, reject) {
-		let path = addr + '/api/v1/block/transactions/did?did='+did
+		let path = addr + '/api/'+current_version+'/block/transactions/did?did='+did
 	    let xhr = new XMLHttpRequest();
 	    xhr.open('GET',path );
 	    xhr.onload = function() {
@@ -252,7 +270,7 @@ export function getTransactionsFromDid(did){
 }
 export function getTransactionsFromTxid(txid){
 	return new Promise(function(resolve, reject) {
-		let path = addr + '/api/v1/block/transactions/txid?txid='+txid
+		let path = addr + '/api/'+current_version+'/block/transactions/txid?txid='+txid
 	    let xhr = new XMLHttpRequest();
 	    xhr.open('GET',path );
 	    xhr.onload = function() {
@@ -270,7 +288,7 @@ export function getTransactionsFromTxid(txid){
 
 export function getTxFromTxid(txid){
 	return new Promise(function(resolve, reject) {
-		let path = addr + '/api/v1/block/transactions/info?txid='+txid
+		let path = addr + '/api/'+current_version+'/block/transactions/info?txid='+txid
 	    let xhr = new XMLHttpRequest();
 	    xhr.open('GET',path );
 	    xhr.onload = function() {
@@ -286,7 +304,7 @@ export function getTxFromTxid(txid){
 }
 export function getTxDetailFromTxid(txid){
 	return new Promise(function(resolve, reject) {
-		let path = addr + '/api/v1/block/transactions/info?txid='+txid
+		let path = addr + '/api/'+current_version+'/block/transactions/info?txid='+txid
 	    let xhr = new XMLHttpRequest();
 	    xhr.open('GET',path );
 	    xhr.onload = function() {
@@ -304,7 +322,7 @@ export function getTxDetailFromTxid(txid){
 
 export function getPropertiesFromDid(did){
 	return new Promise(function(resolve, reject) {
-		let path = addr + '/api/v1/block/properteis/did?did='+did
+		let path = addr + '/api/'+current_version+'/block/properteis/did?did='+did
 	    let xhr = new XMLHttpRequest();
 	    xhr.open('GET',path );
 	    xhr.onload = function() {
@@ -319,26 +337,9 @@ export function getPropertiesFromDid(did){
 	});
 }
 
-export function getPropertyChanges(key,did,start,pageSize){
+export function getPropertyChanges(key,did){
 	return new Promise(function(resolve, reject) {
-		let path = addr + '/api/v1/block/properteis/history?key='+key+'&did='+did+'&start='+start+'&pageSize='+pageSize;
-	    let xhr = new XMLHttpRequest();
-	    xhr.open('GET',path );
-	    xhr.onload = function() {
-	      if (xhr.status === 200) {
-	        resolve(JSON.parse(xhr.responseText));
-	      } 
-	    };
-	    xhr.onerror = function() {
-	      reject(new Error(xhr.statusText));
-	    };
-	    xhr.send();
-	});
-}
-
-export function getPropertiesHistoryCount(key,did){
-	return new Promise(function(resolve, reject) {
-		let path = addr + '/api/v1/block/properteis/history/count?key='+key+'&did='+did;
+		let path = addr + '/api/'+current_version+'/block/properteis/history?key='+key+'&did='+did;
 	    let xhr = new XMLHttpRequest();
 	    xhr.open('GET',path );
 	    xhr.onload = function() {

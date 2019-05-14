@@ -1,0 +1,51 @@
+
+/*transactionDetail*/
+.transaction_title{
+	width:100%;
+	height:40px;
+}
+.transaction_title span{
+	font-size: 18px;
+	color: #364458;
+	font-family: Bio Sans Bold
+}
+.transaction_title img{
+margin-left:5px;
+}
+.transaction_summery{
+
+}
+.transaction_summery{
+	width:100%;
+	height:auto;
+	background: #fff;
+	padding:0px 25px;
+	margin-bottom:2px;
+	border-radius: 5px;
+}
+
+.transaction_summery ul{
+	width:100%;
+	height:auto;
+	margin:0;
+}
+.transaction_summery ul li{
+	width:50%;
+	height:auto;
+	display: inline-block;
+	padding: 25px 0px;
+	border-bottom: 1px #EAEEF4 solid;
+}
+.transaction_summery ul li div{
+	width:50%;
+	height:auto;
+	display: inline-block;
+}
+.transaction_summery span{
+	padding:3px 0px;
+	display: block;
+}
+.transaction_summery p{
+    word-wrap: break-word;
+    word-break: break-all;	
+}

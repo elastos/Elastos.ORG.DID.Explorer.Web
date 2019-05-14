@@ -1,23 +1,34 @@
 import React from 'react';
-import { Layout } from 'antd';
+import './footer.css'
+import logo from '../public/images/logo_f.png' ;
 class Footer extends React.Component {
+	
     render() {
-    	const {Footer} = Layout;
-        const  lang  = this.props.info.lang;
-        return (
-                <Footer style={{"marginTop":"200px",
-                				"background":"#333333",
-                				"height":"100px",
-                			}}>
-                			<p style={{"textAlign":"center"}}>
-                				<a href="http://www.elastos.org" style={{"color":"#fff","fontSize":"16px"}}>{lang.elastos_org}</a>
-                			</p>
-                			<p style={{"color":"#666666","fontSize":"12px","textAlign":"center"}}>
-                				Copyright © 2017 Elastos Foundation. All Rights Reserved.
-                			</p>
+    	
+    	return (
+    		<div className="footer">
+				<div className="container">
+					<div className="footer_content_left floatLeft">
+						<img src={logo} alt="logo"/>
+						<span>DID Explorer</span>
 
-                </Footer>
-        );
+					</div>
+					<div className="footer_content_right floatRight">
+						<div className="link">
+							<ul>
+								<li><span>Report</span></li>
+								<li><span>Elastos.org</span></li>
+								<li>
+									<div className="tips">Create an EApp</div>
+									<span>Developer</span></li>
+							</ul>
+						</div>
+						<div className="copyright">Copyright © 2017 Elastos Foundation. All Rights Reserved.</div>
+
+					</div>
+				</div>
+			</div>
+    	)
     }
 }
 

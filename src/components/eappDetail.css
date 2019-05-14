@@ -1,0 +1,67 @@
+/*eappDetail*/
+.eapp_content{
+	    width: 100%;
+    height: 160px;
+	background: #080251;
+	border-radius: 5px;
+}
+.eapp_content .eapp_profile{
+	width:100%;
+	height:160px;
+}
+.eapp_content .eapp_profile div:nth-child(1){
+	width:15%;
+	height:160px;
+	float:left;
+	line-height: 160px;
+    text-align: right;
+    padding-right: 20px;
+}
+.eapp_content .eapp_profile div:nth-child(2){
+	width:60%;
+	height:160px;
+	float:left;
+}
+
+
+.eapp_content .eapp_profile div:nth-child(3){
+	width:20%;
+	height:160px;
+	float:left;
+	line-height: 160px;
+    text-align: center;
+}
+.eapp_content .eapp_profile .eapp_name{
+	height: 75px;
+    line-height: 105px;
+	color:#fff;
+	font-size: 36px;
+}
+.eapp_content .eapp_profile .eapp_did{
+	
+	font-size: 14px;
+	color:#fff;
+}
+.eapp_content .eapp_profile .eapp_nav li{
+	float:left;
+	opacity: 0.6;
+	margin-right: 35px;
+	
+}
+
+    
+.eapp_content .eapp_profile div:nth-child(2) span{
+	color:#fff;
+}
+
+    
+.eapp_content .eapp_profile div:nth-child(3) span{
+	color: #fff;
+    padding: 10px 30px;
+    font-size: 16px;
+	border: none;
+	outline: none;
+	background: linear-gradient(115.95deg, #03FEB3 0%, #23DD9A 100%);
+	box-shadow: 0px 4px 20px rgba(7, 249, 175, 0.5);
+	border-radius: 20px;
+}

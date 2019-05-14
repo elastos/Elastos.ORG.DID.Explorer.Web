@@ -1,88 +1,58 @@
-.table_tr td:nth-child(1) span{
-	display:block;
-	width:45px;
+/*transactionList*/
+
+.list_top{
+	width:100%;
+	height:40px;
+	margin-top:60px;
+	margin-bottom: 40px;
 }
-.table_tr td:nth-child(2) span{
-	display:block;
-	width:45px;
+.list_top .list_title{
+	float:left;
 }
-.table_tr td:nth-child(3) span{
-	display:block;
-	width:15px;
+.list_top .list_title span{
+	color:#364458;
+	font-family:Bio Sans Bold;
 }
-.table_tr td:nth-child(4) span{
-	display:block;
-	width:15px;
+.list_top .list_search{
+	float:right;
+	width:400px;
+	height:40px;
+	border-radius: 40px;
+	background: #fff;
 }
-.table_tr td:nth-child(5) span{
-	display:block;
-	width:50px;
+.transaction_list_table{
+	width:100%;
+}
+.transaction_list_table .ant-table-thead{
+	
+	background: #E1E5EA;
+}
+.transaction_list_table .ant-table-thead tr{
+	height:64px;
+	font-size:14px;
+	color:#364458;
 }
 
-@media (min-width: 768px){
-	.table_tr td:nth-child(1) span{
-		display:block;
-		width:180px;
-	}
-	.table_tr td:nth-child(2) span{
-		display:block;
-		width:180px;
-	}
-	.table_tr td:nth-child(3) span{
-		display:block;
-		width:33px;
-	}
-	.table_tr td:nth-child(4) span{
-		display:block;
-		width:33px;
-	}
-	.table_tr td:nth-child(5) span{
-		display:block;
-		width:133px;
-	}
+
+.transaction_list_table .ant-table-thead th{
+	padding:0px 30px;
 }
 
-@media (min-width: 992px){
-	.table_tr td:nth-child(1) span{
-		display:block;
-		width:240px;
-	}
-	.table_tr td:nth-child(2) span{
-		display:block;
-		width:240px;
-	}
-	.table_tr td:nth-child(3) span{
-		display:block;
-		width:40px;
-	}
-	.table_tr td:nth-child(4) span{
-		display:block;
-		width:40px;
-	}
-	.table_tr td:nth-child(5) span{
-		display:block;
-		width:160px;
-	}
+
+
+
+.transaction_list_table .ant-table-tbody tr{
+	border-bottom:1px solid #DCE0E7;;
 }
-@media (min-width: 1200px){
-	.table_tr td:nth-child(1) span{
-		display:block;
-		width:300px;
-	}
-	.table_tr td:nth-child(2) span{
-		display:block;
-		width:300px;
-	}
-	.table_tr td:nth-child(3) span{
-		display:block;
-		width:50px;
-	}
-	.table_tr td:nth-child(4) span{
-		display:block;
-		width:50px;
-	}
-	.table_tr td:nth-child(5) span{
-		display:block;
-		width:200px;
-	}
+.transaction_list_table .ant-table-tbody td{
+	padding:0px 30px;
+	height:64px;
+	color:#364458;
+	word-wrap: break-word;
+    word-break: break-all;
 }
+.transaction_list_table .ant-table-tbody td a{
+	color:#31B59D;
+}
+
+

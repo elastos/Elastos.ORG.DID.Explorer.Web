@@ -2,17 +2,20 @@ import React from 'react';
 import { getBlocks, getBlocksCount, getBlocksInfo, getTransactionsCountFromHeight} from '../request/request';
 import {Link} from 'react-router-dom';
 import { Pagination } from 'antd';
-import './Blocks.css';
+import './blocks.css';
+import Search from './elements/Search'
 import loadingImg from '../public/images/loading.gif';
+import iconLeft from '../public/images/icon-left.svg'
+import iconRight from '../public/images/icon-right.svg'
 class Blocks extends React.Component {
 	 constructor(props){
         super(props);
         this.state = {
             count:0,
-            size: 20,
+            size: 10,
             current:1,
             blocks:[],
-            loading:false
+            loading:true
         }
         this.onChange = this.onChange.bind(this);
     }
@@ -35,8 +38,7 @@ class Blocks extends React.Component {
             const start = ( current - 1) * size;
             const blocks = await getBlocks(start,size);
             this.setState({
-                blocks:blocks,
-                loading:false
+                blocks:blocks
             })
             Object.keys(blocks).map((block,k) => {
                 return this.GetBlockInfo(k,blocks[k].height)                
@@ -44,6 +46,7 @@ class Blocks extends React.Component {
             const count = await getBlocksCount();
             this.setState({
                 count:count[0].count,
+                loading:false
             })
         }catch(err){
           console.log(err)
@@ -89,43 +92,55 @@ class Blocks extends React.Component {
       (m < 10 ? '0'+ m : m ) + ':' + 
       (s < 10 ? '0'+ s : s );
     }
+    itemRender(current, type, originalElement) {
+      if (type === 'prev') {
+        return <a><img src={iconLeft}/></a>;
+      } if (type === 'next') {
+        return <a><img src={iconRight}/></a>;
+      }
+      return originalElement;
+    }
     render() {
     	const { blocks, count, size, current, loading } = this.state;
         const  lang  = this.props.lang;
+        
         const txHtml = blocks.map((block,k) => {
         	return(
         		<tr className="ant-table-row ant-table-row-level-0 table_tr1" data-row-key="1" key={k}>
-	        		<td width="30%"><Link to={'/height/'+block.height}><span>{block.height}</span></Link></td>
-	        		<td width="40%"><span>{block.time ? this.timestampToTime(block.time) : "" }</span></td>
-	        		<td width="10%"><span>{block.count}</span></td>
+	        		<td width="30%"><Link to={'/block_detail/'+block.height}><span>{block.height}</span></Link></td>
+	        		<td width="40%"><span>{block.count}</span></td>
 	        		<td width="10%"><span>{block.miner_info}</span></td>
 	        		<td width="10%"><span>{block.size}</span></td>
+	        		<td width="10%"><span>{block.time ? this.timestampToTime(block.time) : "" }</span></td>
 				</tr>
         	)
         });
         return (
                 <div className="container">
-                	<div style={{"marginTop":"20px","borderBottom":"1px #ccc solid","paddingBottom":"15px","textAlign":"left","paddingLeft":"10px"}}><span style={{"fontSize":"25px"}}>{lang.latest_blocks}</span></div>
-					<div className="ant-table ant-table-default ant-table-scroll-position-left">
+                	 <div className = "list_top" >
+                        <div className = "list_title"><span style={{"fontSize":"25px"}}>Blocks</span></div>
+                        <div className = "list_search"><Search button="false" name="list"/></div>
+                    </div>
+                    <div className="ant-table ant-table-default ant-table-scroll-position-left">
 						<div className="ant-table-content">
 							<div className="ant-table-body">
-								<table className="">
+								<table className="blocks_list_table">
 									<thead className="ant-table-thead">
 										<tr>
 											<th className="">
-												<div>{lang.block_height}</div>
+												<div>Height</div>
 											</th>
 											<th className="">
-												<div>{lang.time}</div>
+												<div>Transactions</div>
 											</th>
 											<th className="">
-												<div>{lang.transactions}</div>
+												<div>Miner</div>
 											</th>
 											<th className="">
-												<div>{lang.miner}</div>
+												<div>Size(byte)</div>
 											</th>
 											<th className="">
-												<div>{lang.size}</div>
+												<div>Time</div>
 											</th>
 										</tr>
 									</thead>
@@ -133,12 +148,12 @@ class Blocks extends React.Component {
 										{txHtml}
 									</tbody>
 								</table>
-								<div style={{"marginTop":"50px"}}>
+								<div style={{"marginTop":"50px","textAlign":"center"}}>
                                     
-                                    <Pagination showQuickJumper defaultCurrent={current} total={count} defaultPageSize = {size} showLessItems onChange={this.onChange} 
-                                        style={{"float":"right"}}
-                                    />
-                                    {loading && <img style={{"float":"right","marginRight":"30px","marginTop":"5px","width":"20px"}} src={loadingImg} alt="loading"/>}
+                                    {count != 0 && <Pagination defaultCurrent={current} total={count} defaultPageSize = {size} onChange={this.onChange}  itemRender={this.itemRender}
+                                        style={{"width":"100%","height":"50px","textAlign":"center"}}
+                                    />}
+                                    {loading && <img src={loadingImg} alt="loading"/>}
                                 </div>
 							</div>
 						</div>
