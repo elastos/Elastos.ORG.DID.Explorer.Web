@@ -94,3 +94,6 @@ li{
 .floatRight{
   float:right
 }
+.wordBreak{
+  word-break:break-all;
+}

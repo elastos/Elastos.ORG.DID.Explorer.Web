@@ -37,9 +37,6 @@ class Home extends React.Component {
           console.log(err)
         }
     }
-    
-            
-     
     getBlockInfo = async (k,num,blocks)=>{
         try{
             const blockInfo = await getBlocksInfo(blocks[k].height);
@@ -101,7 +98,7 @@ class Home extends React.Component {
     }
 
     componentWillMount(){
-       /* moment.locale("en",{
+        moment.locale("en",{
             relativeTime : {
                 future : "in %s",
                 past : "%s ago",
@@ -111,11 +108,28 @@ class Home extends React.Component {
                 h : "h",
                 hh : "%dh",
                 d : "d",
-                dd : "%dd",
+                dd : "%dds",
                 M : "M",
                 MM : "%dM",
                 y : "Y",
                 yy : "%dY"
+            }
+        })
+        /*moment.locale("cn",{
+            relativeTime : {
+                future : "%s后",
+                past : "%s前",
+                s : "秒",
+                m : "分",
+                mm : "%d 分",
+                h : "小时",
+                hh : "%d 小时",
+                d : "天",
+                dd : "%d 天",
+                M : "月",
+                MM : "%d 月",
+                y : "年",
+                yy : "%d 年"
             }
         })*/
         this.getInfo();
@@ -139,6 +153,8 @@ class Home extends React.Component {
 
     render() {
         const {rate, blocks, click_id, transactionCount, transactions, s_time} = this.state;
+        const lang =this.props.lang;
+        console.log(lang)
         const lis = blocks.length ? blocks.map((v,k)=>{
             let style = {
                 "right": k*2.55 +"%",
@@ -150,7 +166,7 @@ class Home extends React.Component {
 
                 {click_id == k && <div className = "char_info" id="char_info">
                     <span>{v.height}</span>
-                    <span>Block Size: {v.size} bytes</span>
+                    <span>{lang.block_size}: {v.size} bytes</span>
                 </div>}
             </li> 
         }): <img src={loadingImg} style={{"marginTop":"150px"}}/>  
@@ -180,10 +196,10 @@ class Home extends React.Component {
                 <div className="container container_banner">
                     <img className="banner" src={background} alt="background"/>
                     <div className="banner_title">
-                        <h1 className="title">ELA DID Explorer</h1>
+                        <h1 className="title">{lang.ELA_DID_Explorer}</h1>
                     </div>
                     <div className="banner_search">
-                        <Search button="true" name="home"/>
+                        <Search button="true" name="home" lang={lang}/>
                     </div>
                 </div>
                 <div className="container container_summary">
@@ -191,7 +207,7 @@ class Home extends React.Component {
                         <ul>
                             <li>
                                 <div className="summary_title">
-                                    <span>Total ELA DID</span>
+                                    <span>{lang.total_ela_did}</span>
                                     <img src={iconRight} alt="iconRight" style={{"marginBottom":"3px"}}/>
                                 </div>
                                 <div className="summary_content">
@@ -200,7 +216,7 @@ class Home extends React.Component {
                             </li>
                             <li className="has_border">
                                 <div className="summary_title">
-                                    <span>Total Transactions</span>
+                                    <span>{lang.total_transactions}</span>
                                     <img src={iconRight} alt="iconRight" style={{"marginBottom":"3px"}}/>
                                 </div>
                                 <div className="summary_content">
@@ -209,7 +225,7 @@ class Home extends React.Component {
                             </li>
                             <li className="has_border">
                                 <div className="summary_title">
-                                    <span>Block Height</span>
+                                    <span>{lang.block_height}</span>
                                     <img src={iconRight} alt="iconRight" style={{"marginBottom":"3px"}}/>
                                 </div>
                                 <div className="summary_content">
@@ -218,7 +234,7 @@ class Home extends React.Component {
                             </li>
                             <li className="has_border">
                                 <div className="summary_title">
-                                    <span>Total EApps</span>
+                                    <span>{lang.total_eApps}</span>
                                     <img src={iconRight} alt="iconRight" style={{"marginBottom":"3px"}}/>
                                 </div>
                                 <div className="summary_content">
@@ -243,7 +259,7 @@ class Home extends React.Component {
                         <li className="item" style={{"marginRight":"4%"}}>
                             <div className="item_title">
                                 <h4>ELA DID EVENTS</h4>
-                                <a href="/ela_did">View More</a>
+                                <a href="/ela_did">{lang.view_more}</a>
                             </div>
                             <div className="item_content">
                                 <ul>
@@ -273,8 +289,8 @@ class Home extends React.Component {
                         </li>
                         <li className="item" style={{"marginRight":"4%"}}>
                             <div className="item_title">
-                                <h4>TRANSACTIONS</h4>
-                                <a href="/transactions">View More</a>
+                                <h4>{lang.transactions_c}</h4>
+                                <a href="/transactions">{lang.view_more}</a>
                             </div>
                             <div className="item_content">
                                 <ul>
@@ -284,8 +300,8 @@ class Home extends React.Component {
                         </li>
                         <li className="item" style={{"marginRight":"4%"}}>
                             <div className="item_title">
-                                <h4>BLOCKS</h4>
-                                <a href="/blocks">View More</a>
+                                <h4>{lang.blocks_c}</h4>
+                                <a href="/blocks">{lang.view_more}</a>
                             </div>
                             <div className="item_content">
                                 <ul>
@@ -296,7 +312,7 @@ class Home extends React.Component {
                         <li className="item">
                             <div className="item_title">
                                 <h4>EAPPS</h4>
-                                <a href="/eapps">View More</a>
+                                <a href="/eapps">{lang.view_more}</a>
                             </div>
                             <div className="item_content">
                                 <ul>

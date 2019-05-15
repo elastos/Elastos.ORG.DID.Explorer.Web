@@ -69,45 +69,44 @@ class BlockDetail extends React.Component {
     }
     render() {
         const { height, blockinfo, transCount } = this.state;
-        console.log(blockinfo)
         const lang = this.props.lang;
         return (
             <div className="container">
                 <div className = "list_top" >
-                    <div className = "list_title"><span style={{"fontSize":"25px"}}>Blocks</span></div>
-                    <div className = "list_search"><Search button="false" name="list"/></div>
+                    <div className = "list_title"><span style={{"fontSize":"25px"}}>{lang.block}</span></div>
+                    <div className = "list_search"><Search button="false" name="list" lang={lang}/></div>
                 </div>
                 <div className="transaction_title">
-                    <span> Block Height: {height}</span>
+                    <span> {lang.block_height}: {height}</span>
                 </div>
                 <div className="transaction_summery">
                     <ul>
                         <li>
-                            <span className="detail_key">Hash</span>
+                            <span className="detail_key">{lang.hash}</span>
                             <span className="detail_value" style={{"wordWrap":"break-word","whiteSpace": "pre-wrap"}}  >{blockinfo.hash}</span>
                         </li>
                         <li>
-                            <span className="detail_key">Miner</span>
+                            <span className="detail_key">{lang.miner}</span>
                             <span className="detail_value">{blockinfo.miner_info}</span>
                         </li>
                         <li>
-                            <span className="detail_key">time</span>
+                            <span className="detail_key">{lang.time}</span>
                             <span className="detail_value">{blockinfo.time === "..." ? "..." : this.timestampToTime(blockinfo.time)}</span>
                         </li>
                         <li>
-                            <span className="detail_key">Reward</span>
+                            <span className="detail_key">{lang.reward}</span>
                             <span className="detail_value"> ... ELA</span>
                         </li>
                         <li>
-                            <span className="detail_key">Size</span>
+                            <span className="detail_key">{lang.size}</span>
                             <span className="detail_value">{blockinfo.size} bytes</span>
                         </li>
                         <li>
-                            <span className="detail_key">Transaction</span>
-                            <span className="detail_value">{transCount}</span>
+                            <span className="detail_key">{lang.transactions}</span>
+                            <span className="detail_value">{lang.transCount}</span>
                         </li>
                         <li>
-                            <span className="detail_key">Block Height</span>
+                            <span className="detail_key">{lang.block_height}</span>
                             <span className="detail_value" style={{"color":"#31B59D"}}>{blockinfo.height}</span>
                         </li>
                     </ul>
@@ -115,16 +114,16 @@ class BlockDetail extends React.Component {
                 <div className="transaction_summery" >
                     <ul>
                         <li>
-                            <span className="detail_key">Previous Block</span>
+                            <span className="detail_key">{lang.previous_block}</span>
                             <span className="detail_value" style={{"wordWrap":"break-word","whiteSpace": "pre-wrap","color":"#31B59D"}} >{blockinfo.previous_block_hash}</span>
                         </li>
                         <li>
-                            <span className="detail_key">Next Block</span>
+                            <span className="detail_key">{lang.next_block}</span>
                             <span className="detail_value" style={{"wordWrap":"break-word","whiteSpace": "pre-wrap","color":"#31B59D"}} >{blockinfo.next_block_hash}</span>
                         </li>
                     </ul>
                 </div>
-                {blockinfo.height != "..." && <TransactionList  name="block_detail" blockHeight ={blockinfo.height} setTransCount = {this.setTransCount.bind(this)} />}
+                {blockinfo.height != "..." && <TransactionList  name="block_detail" blockHeight ={blockinfo.height} lang={lang} setTransCount = {this.setTransCount.bind(this)} />}
             </div>
         );
     }

@@ -21,7 +21,7 @@ class Blocks extends React.Component {
     }
     componentWillMount (){
         const { current, size }= this.state;
-        this.GetInfo(current,size);
+        this.getInfo(current,size);
     }
      componentDidMount(){
         const lang = localStorage.getItem("lang");
@@ -33,7 +33,7 @@ class Blocks extends React.Component {
             div[0].childNodes[0].data = "跳转" 
         } 
     }
-    GetInfo = async (current,size) => {
+    getInfo = async (current,size) => {
         try{
             const start = ( current - 1) * size;
             const blocks = await getBlocks(start,size);
@@ -63,7 +63,6 @@ class Blocks extends React.Component {
             const count = await getTransactionsCountFromHeight(height);
             blocks[k].count = count[0].count;
             this.setState({blocks:blocks})
-           
         }catch(err){
             console.log(err)
         }
@@ -118,8 +117,8 @@ class Blocks extends React.Component {
         return (
                 <div className="container">
                 	 <div className = "list_top" >
-                        <div className = "list_title"><span style={{"fontSize":"25px"}}>Blocks</span></div>
-                        <div className = "list_search"><Search button="false" name="list"/></div>
+                        <div className = "list_title"><span style={{"fontSize":"25px"}}>{lang.blocks}</span></div>
+                        <div className = "list_search"><Search button="false" name="list" lang={lang}/></div>
                     </div>
                     <div className="ant-table ant-table-default ant-table-scroll-position-left">
 						<div className="ant-table-content">
@@ -128,19 +127,19 @@ class Blocks extends React.Component {
 									<thead className="ant-table-thead">
 										<tr>
 											<th className="">
-												<div>Height</div>
+												<span>{lang.block_height}</span>
 											</th>
 											<th className="">
-												<div>Transactions</div>
+												<span>{lang.transactions}</span>
 											</th>
 											<th className="">
-												<div>Miner</div>
+												<span>{lang.miner}</span>
 											</th>
 											<th className="">
-												<div>Size(byte)</div>
+												<span>{lang.size}(byte)</span>
 											</th>
 											<th className="">
-												<div>Time</div>
+												<span>{lang.time}</span>
 											</th>
 										</tr>
 									</thead>

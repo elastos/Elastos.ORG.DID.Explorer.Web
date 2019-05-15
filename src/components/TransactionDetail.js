@@ -13,7 +13,8 @@ class TransactionDetail extends React.Component {
         this.state = {
 	        txid:"",
             currentHeight:0,
-            transactions:[]
+            transactions:[],
+            isEvent:true,
         }
     }
     componentWillMount (){
@@ -27,6 +28,7 @@ class TransactionDetail extends React.Component {
          try{
             const transactions = await getTransactionsFromTxid(txid);
             const properties = await getTxDetailFromTxid(txid);
+            const isEvent = properties.length > 0 ? true : false
             const values = await getValuesFromTxid(txid)
             transactions[0].properties = properties;
             transactions[0].did = properties[0].did;
@@ -35,7 +37,8 @@ class TransactionDetail extends React.Component {
             this.setState({transactions:transactions})
             const currentHeight = await getCurrentHeight();
             this.setState({
-                currentHeight:currentHeight[0].height
+                currentHeight:currentHeight[0].height,
+                isEvent:isEvent
             })
             
         }catch(err){
@@ -67,13 +70,14 @@ class TransactionDetail extends React.Component {
     }
     render() {
     	const txid = this.props.match.params.txid;
-        const { transactions,currentHeight } = this.state;
+        const lang = this.props.lang;
+        const { transactions,currentHeight, isEvent } = this.state;
     	
         console.log(transactions)
 
         const proHtml = (transactions.length >0 && typeof transactions[0].properties != "undefined") ? (transactions[0].properties.map((property,k)=>{
             return(
-                <li style={{"width":"50%","display":"inline-block"}}>
+                <li style={{"width":"50%","display":"inline-block"}} key={k}>
                             <span className="detail_key">{ property.property_key}</span>
                             <span className="detail_value">{ property.property_value}</span>
                             {property.property_key_status === 1 ? (
@@ -88,8 +92,8 @@ class TransactionDetail extends React.Component {
         return (
             <div className="container">
             	<div className = "list_top" >
-                    <div className = "list_title"><span style={{"fontSize":"25px"}}>Transactions</span></div>
-                    <div className = "list_search"><Search button="false" name="list"/></div>
+                    <div className = "list_title"><span style={{"fontSize":"25px"}}>{lang.transactions}</span></div>
+                    <div className = "list_search"><Search button="false" name="list" lang={lang}/></div>
                 </div>
                 <div className="transaction_title">
                 	<span> {txid} </span>
@@ -99,23 +103,23 @@ class TransactionDetail extends React.Component {
                 <div className="transaction_summery">
                 	<ul>
                 		<li>
-                			<span className="detail_key">Status</span>
+                			<span className="detail_key">{lang.status}</span>
                 			<span className="detail_value" style={{"color":"#31B59D"}}><img src={confirmed}/> Confirmed</span>
                 		</li>
                 		<li>
-                			<span className="detail_key">DID Event Included</span>
-                			<span className="detail_value">yes</span>
+                			<span className="detail_key">{lang.did_event_included}</span>
+                			<span className="detail_value">{isEvent ? lang.yes : lang.no}</span>
                 		</li>
                 		<li>
-                			<span className="detail_key">time</span>
+                			<span className="detail_key">{lang.time}</span>
                 			<span className="detail_value">{transactions.length ? this.timestampToTime(transactions[0].createTime) : "..."}</span>
                 		</li>
                 		<li>
-                			<span className="detail_key">Block Height</span>
+                			<span className="detail_key">{lang.block_height}</span>
                 			<span className="detail_value"> {transactions.length ? transactions[0].height : "..."}</span>
                 		</li>
                 		<li>
-                			<span className="detail_key">Fee</span>
+                			<span className="detail_key">{lang.fee}</span>
                 			<span className="detail_value">{transactions.length ? transactions[0].fee / 100000000 : "..."} ELA</span>
                 		</li>
                 	</ul>
@@ -123,33 +127,33 @@ class TransactionDetail extends React.Component {
                 <div className="transaction_summery" >
                 	<ul>
                 		<li style={{"width":"40%"}}> 
-                			<span className="detail_key">From</span>
+                			<span className="detail_key">{lang.from}</span>
                 			<span className="detail_value" style={{"color":"#31B59D"}}>{transactions.length ? transactions[0].inputs : "..."}</span>
                 		</li>
                 		<li style={{"width":"40%"}}>
-                			<span className="detail_key">To</span>
-                			<span className="detail_value" style={{"color":"#31B59D"}}>{transactions.length ? transactions[0].outputs : "..."}</span>
+                			<span className="detail_key">{lang.to}</span>
+                			<span className="detail_value" style={{"color":"#31B59D"}}>{transactions.length ? transactions[0].inputs : "..."}</span>
                 		</li>
                         <li style={{"width":"20%"}}>
-                            <span className="detail_key">Number</span>
+                            <span className="detail_key">{lang.number}</span>
                             <span className="detail_value">{transactions.length ? transactions[0].values / 100000000 : "..."} ELA</span>
                         </li>
                 		<li style={{"width":"40%"}}>
-                			<span className="detail_key">From</span>
+                			<span className="detail_key">{lang.from}</span>
                 			<span className="detail_value" style={{"color":"#31B59D"}}>{transactions.length ? transactions[0].inputs : "..."}</span>
                 		</li>
                 		<li style={{"width":"40%"}}>
-                			<span className="detail_key">To</span>
+                			<span className="detail_key">{lang.to}</span>
                 			<span className="detail_value" style={{"color":"#31B59D"}}>{transactions.length ? transactions[0].outputs : "..."}</span>
                 		</li>
                         <li style={{"width":"20%"}}>
-                            <span className="detail_key">Number</span>
+                            <span className="detail_key">{lang.number}</span>
                             <span className="detail_value">{transactions.length ? transactions[0].values / 100000000 : "..."} ELA</span>
                         </li>
                 	</ul>
                 </div>
 				<div className="transaction_title" style={{    "marginTop": "40px"}}>
-                	<span> DID Properties</span>
+                	<span> {lang.did_properties}</span>
                 </div>
                 <div className="did_content">
                 	<ul>

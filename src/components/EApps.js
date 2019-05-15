@@ -127,7 +127,7 @@ class EApps extends React.Component {
                 <div className="container">
                     <div className = "list_top" >
                         <div className = "list_title"><span style={{"fontSize":"25px"}}>EApps</span></div>
-                        <div className = "list_search"><Search button="false" name="list"/></div>
+                        <div className = "list_search"><Search button="false" name="list" lang={lang}/></div>
 
                     </div>
                     <div className="ant-table ant-table-default ant-table-scroll-position-left">
@@ -137,13 +137,13 @@ class EApps extends React.Component {
                                     <thead className="ant-table-thead">
                                         <tr>
                                             <th  width="20%">
-                                                <span>Name</span>
+                                                <span>{lang.name}</span>
                                             </th>
                                             <th  width="40%">
                                                 <span>App ID</span>
                                             </th>
                                             <th  width="20%">
-                                                <span>URLs</span>
+                                                <span>{lang.url}</span>
                                             </th>
                                             <th  width="20%">
                                                 <span>Apps</span>

@@ -115,7 +115,7 @@ class DidList extends React.Component {
                 <div className="container">
                     <div className = "list_top" >
                         <div className = "list_title"><span style={{"fontSize":"25px"}}>ELA DID</span></div>
-                        <div className = "list_search"><Search button="false" name="list"/></div>
+                        <div className = "list_search"><Search button="false" name="list" lang={lang}/></div>
 
                     </div>
                     <div className="ant-table ant-table-default ant-table-scroll-position-left">
@@ -128,13 +128,13 @@ class DidList extends React.Component {
                                                 <span>ELA DID</span>
                                             </th>
                                             <th  width="30%">
-                                                <span>Transaction ID</span>
+                                                <span>{lang.transaction} ID</span>
                                             </th>
                                             <th  width="20%" style={{"textAlign":"center"}}>
                                                 <span>{lang.block_height}</span>
                                             </th>
                                             <th  width="20%">
-                                                <span>Register Time</span>
+                                                <span>{lang.register_time}</span>
                                             </th>
                                         </tr>
                                     </thead>

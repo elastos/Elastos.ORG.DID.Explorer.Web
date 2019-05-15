@@ -1,5 +1,5 @@
 import React from 'react';
-import { getTransactions , getTransactionsCount, getTransactionsInfo, getTransactionsFromHeight, getTransactionsCountFromHeight } from '../request/request';
+import { getTransactions , getTransactionsCount, getTransactionsInfo, getTransactionsFromHeight, getTransactionsCountFromHeight, getTxDetailFromTxid } from '../request/request';
 import {Link} from 'react-router-dom';
 import { Pagination } from 'antd';
 import './transactionList.css';
@@ -17,13 +17,13 @@ class TransactionList extends React.Component {
             transactions:[],
             transaction_num : {},
             loading:true,
-            height:null
+            height:null,
+            isEvent:true
         }
         this.onChange = this.onChange.bind(this);
     }
     componentWillMount (){
-        console.log(this.props.name)
-        console.log(this.props.blockHeight)
+        
        if(this.props.name === "block_detail" && this.props.blockHeight) {
             console.log("truesss")
             this.setState({
@@ -36,30 +36,18 @@ class TransactionList extends React.Component {
         const { current }= this.state;
         this.GetInfo(current,size,height);
     }
-     componentDidMount(){
-        const lang = localStorage.getItem("lang");
-        var div = document.getElementsByClassName("ant-pagination-options-quick-jumper");
-        if (lang === "en" && typeof div[0] != "undefined") {
-            div[0].childNodes[0].data = "Goto" 
-        }
-        if(lang === "cn" && typeof div[0] != "undefined"){
-            div[0].childNodes[0].data = "跳转" 
-        } 
-    }
+    
     GetInfo = async (current, size, height) => {
-        console.log("height = " + height)
+        
         try{
             const start = ( current - 1) * size;
             const transactions = height ? await getTransactionsFromHeight(height,start,size) : await getTransactions(start,size);
-            console.log(transactions)
-            this.setState({
-                transactions:transactions
-            })
             let obj={}
+            let number = [];
             Object.keys(transactions).map((transaction,k) => {
                 let num = obj[transactions[k].height] || 0
                 obj[transactions[k].height] = num + 1
-                return this.GetTransactionsInfo(k,transactions[k].txid)                
+                return this.GetTransactionsInfo(k,number,transactions)                
             });
             this.setState({
                 transaction_num: obj 
@@ -74,18 +62,55 @@ class TransactionList extends React.Component {
           console.log(err)
         }
     }
-    GetTransactionsInfo = async (k,txid)=>{
+    GetTransactionsInfo = async (k,number,transactions)=>{
         try{
-            const transaction = await getTransactionsInfo(txid);
-            let transactions = this.state.transactions;
+            const transaction = await getTransactionsInfo(transactions[k].txid);
+            const properties = await getTxDetailFromTxid(transactions[k].txid);
+            const isEvent = properties.length > 0 ? true : false 
             transactions[k].createTime = transaction[0].createTime;
             transactions[k].length_memo = transaction[0].length_memo;
             transactions[k].fee = transaction[0].fee;
-            this.setState({transactions:transactions})
+            transactions[k].isEvent = isEvent;
+            number.push(k);
+             if(number.length === transactions.length){
+                this.setState({transactions:transactions})
+            }
         }catch(err){
             console.log(err)
         }
     }
+
+
+     getTrans = async()=>{
+        try{
+            const count = await getTransactionsCount();
+            this.setState({
+                transactionCount:count[0].count
+            })
+            const transactions = await getTransactions(0,5);
+            var number = []
+            Object.keys(transactions).map((transaction,k) => {
+                return this.getTransactionsInfo(k,number,transactions)                
+            });
+        }catch(err){
+          console.log(err)
+        }
+    }
+    getTransactionsInfo = async(k,number,transactions)=>{
+        try{
+            const transaction = await getTransactionsInfo(transactions[k].txid);
+            transactions[k].createTime = transaction[0].createTime;
+            transactions[k].length_memo = transaction[0].length_memo;
+            number.push(k)
+            if(number.length === transactions.length){
+                this.setState({transactions:transactions})
+            }
+        }catch(err){
+            console.log(err)
+        }
+    }
+
+
     onChange(pageNumber) {
         this.setState({
             loading:true,
@@ -118,9 +143,8 @@ class TransactionList extends React.Component {
       return originalElement;
     }
     render() {
-        const { transactions, count, size, current, loading, transaction_num} = this.state;
+        const { transactions, count, size, current, loading, transaction_num, isEvent} = this.state;
         const  {lang, name}  = this.props;
-        //console.log(transactions)
         const txHtml = transactions.map((tx,k) => {
             let num = transaction_num[tx.height];
             let height = num * 64 - 40 + "px"
@@ -128,12 +152,12 @@ class TransactionList extends React.Component {
             return(
                 <tr className="ant-table-row ant-table-row-level-0 table_tr1" data-row-key="1" key={k}>
                     <td width="30%"><Link to={'/transaction_detail/'+tx.txid}>{tx.txid}</Link></td>
-                    <td width="40%"><span></span></td>
-                    <td width="10%" style={{"position":"relative"}}>
+                    <td width="20%"><span>{isEvent ? lang.yes : lang.no}</span></td>
+                    <td width="15%" style={{"position":"relative"}}>
                         { tx.height !== height1 &&  num > 1 && <div style={{"width":"5px","height":height,"background": "linear-gradient(180deg, #1DE9B6 0%, #02C67F 100%)","borderRadius": "4px","position":"absolute","left":"35px"}}></div>}
                     <span style={{"paddingLeft":"20px"}}>{tx.height}</span></td>
-                    <td width="10%"><span>{tx.fee}</span></td>
-                    <td width="10%"><span>{tx.createTime ? this.timestampToTime(tx.createTime) : "" }</span></td>
+                    <td width="15%"><span>{tx.fee / 100000000}</span></td>
+                    <td width="20%"><span>{tx.createTime ? this.timestampToTime(tx.createTime) : "" }</span></td>
                 </tr>
             )
         });
@@ -141,8 +165,8 @@ class TransactionList extends React.Component {
                 <div className="container">
                      <div className = "list_top" >
                      
-                        <div className = "list_title"><span style={{"fontSize":"25px"}}>{name === "block_detail" ? "Transactions in this Block " : "Transactions"}</span></div>
-                        {name === "block_detail" || <div className = "list_search"><Search button="false" name="list"/></div>}
+                        <div className = "list_title"><span style={{"fontSize":"25px"}}>{name === "block_detail" ? lang.transactions_in_this_block : lang.transactions_list}</span></div>
+                        {name === "block_detail" || <div className = "list_search"><Search button="false" name="list" lang={lang}/></div>}
 
                     </div>
                     <div className="ant-table ant-table-default ant-table-scroll-position-left">
@@ -152,19 +176,19 @@ class TransactionList extends React.Component {
                                     <thead className="ant-table-thead">
                                         <tr>
                                             <th className="">
-                                                <div>TxID</div>
+                                                <div>{lang.txid}</div>
                                             </th>
                                             <th className="">
                                                 <div>DID Event Included</div>
                                             </th>
                                             <th className="">
-                                                <div>Height</div>
+                                                <div>{lang.block_height}</div>
                                             </th>
                                             <th className="">
-                                                <div>Fee</div>
+                                                <div>{lang.fee}</div>
                                             </th>
                                             <th className="">
-                                                <div>Time</div>
+                                                <div>{lang.time}</div>
                                             </th>
                                         </tr>
                                     </thead>
