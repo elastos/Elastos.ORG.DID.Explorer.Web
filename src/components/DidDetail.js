@@ -56,71 +56,53 @@ class DidDetail extends React.Component {
     }
     render() {
     	const { properties, did } = this.state;
+        console.log(properties)
     	const lang = this.props.lang;
-    	
-    	/*const propertyHtml = properties.map((property,k) => {
-    		if(property.property_key){
-				return(
-	        		<tr className="ant-table-row ant-table-row-level-0 " data-row-key="1" key={k} >
-		        		<td width="20%"><span>{property.property_key}</span></td>
-		        		<td width="20%"><span>{property.property_value}</span></td>
-		        		<td width="20%"><span>{this.timestampToTime(property.block_time)}</span></td>
-		        		<td width="30%"><span>{property.txid}</span></td>
-		        		<td width="10%"><Link to={'/did/'+did+'/property_history/'+property.property_key}><span>{lang.details}</span></Link></td>
-					</tr>
-	        	)
-    		}else{
+
+        const propertyHtml = properties.map((property,k) => {
+            if(property.property_key){
+                return(
+                    
+                    <li style={{"width":"50%","display":"inline-block"}} key={k}>
+                            <span className="detail_key">{ property.property_key}</span>
+                            <span className="detail_value">{ property.property_value}</span>
+                            {property.property_key_status === 1 ? (
+                                <span className="detail_status" ><img src={iconNormal} crt="iconNormal"/>Normal</span>
+                                ) :(
+                                <span className="detail_status" style={{"color":"#E25757"}}><img src={iconDeprecated} crt="iconDeprecated"/> Deprecated</span>
+                                )}
+                            
+                        </li>
+                )
+            }else{
           return("");
         }
-        });*/
+        });
+
+
+
         return (
             <div className="container">
             	<div className = "list_top" >
-                    <div className = "list_title"><span style={{"fontSize":"25px"}}>ELA DID Detail</span></div>
-                    <div className = "list_search"><Search button="false" name="list"/></div>
+                    <div className = "list_title"><span style={{"fontSize":"25px"}}>{lang.ela_did_detail}</span></div>
+                    <div className = "list_search"><Search button="false" name="list" lang={lang}/></div>
                 </div>
                 <div className="did_title">
-                	<span>DID: ela: AUJXj1kaA1zy4gRYLjC7faucjodaBx1W19</span>
+                	<span>DID: ela: {did}</span>
                 	<img src={iconCopy} alt="iconCopy"/>
 
                 </div>
                 <div className="did_content">
                 	<ul>
                 		<li>
-                			<span className="detail_key">Public Key</span>
+                			<span className="detail_key">{lang.public_key}</span>
                 			<span className="detail_value">{did}</span>
                 		</li>
                 	</ul>
                 </div>
                 <div className="did_content">
                 	<ul>
-                		<li>
-                			<div>
-                				<p className="detail_key">Nickname</p>
-                				<p className="detail_value">abcefgkjaskldfajlkaskldfjasl;kfd;asal</p>
-                				<span className="detail_status"><img src={iconNormal} alt="iconNormal"/>Normal</span>
-                			</div>
-                			<div>
-                				<p className="detail_key">Phone number</p>
-                				<p className="detail_value">+86 123 963 2365 </p>
-                				<span className="detail_status" style={{"color":"#E25757"}}><img src={iconDeprecated} alt="iconDeprecated"/>Deprecated</span>
-                			</div>
-
-                		</li>
-                		<li>
-                			<div>
-                				<p className="detail_key">Wallet Address</p>
-                				<p className="detail_value">0xelakjajnksdjfnklsfjdls</p>
-                				<span className="detail_status"><img src={iconNormal} alt="iconNormal"/>Normal</span>
-                			</div>
-                			<div>
-                				<p className="detail_key"></p>
-                				<p className="detail_value"></p>
-                				<span className="detail_status"></span>
-                			</div>
-
-                		</li>
-
+                        {propertyHtml}
                 	</ul>
 
 

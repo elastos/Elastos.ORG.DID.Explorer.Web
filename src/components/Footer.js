@@ -4,13 +4,13 @@ import logo from '../public/images/logo_f.png' ;
 class Footer extends React.Component {
 	
     render() {
-    	
+    	const lang = this.props.lang;
     	return (
     		<div className="footer">
 				<div className="container">
 					<div className="footer_content_left floatLeft">
 						<img src={logo} alt="logo"/>
-						<span>DID Explorer</span>
+						<span>{lang.DID_BlockChain_Explorer}</span>
 
 					</div>
 					<div className="footer_content_right floatRight">

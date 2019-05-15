@@ -9,14 +9,14 @@ import notice from '../public/images/icon-notice.svg'
 class Header extends React.Component {
 	constructor(props){
         super(props);
-        
     }
     render() {
+        const lang = this.props.lang
     	return (
     		 <div className="container">
             	<div className = "list_top" >
-                    <div className = "list_title"><img src={iconLeft} alt="back" style={{"marginBottom":"2px","marginRight":"10px"}}/><span style={{"fontSize":"14px"}}>Back</span></div>
-                    <div className = "list_search"><Search button="false" name="list"/></div>
+                    <div className = "list_title"><img src={iconLeft} alt="back" style={{"marginBottom":"2px","marginRight":"10px"}}/><span style={{"fontSize":"14px"}}>{lang.back}</span></div>
+                    <div className = "list_search"><Search button="false" name="list" lang={lang}/></div>
                 </div>
                 <div className="eapp_content">
                 	<div className="eapp_profile">
@@ -31,7 +31,7 @@ class Header extends React.Component {
                 			</ul>
                 		</div>
                 		<div>
-                			<span>Website</span>
+                			<span>{lang.website}</span>
                 		</div>
 
                 	</div>

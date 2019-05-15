@@ -71,11 +71,11 @@ class App extends Component {
     }
     return (
       <div className="App">
-        <Header {...props} onChange = {this.onChange} info = {this.state}/>
+        <Header {...props} onChange = {this.onChange} lang = {this.state.lang}/>
           <Content>
             {context}
           </Content>
-        <Footer {...props} info = {this.state} />
+        <Footer {...props}  lang = {this.state.lang} />
       </div>
     );
   }
