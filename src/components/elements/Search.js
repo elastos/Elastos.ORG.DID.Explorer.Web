@@ -24,11 +24,11 @@ class Search extends React.Component {
         event.keyCode === 13 && (window.location.href = "/did/"+did+"/property_history/"+property);
     }
     render() {
-    	const isButton = this.props.button == "true" ? true :false;
+    	const isButton = this.props.button === "true" ? true :false;
         const lang = this.props.lang;
     	return (
     		<div className="search">
-                <div className="floatLeft"><img className = {"search_"+this.props.name} src={search}/></div>
+                <div className="floatLeft"><img className = {"search_"+this.props.name} src={search} alt="search"/></div>
                 <input id="serchInput"className={"input_search input_"+this.props.name} type="text" placeholder={lang.searchPlaceholder} onKeyDown = {this.onSerchSubmit.bind(this,"text")}/>
                 {isButton && <input className="input_button" type="button" value={lang.search} onClick = {this.onSerchSubmit.bind(this,"button")} />}
             </div>

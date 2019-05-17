@@ -7,9 +7,7 @@ import mark_l from '../public/images/mark_l.png'
 import privacy from '../public/images/icon-privacy.svg'
 import notice from '../public/images/icon-notice.svg'
 class Header extends React.Component {
-	constructor(props){
-        super(props);
-    }
+	
     render() {
         const lang = this.props.lang
     	return (

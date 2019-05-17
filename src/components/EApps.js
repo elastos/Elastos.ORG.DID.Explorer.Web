@@ -23,21 +23,10 @@ class EApps extends React.Component {
     }
     componentWillMount (){
         const { current, size }= this.state;
-        this.GetInfo(current,size);
+        this.getInfo(current,size);
        
     }
-    componentDidMount(){
-        const lang = localStorage.getItem("lang");
-        var div = document.getElementsByClassName("ant-pagination-options-quick-jumper");
-        if (lang === "en" && typeof div[0] != "undefined") {
-            div[0].childNodes[0].data = "Goto" 
-        }
-        if(lang === "cn" && typeof div[0] != "undefined"){
-            div[0].childNodes[0].data = "跳转" 
-        } 
-    }
-    
-    GetInfo = async (current,size) => {
+    getInfo = async (current,size) => {
         try{
             
             const start = ( current - 1) * size;
@@ -46,7 +35,7 @@ class EApps extends React.Component {
                 transactions:transactions               
             })
             Object.keys(transactions).map((transaction,k) => {
-                return this.GetTransactionsInfo(k,transactions[k].txid)                
+                return this.getTransactionInfo(k,transactions[k].txid)                
             });
             const count = await getTransactionsCount();
              this.setState({
@@ -57,7 +46,7 @@ class EApps extends React.Component {
           console.log(err)
         }
     }
-    GetTransactionsInfo = async (k,txid)=>{
+    getTransactionInfo = async (k,txid)=>{
         try{
             const transaction = await getTransactionsInfo(txid);
             let transactions = this.state.transactions;
@@ -93,9 +82,9 @@ class EApps extends React.Component {
     }
     itemRender(current, type, originalElement) {
       if (type === 'prev' ) {
-        return <a><img src={iconLeft}/></a>;
+        return <a href="#"><img src={iconLeft} alt = "iconleft"/></a>;
       } if (type === 'next') {
-        return <a><img src={iconRight}/></a>;
+        return <a href="#"><img src={iconRight} alt = "iconright"/></a>;
       }
       return originalElement;
     }

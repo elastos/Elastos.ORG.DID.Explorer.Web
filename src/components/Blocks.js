@@ -26,10 +26,10 @@ class Blocks extends React.Component {
      componentDidMount(){
         const lang = localStorage.getItem("lang");
         var div = document.getElementsByClassName("ant-pagination-options-quick-jumper");
-        if (lang === "en" && typeof div[0] != "undefined") {
+        if (lang === "en" && typeof div[0] !== "undefined") {
             div[0].childNodes[0].data = "Goto" 
         }
-        if(lang === "cn" && typeof div[0] != "undefined"){
+        if(lang === "cn" && typeof div[0] !== "undefined"){
             div[0].childNodes[0].data = "跳转" 
         } 
     }
@@ -37,11 +37,9 @@ class Blocks extends React.Component {
         try{
             const start = ( current - 1) * size;
             const blocks = await getBlocks(start,size);
-            this.setState({
-                blocks:blocks
-            })
+            let number = [];
             Object.keys(blocks).map((block,k) => {
-                return this.GetBlockInfo(k,blocks[k].height)                
+                return this.GetBlockInfo(k,number,blocks)                
             });
             const count = await getBlocksCount();
             this.setState({
@@ -52,17 +50,18 @@ class Blocks extends React.Component {
           console.log(err)
         }
     }
-    GetBlockInfo = async (k,height)=>{
+    GetBlockInfo = async (k,number,blocks)=>{
         try{
-            const blockInfo = await getBlocksInfo(height);
-            let blocks = this.state.blocks;
+            const blockInfo = await getBlocksInfo(blocks[k].height);
             blocks[k].time = blockInfo[0].time;
             blocks[k].miner_info = blockInfo[0].miner_info;
             blocks[k].size = blockInfo[0].size;
-            this.setState({blocks:blocks})
-            const count = await getTransactionsCountFromHeight(height);
+            const count = await getTransactionsCountFromHeight(blocks[k].height);
             blocks[k].count = count[0].count;
-            this.setState({blocks:blocks})
+            number.push(k)
+            if(number.length === blocks.length){
+                this.setState({blocks:blocks})
+            }
         }catch(err){
             console.log(err)
         }
@@ -74,7 +73,7 @@ class Blocks extends React.Component {
             current : pageNumber
         })
         const { size }= this.state;
-        this.GetInfo(pageNumber,size);
+        this.getInfo(pageNumber,size);
     }
     timestampToTime(timestamp) {
       let date = new Date(timestamp * 1000);
@@ -93,9 +92,9 @@ class Blocks extends React.Component {
     }
     itemRender(current, type, originalElement) {
       if (type === 'prev') {
-        return <a><img src={iconLeft}/></a>;
+        return <a><img src={iconLeft} alt="iconleft"/></a>;
       } if (type === 'next') {
-        return <a><img src={iconRight}/></a>;
+        return <a><img src={iconRight} alt="iconright"/></a>;
       }
       return originalElement;
     }

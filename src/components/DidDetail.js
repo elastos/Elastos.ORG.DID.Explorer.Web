@@ -67,9 +67,9 @@ class DidDetail extends React.Component {
                             <span className="detail_key">{ property.property_key}</span>
                             <span className="detail_value">{ property.property_value}</span>
                             {property.property_key_status === 1 ? (
-                                <span className="detail_status" ><img src={iconNormal} crt="iconNormal"/>Normal</span>
+                                <span className="detail_status" ><img src={iconNormal} alt="iconNormal"/>Normal</span>
                                 ) :(
-                                <span className="detail_status" style={{"color":"#E25757"}}><img src={iconDeprecated} crt="iconDeprecated"/> Deprecated</span>
+                                <span className="detail_status" style={{"color":"#E25757"}}><img src={iconDeprecated} alt="iconDeprecated"/> Deprecated</span>
                                 )}
                             
                         </li>
@@ -95,8 +95,8 @@ class DidDetail extends React.Component {
                 <div className="did_content">
                 	<ul>
                 		<li>
-                			<span className="detail_key">{lang.public_key}</span>
-                			<span className="detail_value">{did}</span>
+                			<span className="detail_key wordBreak">{lang.public_key}</span>
+                			<span className="detail_value wordBreak">{did}</span>
                 		</li>
                 	</ul>
                 </div>

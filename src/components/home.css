@@ -221,6 +221,16 @@
     font-size: 12px;
     color: #8696AE;
 }
+.container .item .item_content li a{
+   	font-size: 14px;
+    color: #364458;
+    font-weight: 600;
+    text-decoration: none;
+}
+.container .item .item_content li a:hover{
+   	color:#31B59D;
+   	text-decoration: none;
+}
 
 .container.container_items .item:nth-child(1) li{
 	border-left: 4px solid #37B7CC;
