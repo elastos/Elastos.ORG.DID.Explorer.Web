@@ -95,5 +95,7 @@ li{
   float:right
 }
 .wordBreak{
-  word-break:break-all;
+    word-break: break-all;
+    white-space: normal;
+    overflow-wrap: break-word;
 }

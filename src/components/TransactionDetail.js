@@ -1,6 +1,5 @@
 import React from 'react';
-import { getTxDetailFromTxid ,getTransactionsFromTxid,getCurrentHeight,getValuesFromTxid} from '../request/request';
-import {Link} from 'react-router-dom';
+import { getTxDetailFromTxid ,getTransactionsFromTxid,getValuesFromTxid} from '../request/request';
 import './transactionDetail.css'
 import Search from './elements/Search'
 import iconCopy from '../public/images/icon-copy.svg'
@@ -12,7 +11,6 @@ class TransactionDetail extends React.Component {
         super(props);
         this.state = {
 	        txid:"",
-            currentHeight:0,
             transactions:[],
             isEvent:true,
         }
@@ -34,13 +32,10 @@ class TransactionDetail extends React.Component {
             transactions[0].did = properties[0].did;
             transactions[0].didstatus = properties[0].did_status;
             transactions[0].values = values[0].value;
-            this.setState({transactions:transactions})
-            const currentHeight = await getCurrentHeight();
             this.setState({
-                currentHeight:currentHeight[0].height,
+                transactions:transactions,
                 isEvent:isEvent
             })
-            
         }catch(err){
           console.log(err)
         }
@@ -71,19 +66,19 @@ class TransactionDetail extends React.Component {
     render() {
     	const txid = this.props.match.params.txid;
         const lang = this.props.lang;
-        const { transactions,currentHeight, isEvent } = this.state;
+        const { transactions, isEvent } = this.state;
     	
         console.log(transactions)
 
         const proHtml = (transactions.length >0 && typeof transactions[0].properties != "undefined") ? (transactions[0].properties.map((property,k)=>{
             return(
                 <li style={{"width":"50%","display":"inline-block"}} key={k}>
-                            <span className="detail_key">{ property.property_key}</span>
-                            <span className="detail_value">{ property.property_value}</span>
+                            <span className="detail_key wordBreak">{ property.property_key}</span>
+                            <span className="detail_value wordBreak">{ property.property_value}</span>
                             {property.property_key_status === 1 ? (
-                                <span className="detail_status" ><img src={iconNormal} crt="iconNormal"/>Normal</span>
+                                <span className="detail_status" ><img src={iconNormal} alt="iconNormal"/>Normal</span>
                                 ) :(
-                                <span className="detail_status" style={{"color":"#E25757"}}><img src={iconDeprecated} crt="iconDeprecated"/> Deprecated</span>
+                                <span className="detail_status" style={{"color":"#E25757"}}><img src={iconDeprecated} alt="iconDeprecated"/> Deprecated</span>
                                 )}
                             
                         </li>
@@ -97,58 +92,58 @@ class TransactionDetail extends React.Component {
                 </div>
                 <div className="transaction_title">
                 	<span> {txid} </span>
-                	<img src={iconCopy} crt="iconCopy"/>
+                	<img src={iconCopy} alt="iconCopy"/>
 
                 </div>
                 <div className="transaction_summery">
                 	<ul>
                 		<li>
-                			<span className="detail_key">{lang.status}</span>
-                			<span className="detail_value" style={{"color":"#31B59D"}}><img src={confirmed}/> Confirmed</span>
+                			<span className="detail_key wordBreak">{lang.status}</span>
+                			<span className="detail_value wordBreak" style={{"color":"#31B59D"}}><img src={confirmed} alt = "confirmed"/> Confirmed</span>
                 		</li>
                 		<li>
-                			<span className="detail_key">{lang.did_event_included}</span>
-                			<span className="detail_value">{isEvent ? lang.yes : lang.no}</span>
+                			<span className="detail_key wordBreak">{lang.did_event_included}</span>
+                			<span className="detail_value wordBreak">{isEvent ? lang.yes : lang.no}</span>
                 		</li>
                 		<li>
-                			<span className="detail_key">{lang.time}</span>
-                			<span className="detail_value">{transactions.length ? this.timestampToTime(transactions[0].createTime) : "..."}</span>
+                			<span className="detail_key wordBreak">{lang.time}</span>
+                			<span className="detail_value wordBreak">{transactions.length ? this.timestampToTime(transactions[0].createTime) : "..."}</span>
                 		</li>
                 		<li>
-                			<span className="detail_key">{lang.block_height}</span>
-                			<span className="detail_value"> {transactions.length ? transactions[0].height : "..."}</span>
+                			<span className="detail_key wordBreak">{lang.block_height}</span>
+                			<span className="detail_value wordBreak"> {transactions.length ? transactions[0].height : "..."}</span>
                 		</li>
                 		<li>
-                			<span className="detail_key">{lang.fee}</span>
-                			<span className="detail_value">{transactions.length ? transactions[0].fee / 100000000 : "..."} ELA</span>
+                			<span className="detail_key wordBreak">{lang.fee}</span>
+                			<span className="detail_value wordBreak">{transactions.length ? transactions[0].fee / 100000000 : "..."} ELA</span>
                 		</li>
                 	</ul>
                 </div>
                 <div className="transaction_summery" >
                 	<ul>
                 		<li style={{"width":"40%"}}> 
-                			<span className="detail_key">{lang.from}</span>
-                			<span className="detail_value" style={{"color":"#31B59D"}}>{transactions.length ? transactions[0].inputs : "..."}</span>
+                			<span className="detail_key wordBreak">{lang.from}</span>
+                			<span className="detail_value wordBreak" style={{"color":"#31B59D"}}>{transactions.length ? transactions[0].inputs : "..."}</span>
                 		</li>
                 		<li style={{"width":"40%"}}>
-                			<span className="detail_key">{lang.to}</span>
-                			<span className="detail_value" style={{"color":"#31B59D"}}>{transactions.length ? transactions[0].inputs : "..."}</span>
+                			<span className="detail_key wordBreak">{lang.to}</span>
+                			<span className="detail_value wordBreak" style={{"color":"#31B59D"}}>{transactions.length ? transactions[0].inputs : "..."}</span>
                 		</li>
                         <li style={{"width":"20%"}}>
-                            <span className="detail_key">{lang.number}</span>
-                            <span className="detail_value">{transactions.length ? transactions[0].values / 100000000 : "..."} ELA</span>
+                            <span className="detail_key wordBreak">{lang.number}</span>
+                            <span className="detail_value wordBreak">{transactions.length ? transactions[0].values / 100000000 : "..."} ELA</span>
                         </li>
                 		<li style={{"width":"40%"}}>
-                			<span className="detail_key">{lang.from}</span>
-                			<span className="detail_value" style={{"color":"#31B59D"}}>{transactions.length ? transactions[0].inputs : "..."}</span>
+                			<span className="detail_key wordBreak">{lang.from}</span>
+                			<span className="detail_value wordBreak" style={{"color":"#31B59D"}}>{transactions.length ? transactions[0].inputs : "..."}</span>
                 		</li>
                 		<li style={{"width":"40%"}}>
-                			<span className="detail_key">{lang.to}</span>
-                			<span className="detail_value" style={{"color":"#31B59D"}}>{transactions.length ? transactions[0].outputs : "..."}</span>
+                			<span className="detail_key wordBreak">{lang.to}</span>
+                			<span className="detail_value wordBreak" style={{"color":"#31B59D"}}>{transactions.length ? transactions[0].outputs : "..."}</span>
                 		</li>
                         <li style={{"width":"20%"}}>
-                            <span className="detail_key">{lang.number}</span>
-                            <span className="detail_value">{transactions.length ? transactions[0].values / 100000000 : "..."} ELA</span>
+                            <span className="detail_key wordBreak">{lang.number}</span>
+                            <span className="detail_value wordBreak">{transactions.length ? transactions[0].values / 100000000 : "..."} ELA</span>
                         </li>
                 	</ul>
                 </div>

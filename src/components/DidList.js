@@ -1,5 +1,5 @@
 import React from 'react';
-import { getTransactions , getTransactionsCount, getTransactionsInfo } from '../request/request';
+import { getDids, getDidCount, getDidInfo } from '../request/request';
 import {Link} from 'react-router-dom';
 import { Pagination } from 'antd';
 import './didList.css';
@@ -15,40 +15,27 @@ class DidList extends React.Component {
             count:0,
             size: 10,
             current:1,
-            transactions:[],
+            dids:[],
             loading:true
         }
         this.onChange = this.onChange.bind(this);
     }
     componentWillMount (){
         const { current, size }= this.state;
-        this.GetInfo(current,size);
+        this.getInfo(current,size);
        
     }
-    componentDidMount(){
-        const lang = localStorage.getItem("lang");
-        var div = document.getElementsByClassName("ant-pagination-options-quick-jumper");
-        if (lang === "en" && typeof div[0] != "undefined") {
-            div[0].childNodes[0].data = "Goto" 
-        }
-        if(lang === "cn" && typeof div[0] != "undefined"){
-            div[0].childNodes[0].data = "跳转" 
-        } 
-    }
-    
-    GetInfo = async (current,size) => {
+    getInfo = async (current,size) => {
         try{
-            
             const start = ( current - 1) * size;
-            const transactions = await getTransactions(start,size);
-            this.setState({
-                transactions:transactions
-            })
-            Object.keys(transactions).map((transaction,k) => {
-                return this.GetTransactionsInfo(k,transactions[k].txid)                
+            const dids = await getDids(start,size);
+            console.log(dids)
+            var number = []
+            Object.keys(dids).map((did,k) => {
+                return this.getDidsInfo(k,number,dids)                
             });
-            const count = await getTransactionsCount();
-             this.setState({
+            const count = await getDidCount();
+            this.setState({
                 count:count[0].count,
                 loading:false
             })
@@ -56,13 +43,17 @@ class DidList extends React.Component {
           console.log(err)
         }
     }
-    GetTransactionsInfo = async (k,txid)=>{
+    getDidsInfo = async (k,number,dids)=>{
         try{
-            const transaction = await getTransactionsInfo(txid);
-            let transactions = this.state.transactions;
-            transactions[k].createTime = transaction[0].createTime;
-            transactions[k].length_memo = transaction[0].length_memo;
-            this.setState({transactions:transactions})
+            const didDetail = await getDidInfo(dids[k].did)
+            dids[k].txid = didDetail[0].txid;
+            dids[k].height = didDetail[0].height;
+            dids[k].time = didDetail[0].local_system_time
+
+            number.push(k);
+            if(number.length === dids.length){
+                this.setState({dids:dids})
+            }
         }catch(err){
             console.log(err)
         }
@@ -73,10 +64,10 @@ class DidList extends React.Component {
             current : pageNumber
         })
         const { size }= this.state;
-        this.GetInfo(pageNumber,size);
+        this.getInfo(pageNumber,size);
     }
-    timestampToTime(timestamp) {
-      let date = new Date(timestamp * 1000);
+    timestampToTime(time) {
+      let date = new Date(time);
       let Y = date.getFullYear();
       let M = date.getMonth()+1;
       let D = date.getDate() ;
@@ -92,22 +83,22 @@ class DidList extends React.Component {
     }
     itemRender(current, type, originalElement) {
       if (type === 'prev') {
-        return <a><img src={iconLeft}/></a>;
+        return <a href="#"><img src={iconLeft} alt="iconleft"/></a>;
       } if (type === 'next') {
-        return <a><img src={iconRight}/></a>;
+        return <a href="#"><img src={iconRight} alt="iconright"/></a>;
       }
       return originalElement;
     }
     render() {
-        const { transactions, count, size, current, loading } = this.state;
+        const { dids, count, size, current, loading } = this.state;
         const  lang  = this.props.lang;
-        const txHtml = transactions.map((tx,k) => {
+        const txHtml = dids.map((did,k) => {
             return(
                 <tr className="ant-table-row ant-table-row-level-0 table_tr" data-row-key="1" key={k}>
-                    <td width="30%"><Link to={'/did_detail/'+tx.did}>{tx.did}</Link></td>
-                    <td width="30%"><Link to={'/transaction_detail/'+tx.txid}>{tx.txid}</Link></td>
-                    <td width="20%" style={{"textAlign":"center"}}>{tx.height}</td>
-                    <td width="20%">{tx.createTime ? this.timestampToTime(tx.createTime) : ''}</td>
+                    <td width="30%"><Link to={'/did_detail/'+did.did}>{did.did}</Link></td>
+                    <td width="30%"><Link to={'/transaction_detail/'+did.txid}>{did.txid}</Link></td>
+                    <td width="20%" style={{"textAlign":"center"}}>{did.height}</td>
+                    <td width="20%">{did.time ? this.timestampToTime(did.time) : ''}</td>
                 </tr>
             )
         });
@@ -144,7 +135,7 @@ class DidList extends React.Component {
                                 </table>
                                 <div style={{"marginTop":"50px","textAlign":"center"}}>
                                     
-                                    {count != 0 &&<Pagination defaultCurrent={current} total={count} defaultPageSize = {size} onChange={this.onChange}  itemRender={this.itemRender}
+                                    {count !== 0 &&<Pagination defaultCurrent={current} total={count} defaultPageSize = {size} onChange={this.onChange}  itemRender={this.itemRender}
                                         style={{"width":"100%","height":"50px","textAlign":"center"}}
                                     />}
                                     {loading && <img src={loadingImg} alt="loading"/>}

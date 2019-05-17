@@ -375,11 +375,32 @@ router.get('/block/properteis/history', function(req, res, next) {
 		var db =  DB.connection;
 		var key = req.query.key;
 		var did = req.query.did;
-		db.query('SELECT * FROM `chain_did_property`  WHERE `did` = "' + did + '" AND `property_key` = "' + key + '" ORDER BY `id` DESC LIMIT 20', function (error, results, fields) {
+		var start = req.query.start;
+		var pageSize = req.query.pageSize;
+		db.query('SELECT * FROM `chain_did_property`  WHERE `did` = "' + did + '" AND `property_key` = "' + key + '" ORDER BY `id` DESC LIMIT ' + start + ',' + pageSize, function (error, results, fields) {
 			if(error){
 				console.log("mysql error")
 				console.log(error)
 			}else{
+				res.send(results);
+			}
+		})
+	}catch(err){
+		console.log(err)
+	}
+});
+router.get('/block/properteis/history/count', function(req, res, next) {
+	setHeaders(res);
+	try{
+		var db =  DB.connection;
+		var key = req.query.key;
+		var did = req.query.did;
+		db.query('SELECT count(*) AS count FROM `chain_did_property`  WHERE `did` = "' + did + '" AND `property_key` = "' + key +'"', function (error, results, fields) {
+			if(error){
+				console.log("mysql error")
+				console.log(error)
+			}else{
+				console.log(results)
 				res.send(results);
 			}
 		})

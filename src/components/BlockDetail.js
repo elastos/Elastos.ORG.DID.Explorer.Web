@@ -1,12 +1,8 @@
 import React from 'react';
-import { getCurrentBlock, getTransactionsFromHeight, getTxDetailFromTxid, getBlockInfo,getCurrentHeight, getValuesFromTxid, getTransactionsCountFromHeight} from '../request/request';
-import {Link} from 'react-router-dom';
+import { getCurrentBlock, getBlockInfo} from '../request/request';
 import TransactionList from './TransactionList'
 import './transactionDetail.css'
 import Search from './elements/Search'
-import iconCopy from '../public/images/icon-copy.svg'
-import iconDeprecated from '../public/images/icon-deprecated.svg'
-import iconNormal from '../public/images/icon-normal.svg'
 class BlockDetail extends React.Component {
     constructor(props){
         super(props);
@@ -82,48 +78,48 @@ class BlockDetail extends React.Component {
                 <div className="transaction_summery">
                     <ul>
                         <li>
-                            <span className="detail_key">{lang.hash}</span>
-                            <span className="detail_value" style={{"wordWrap":"break-word","whiteSpace": "pre-wrap"}}  >{blockinfo.hash}</span>
+                            <span className="detail_key wordBreak">{lang.hash}</span>
+                            <span className="detail_value wordBreak" style={{"wordWrap":"break-word","whiteSpace": "pre-wrap"}}  >{blockinfo.hash}</span>
                         </li>
                         <li>
-                            <span className="detail_key">{lang.miner}</span>
-                            <span className="detail_value">{blockinfo.miner_info}</span>
+                            <span className="detail_key wordBreak">{lang.miner}</span>
+                            <span className="detail_value wordBreak">{blockinfo.miner_info}</span>
                         </li>
                         <li>
-                            <span className="detail_key">{lang.time}</span>
-                            <span className="detail_value">{blockinfo.time === "..." ? "..." : this.timestampToTime(blockinfo.time)}</span>
+                            <span className="detail_key wordBreak">{lang.time}</span>
+                            <span className="detail_value wordBreak">{blockinfo.time === "..." ? "..." : this.timestampToTime(blockinfo.time)}</span>
                         </li>
                         <li>
-                            <span className="detail_key">{lang.reward}</span>
-                            <span className="detail_value"> ... ELA</span>
+                            <span className="detail_key wordBreak">{lang.reward}</span>
+                            <span className="detail_value wordBreak"> ... ELA</span>
                         </li>
                         <li>
-                            <span className="detail_key">{lang.size}</span>
-                            <span className="detail_value">{blockinfo.size} bytes</span>
+                            <span className="detail_key wordBreak">{lang.size}</span>
+                            <span className="detail_value wordBreak">{blockinfo.size} bytes</span>
                         </li>
                         <li>
-                            <span className="detail_key">{lang.transactions}</span>
-                            <span className="detail_value">{lang.transCount}</span>
+                            <span className="detail_key wordBreak">{lang.transactions}</span>
+                            <span className="detail_value wordBreak">{transCount}</span>
                         </li>
                         <li>
-                            <span className="detail_key">{lang.block_height}</span>
-                            <span className="detail_value" style={{"color":"#31B59D"}}>{blockinfo.height}</span>
+                            <span className="detail_key wordBreak">{lang.block_height}</span>
+                            <span className="detail_value wordBreak" style={{"color":"#31B59D"}}>{blockinfo.height}</span>
                         </li>
                     </ul>
                 </div>
                 <div className="transaction_summery" >
                     <ul>
                         <li>
-                            <span className="detail_key">{lang.previous_block}</span>
-                            <span className="detail_value" style={{"wordWrap":"break-word","whiteSpace": "pre-wrap","color":"#31B59D"}} >{blockinfo.previous_block_hash}</span>
+                            <span className="detail_key wordBreak">{lang.previous_block}</span>
+                            <span className="detail_value wordBreak" style={{"wordWrap":"break-word","whiteSpace": "pre-wrap","color":"#31B59D"}} >{blockinfo.previous_block_hash}</span>
                         </li>
                         <li>
-                            <span className="detail_key">{lang.next_block}</span>
-                            <span className="detail_value" style={{"wordWrap":"break-word","whiteSpace": "pre-wrap","color":"#31B59D"}} >{blockinfo.next_block_hash}</span>
+                            <span className="detail_key wordBreak">{lang.next_block}</span>
+                            <span className="detail_value wordBreak" style={{"wordWrap":"break-word","whiteSpace": "pre-wrap","color":"#31B59D"}} >{blockinfo.next_block_hash}</span>
                         </li>
                     </ul>
                 </div>
-                {blockinfo.height != "..." && <TransactionList  name="block_detail" blockHeight ={blockinfo.height} lang={lang} setTransCount = {this.setTransCount.bind(this)} />}
+                {blockinfo.height !== "..." && <TransactionList  name="block_detail" blockHeight ={blockinfo.height} lang={lang} setTransCount = {this.setTransCount.bind(this)} />}
             </div>
         );
     }

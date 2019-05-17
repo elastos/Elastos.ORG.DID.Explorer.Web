@@ -1,6 +1,6 @@
 import React from 'react';
 import moment from 'moment'
-import { getBlocks, getBlocksInfo, getTransactionsCount, getTransactions, getTransactionsInfo, getTransactionsCountFromHeight, getServerInfo } from '../request/request';
+import { getBlocks, getBlocksInfo, getTransactionsCount, getTransactions, getTransactionsInfo, getTransactionsCountFromHeight, getServerInfo, getDids, getDidCount, getDidInfo } from '../request/request';
 import './home.css'
 import mask from '../public/images/mask1.png'
 import background from '../public/images/background.svg'
@@ -18,7 +18,9 @@ class Home extends React.Component {
            blocks:[],
            transactionCount:null,
            transactions:[],
-           s_time:null
+           s_time:null,
+           dids:[],
+           didCount:null
         }
       
     } 
@@ -96,7 +98,35 @@ class Home extends React.Component {
             console.log(err)
         }
     }
-
+    getDid = async () => {
+        try{
+            const dids = await getDids(0,5);
+            var num = []
+            Object.keys(dids).map((did,k) => {
+                return this.getDidsInfo(k,num,dids)                
+            });
+            const count = await getDidCount();
+            this.setState({
+                didCount:count[0].count,
+            })
+        }catch(err){
+          console.log(err)
+        }
+    }
+    getDidsInfo = async (k,num,dids)=>{
+        try{
+            const didDetail = await getDidInfo(dids[k].did)
+            dids[k].txid = didDetail[0].txid;
+            dids[k].height = didDetail[0].height;
+            dids[k].time = didDetail[0].local_system_time;
+            num.push(k);
+            if(num.length === dids.length){
+                this.setState({dids:dids})
+            }
+        }catch(err){
+            console.log(err)
+        }
+    }
     componentWillMount(){
         moment.locale("en",{
             relativeTime : {
@@ -134,6 +164,7 @@ class Home extends React.Component {
         })*/
         this.getInfo();
         this.getTrans();
+        this.getDid();
         //his.getBlocks();
         console.log(moment.locale())
         document.onclick=function(){
@@ -152,45 +183,55 @@ class Home extends React.Component {
     }
 
     render() {
-        const {rate, blocks, click_id, transactionCount, transactions, s_time} = this.state;
+        const {rate, blocks, click_id, transactionCount, transactions, s_time, dids, didCount} = this.state;
         const lang =this.props.lang;
-        console.log(lang)
         const lis = blocks.length ? blocks.map((v,k)=>{
             let style = {
                 "right": k*2.55 +"%",
                 "height": typeof v.size === "number" ? v.size * rate : 0 +"px"
             }
-            return <li className= {click_id == k ? "char_li char_clicked" : "char_li" } key= {k} style={style} 
+            return <li className= {click_id === k ? "char_li char_clicked" : "char_li" } key= {k} style={style} 
             onClick={(e)=>{e.nativeEvent.stopImmediatePropagation();}} 
             onMouseOver={this.showBlockInfo.bind(this,k)}>
 
-                {click_id == k && <div className = "char_info" id="char_info">
+                {click_id === k && <div className = "char_info" id="char_info">
                     <span>{v.height}</span>
                     <span>{lang.block_size}: {v.size} bytes</span>
                 </div>}
             </li> 
-        }): <img src={loadingImg} style={{"marginTop":"150px"}}/>  
+        }): <img src={loadingImg} style={{"marginTop":"150px"}} alt="loadingImg"/>  
         const item_blocks = blocks.length ? blocks.map((v,k)=>{
             if(k<5){
                 return <li key= {k}>
-                        <div><span>{v.height}</span><span className="txns">{v.count ? v.count + "Txns" : "..." }</span></div>
+                        <div><a href={"/block_detail/"+v.height}><span>{v.height}</span></a><span className="txns">{v.count ? v.count + "Txns" : "..." }</span></div>
                         <div><span>{v.size} bytes </span><span className="time">{s_time ? moment(v.time * 1000).from(s_time) : "..."}</span></div>
                     </li>
             }else{
                 return "";
             }
             
-        }) : <img src={loadingImg} style={{"margin":"160px 110px"}}/>
+        }) : <img src={loadingImg} style={{"margin":"160px 110px"}} alt="loadingImg"/>
         const item_transactions = transactions.length ? transactions.map((v,k)=>{
             if(k<5){
                 return <li key= {k}>
-                        <div><HashFormat text = {v.txid} width = "70%"/><span className="time">{s_time ? moment(v.createTime * 1000).from(s_time) : "..."}</span></div>
+                        <div><a href={"/transaction_detail/"+v.txid}><HashFormat text = {v.txid} width = "70%"/></a><span className="time">{s_time ? moment(v.createTime * 1000).from(s_time) : "..."}</span></div>
                     </li>
             }else{
                 return "";
             }
             
-        }) : <img src={loadingImg} style={{"margin":"160px 110px"}}/>
+        }) : <img src={loadingImg} style={{"margin":"160px 110px"}} alt="loadingImg"/>
+        const item_dids = dids.length ? dids.map((v,k)=>{
+            if(k<5){
+                return <li key= {k}>
+                        <div><a href={"/did_detail/"+v.did}><HashFormat text = {v.did} width = "70%"/></a><span className="time">{s_time ? moment(v.time).from(s_time) : "..."}</span></div>
+                        <div>Register ELA DID</div>
+                    </li>
+            }else{
+                return "";
+            }
+
+        }) : <img src={loadingImg} style={{"margin":"160px 110px"}} alt="loadingImg"/>
     	return (
     		<div className="content">
                 <div className="container container_banner">
@@ -211,7 +252,7 @@ class Home extends React.Component {
                                     <img src={iconRight} alt="iconRight" style={{"marginBottom":"3px"}}/>
                                 </div>
                                 <div className="summary_content">
-                                    <span>...</span>
+                                    <span>{didCount ? didCount : "..."}</span>
                                 </div>
                             </li>
                             <li className="has_border">
@@ -263,27 +304,7 @@ class Home extends React.Component {
                             </div>
                             <div className="item_content">
                                 <ul>
-                                    <li>
-                                        <div><span className="hash">112SHCF...48362789</span><span className="time">17m ago</span></div>
-                                        <div>Register ELA DID</div>
-                                    </li>
-                                    <li>
-                                        <div><span>112SHCF...48362789</span><span className="time">17m ago</span></div>
-                                        <div>Register ELA DID</div>
-                                    </li>
-                                    <li>
-                                        <div><span>112SHCF...48362789</span><span className="time">17m ago</span></div>
-                                        <div>Register ELA DID</div>
-                                    </li>
-                                    <li>
-                                        <div><span>112SHCF...48362789</span><span className="time">17m ago</span></div>
-                                        <div>Register ELA DID</div>
-                                    </li>
-                                    <li>
-                                        <div><span>112SHCF...48362789</span><span className="time">17m ago</span></div>
-                                        <div>Register ELA DID</div>
-                                    </li>
-
+                                   {item_dids}
                                 </ul>
                             </div>
                         </li>
