@@ -201,7 +201,7 @@ class TransactionList extends React.Component {
                                     {count !== 0 && <Pagination defaultCurrent={current} total={count} defaultPageSize = {size} onChange={this.onChange}  itemRender={this.itemRender}
                                         style={{"width":"100%","height":"50px","textAlign":"center"}}
                                     />}
-                                    {loading && <img src={loadingImg} alt="loading"/>}
+                                    {loading && <div className="loadingBox"><img src={loadingImg} alt="loading"/></div>}
                                 </div>
                             </div>
                         </div>

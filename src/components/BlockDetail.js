@@ -3,6 +3,7 @@ import { getCurrentBlock, getBlockInfo} from '../request/request';
 import TransactionList from './TransactionList'
 import './transactionDetail.css'
 import Search from './elements/Search'
+import loadingImg from '../public/images/loading.gif';
 class BlockDetail extends React.Component {
     constructor(props){
         super(props);
@@ -20,6 +21,7 @@ class BlockDetail extends React.Component {
                 nonce:"...",
             },
             transCount:"...",
+            loading:true
         }
     }
     componentWillMount (){
@@ -27,26 +29,32 @@ class BlockDetail extends React.Component {
         this.GetInfo();
     }
     GetInfo = async () => {
-        const data = await getCurrentBlock();
-        const height = this.props.match.params.height ? this.props.match.params.height : data[0].height 
-        const blockinfo = await getBlockInfo(height);
-        this.setState({
-            height:height,
-            blockinfo:blockinfo[0] ? blockinfo[0] : this.state.blockinfo,
-        })
+        try{
+            const data = await getCurrentBlock();
+            const height = this.props.match.params.height ? this.props.match.params.height : data[0].height 
+            const blockinfo = await getBlockInfo(height);
+            this.setState({
+                height:height,
+                blockinfo:blockinfo[0] ? blockinfo[0] : this.state.blockinfo,
+                loading:false
+            })
+        }catch(e){
+            this.setState({
+                loading:false
+            })
+        }
+        
     }
     setTransCount(count){
-        console.log(count)
         this.setState({
             transCount:count
         })
     }
     componentWillReceiveProps(nextProps) {
-        this.setState({
-            height:nextProps.match.params.height,
-            lang:nextProps.lang
+        /*this.setState({
+            height:nextProps.match.params.height
         })
-        this.GetInfo();
+        this.GetInfo();*/
     }
      timestampToTime(timestamp) {
       let date = new Date(timestamp * 1000);
@@ -64,18 +72,9 @@ class BlockDetail extends React.Component {
       (s < 10 ? '0'+ s : s );
     }
     render() {
-        const { height, blockinfo, transCount } = this.state;
+        const { height, blockinfo, transCount, loading } = this.state;
         const lang = this.props.lang;
-        return (
-            <div className="container">
-                <div className = "list_top" >
-                    <div className = "list_title"><span style={{"fontSize":"25px"}}>{lang.block}</span></div>
-                    <div className = "list_search"><Search button="false" name="list" lang={lang}/></div>
-                </div>
-                <div className="transaction_title">
-                    <span> {lang.block_height}: {height}</span>
-                </div>
-                <div className="transaction_summery">
+        const blockHTML = blockinfo.hash === "..." ? <div className="loadingBox">{loading ? <img src={loadingImg} alt="loading"/> : <span className="notFound">{lang.not_found}</span>}</div> : <div><div className="transaction_summery">
                     <ul>
                         <li>
                             <span className="detail_key wordBreak">{lang.hash}</span>
@@ -119,7 +118,18 @@ class BlockDetail extends React.Component {
                         </li>
                     </ul>
                 </div>
-                {blockinfo.height !== "..." && <TransactionList  name="block_detail" blockHeight ={blockinfo.height} lang={lang} setTransCount = {this.setTransCount.bind(this)} />}
+            </div>;
+        return (
+            <div className="container">
+                <div className = "list_top" >
+                    <div className = "list_title"><span style={{"fontSize":"25px"}}>{lang.block}</span></div>
+                    <div className = "list_search"><Search button="false" name="list" lang={lang}/></div>
+                </div>
+                <div className="transaction_title">
+                    <span> {lang.block_height}: {height}</span>
+                </div>
+                {blockHTML}
+                {blockinfo.hash !== "..." && <TransactionList  name="block_detail" blockHeight ={blockinfo.height} lang={lang} setTransCount = {this.setTransCount.bind(this)} />}
             </div>
         );
     }

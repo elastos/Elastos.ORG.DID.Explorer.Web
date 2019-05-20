@@ -66,5 +66,12 @@
 	"name":"名称",
 	"url":"地址",
 	"back":"返回",
-	"website":"网址"
+	"website":"网址",
+	"not_found":"未搜索到记录",
+	"address":"地址",
+	"balance":"余额",
+	"total_sent":"发送总额",
+	"total_received":"接收总额",
+	"transaction_history":"交易历史",
+	"reporting":"统计报表"
 }

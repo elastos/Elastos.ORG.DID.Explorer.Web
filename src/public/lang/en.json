@@ -66,5 +66,12 @@
 	"name":"Name",
 	"url":"URLs",
 	"back":"Back",
-	"website":"Website"
+	"website":"Website",
+	"not_found":"Not Found",
+	"address":"Address",
+	"balance":"Balance",
+	"total_sent":"Total Sent",
+	"total_received":"Total Received",
+	"transaction_history":"Transaction History",
+	"reporting":"Reporting"
 }

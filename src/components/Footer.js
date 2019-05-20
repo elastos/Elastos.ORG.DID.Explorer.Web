@@ -16,11 +16,12 @@ class Footer extends React.Component {
 					<div className="footer_content_right floatRight">
 						<div className="link">
 							<ul>
-								<li><span>Report</span></li>
-								<li><span>Elastos.org</span></li>
+								<li><a href="/reporting" target="_blank"><span>Report</span></a></li>
+								<li><a href="https://www.elastos.org/" target="_blank"><span>Elastos.org</span></a></li>
 								<li>
 									<div className="tips">Create an EApp</div>
-									<span>Developer</span></li>
+									<a href="https://developer.elastos.org/" target="_blank"><span>Developer</span></a>
+								</li>
 							</ul>
 						</div>
 						<div className="copyright">Copyright © 2017 Elastos Foundation. All Rights Reserved.</div>

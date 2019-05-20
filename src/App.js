@@ -12,6 +12,9 @@ import TransactionDetail from './components/TransactionDetail';
 import BlockDetail from './components/BlockDetail'
 import EApps from './components/EApps';
 import EAppDetail from './components/EAppDetail';
+import AddressInfo from './components/AddressInfo'
+import Reporting from './components/Reporting'
+import NoPage from './components/NoPage'
 import lang_cn from './public/lang/cn.json';
 import lang_en from './public/lang/en.json';
 class App extends Component {
@@ -41,6 +44,9 @@ class App extends Component {
     const props = this.props;
     let context = ""
     switch(path){
+      case '/':
+        context = <Home {...props} lang = {this.state.lang}/>;
+      break;
       case '/ela_did':
         context = <DidList  {...props} lang = {this.state.lang}/>;
       break;
@@ -65,9 +71,14 @@ class App extends Component {
       case '/eapp_detail/:did':
         context = <EAppDetail  {...props} lang = {this.state.lang}/>;
       break;
-      
+      case '/address_info':
+        context = <AddressInfo  {...props} lang = {this.state.lang}/>;
+      break;
+      case '/reporting':
+        context = <Reporting  {...props} lang = {this.state.lang}/>;
+      break;
       default:
-        context = <Home {...props} lang = {this.state.lang}/>;
+        context = <NoPage {...props} lang = {this.state.lang}/>;
     }
     return (
       <div className="App">

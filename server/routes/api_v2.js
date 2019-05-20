@@ -473,4 +473,22 @@ router.get('/block/did/info', function(req, res, next) {
 		console.log(err)
 	}
 });
+
+router.get('/block/didTotal', function(req, res, next) {
+	setHeaders(res);
+	try{
+		var db =  DB.connection;
+		var type = req.query.type;
+		db.query('SELECT * FROM `chain_did_property` WHERE `did` = "'+did+'" LIMIT 1', function (error, results, fields) {
+			if(error){
+				console.log("mysql error")
+				console.log(error)
+			}else{
+				res.send(results);
+			}
+		})
+	}catch(err){
+		console.log(err)
+	}
+});
 module.exports = router;
