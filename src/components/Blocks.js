@@ -2,7 +2,7 @@ import React from 'react';
 import { getBlocks, getBlocksCount, getBlocksInfo, getTransactionsCountFromHeight} from '../request/request';
 import {Link} from 'react-router-dom';
 import { Pagination } from 'antd';
-import './blocks.css';
+import './Blocks.css';
 import Search from './elements/Search'
 import loadingImg from '../public/images/loading.gif';
 import iconLeft from '../public/images/icon-left.svg'
@@ -116,7 +116,7 @@ class Blocks extends React.Component {
         return (
                 <div className="container">
                 	 <div className = "list_top" >
-                        <div className = "list_title"><span style={{"fontSize":"25px"}}>{lang.blocks}</span></div>
+                        <div className = "list_title"><span style={{"fontSize":"25px"}}>{lang.block}</span></div>
                         <div className = "list_search"><Search button="false" name="list" lang={lang}/></div>
                     </div>
                     <div className="ant-table ant-table-default ant-table-scroll-position-left">

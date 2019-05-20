@@ -128,45 +128,10 @@ class Home extends React.Component {
         }
     }
     componentWillMount(){
-        moment.locale("en",{
-            relativeTime : {
-                future : "in %s",
-                past : "%s ago",
-                s : "s",
-                m : "m",
-                mm : "%dm",
-                h : "h",
-                hh : "%dh",
-                d : "d",
-                dd : "%dds",
-                M : "M",
-                MM : "%dM",
-                y : "Y",
-                yy : "%dY"
-            }
-        })
-        /*moment.locale("cn",{
-            relativeTime : {
-                future : "%s后",
-                past : "%s前",
-                s : "秒",
-                m : "分",
-                mm : "%d 分",
-                h : "小时",
-                hh : "%d 小时",
-                d : "天",
-                dd : "%d 天",
-                M : "月",
-                MM : "%d 月",
-                y : "年",
-                yy : "%d 年"
-            }
-        })*/
         this.getInfo();
         this.getTrans();
         this.getDid();
-        //his.getBlocks();
-        console.log(moment.locale())
+        this.setTimeFormat();
         document.onclick=function(){
             try{
                document.getElementById("char_info").style.display="none";
@@ -181,10 +146,51 @@ class Home extends React.Component {
         })
         try{ document.getElementById("char_info").style.display="block";}catch(e){}
     }
-
+    setTimeFormat(){
+        const lang = localStorage.getItem("lang")
+        if(lang === "cn"){
+            moment.locale("cn",{
+                relativeTime : {
+                    future : "%s后",
+                    past : "%s前",
+                    s : "%d秒",
+                    m : "%d分",
+                    mm : "%d 分",
+                    h : "%d小时",
+                    hh : "%d 小时",
+                    d : "%d天",
+                    dd : "%d 天",
+                    M : "%d月",
+                    MM : "%d 月",
+                    y : "%d年",
+                    yy : "%d 年"
+                }
+            })
+        }else{
+           moment.locale("en",{
+                relativeTime : {
+                    future : "in %s",
+                    past : "%s ago",
+                    s : "%ds",
+                    m : "%dm",
+                    mm : "%dm",
+                    h : "%dh",
+                    hh : "%dh",
+                    d : "%dd",
+                    dd : "%dd",
+                    M : "%dM",
+                    MM : "%dM",
+                    y : "%dY",
+                    yy : "%dY"
+                }
+            }) 
+        }
+    }
     render() {
+        this.setTimeFormat();
         const {rate, blocks, click_id, transactionCount, transactions, s_time, dids, didCount} = this.state;
         const lang =this.props.lang;
+
         const lis = blocks.length ? blocks.map((v,k)=>{
             let style = {
                 "right": k*2.55 +"%",

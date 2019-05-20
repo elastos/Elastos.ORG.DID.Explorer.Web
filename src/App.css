@@ -99,3 +99,13 @@ li{
     white-space: normal;
     overflow-wrap: break-word;
 }
+.loadingBox{
+    text-align: center;
+    min-height: 500px;
+}
+.notFound{
+  display: block;
+  width: 100%;
+  background: #fff;
+  padding: 20px 0px;
+}
