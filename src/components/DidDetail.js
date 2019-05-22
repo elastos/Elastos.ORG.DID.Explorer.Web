@@ -1,10 +1,11 @@
 import React from 'react';
 import { getPropertiesFromDid } from '../request/request';
-import './didDetail.css'
-import Search from './elements/Search'
-import iconCopy from '../public/images/icon-copy.svg'
-import iconDeprecated from '../public/images/icon-deprecated.svg'
-import iconNormal from '../public/images/icon-normal.svg'
+import './didDetail.css';
+import Search from './elements/Search';
+import Clipboard from './elements/Clipboard';
+import iconCopy from '../public/images/icon-copy.svg';
+import iconDeprecated from '../public/images/icon-deprecated.svg';
+import iconNormal from '../public/images/icon-normal.svg';
 class DidDetail extends React.Component {
 	constructor(props){
         super(props);
@@ -19,7 +20,9 @@ class DidDetail extends React.Component {
             did:did
         })
         this.GetInfo(did);
+       
     }
+    
     GetInfo = async (did) => {
         try{
             const properties = await getPropertiesFromDid(did);
@@ -88,15 +91,14 @@ class DidDetail extends React.Component {
                     <div className = "list_search"><Search button="false" name="list" lang={lang}/></div>
                 </div>
                 <div className="did_title">
-                	<span>DID: ela: {did}</span>
-                	<img src={iconCopy} alt="iconCopy"/>
-
+                	<span>DID: ela:</span><span  id="foo">{did}</span> 
+                    <Clipboard eleId = "foo" icon = {iconCopy} style={{"marginBotton":"5px","padding":"3px"}}/>
                 </div>
                 <div className="did_content">
                 	<ul>
                 		<li>
                 			<span className="detail_key wordBreak">{lang.public_key}</span>
-                			<span className="detail_value wordBreak">{did}</span>
+                			<span  className="detail_value wordBreak">{properties.length > 0 ? properties[0].public_key : '...'}</span>
                 		</li>
                 	</ul>
                 </div>

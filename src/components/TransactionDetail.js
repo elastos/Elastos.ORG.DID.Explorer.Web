@@ -2,6 +2,7 @@ import React from 'react';
 import { getTxDetailFromTxid ,getTransactionsFromTxid,getValuesFromTxid} from '../request/request';
 import './transactionDetail.css'
 import Search from './elements/Search'
+import Clipboard from './elements/Clipboard';
 import iconCopy from '../public/images/icon-copy.svg'
 import iconDeprecated from '../public/images/icon-deprecated.svg'
 import iconNormal from '../public/images/icon-normal.svg'
@@ -93,8 +94,8 @@ class TransactionDetail extends React.Component {
                     <div className = "list_search"><Search button="false" name="list" lang={lang}/></div>
                 </div>
                 <div className="transaction_title">
-                	<span> {txid} </span>
-                	<img src={iconCopy} alt="iconCopy"/>
+                	<span id="foo"> {txid} </span>
+                	<Clipboard eleId = "foo" icon = {iconCopy} style={{"marginBotton":"5px","padding":"3px"}}/>
 
                 </div>
                 <div className="transaction_summery">
