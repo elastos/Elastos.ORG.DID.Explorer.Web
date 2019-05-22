@@ -12,7 +12,7 @@ class TransactionList extends React.Component {
         super(props);
         this.state = {
             count:0,
-            size: 10,
+            size: 50,
             current:1,
             transactions:[],
             transaction_num : {},

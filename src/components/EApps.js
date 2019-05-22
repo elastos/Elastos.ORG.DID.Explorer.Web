@@ -14,7 +14,7 @@ class EApps extends React.Component {
         super(props);
         this.state = {
             count:0,
-            size: 10,
+            size: 50,
             current:1,
             transactions:[],
             loading:true
@@ -99,9 +99,9 @@ class EApps extends React.Component {
                     </Link></td>
                     <td width="40%">elaapp: fhsuiwhegbwhjfksjtivhjrqgvhfieuvw</td>
                     <td width="20%">
-	                    <Link to={'#'}><span style={{"padding":"0px 10px"}}>Website</span></Link>
-	                    <Link to={'#'}><span style={{"padding":"0px 10px"}}>Privacy</span></Link>
-	                  	<Link to={'#'}><span style={{"padding":"0px 10px"}}>Notification</span></Link>
+	                    <Link to={'/Website'}><span style={{"padding":"0px 10px"}}>Website</span></Link>
+	                    <Link to={'/Privacy'}><span style={{"padding":"0px 10px"}}>Privacy</span></Link>
+	                  	<Link to={'/Notification'}><span style={{"padding":"0px 10px"}}>Notification</span></Link>
                     </td>
                     <td width="20%">
                     	<Link to={'#'}><span style={{"padding":"2px 20px","border":"1px #4F92D0 solid","borderRadius":"15px","color":"#4F92D0"}}>iOS</span></Link>

@@ -13,7 +13,7 @@ class DidList extends React.Component {
         super(props);
         this.state = {
             count:0,
-            size: 10,
+            size: 50,
             current:1,
             dids:[],
             loading:true

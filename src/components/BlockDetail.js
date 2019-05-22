@@ -90,7 +90,7 @@ class BlockDetail extends React.Component {
                         </li>
                         <li>
                             <span className="detail_key wordBreak">{lang.reward}</span>
-                            <span className="detail_value wordBreak"> ... ELA</span>
+                            <span className="detail_value wordBreak"> 0 ELA</span>
                         </li>
                         <li>
                             <span className="detail_key wordBreak">{lang.size}</span>
@@ -110,11 +110,11 @@ class BlockDetail extends React.Component {
                     <ul>
                         <li>
                             <span className="detail_key wordBreak">{lang.previous_block}</span>
-                            <span className="detail_value wordBreak" style={{"wordWrap":"break-word","whiteSpace": "pre-wrap","color":"#31B59D"}} >{blockinfo.previous_block_hash}</span>
+                            <a href={"/block_detail/" + (parseInt(height - 1))}><span className="detail_value wordBreak" style={{"color":"#31B59D"}} >{parseInt(height - 1)}</span></a>
                         </li>
                         <li>
                             <span className="detail_key wordBreak">{lang.next_block}</span>
-                            <span className="detail_value wordBreak" style={{"wordWrap":"break-word","whiteSpace": "pre-wrap","color":"#31B59D"}} >{blockinfo.next_block_hash}</span>
+                            <a href={"/block_detail/" + (parseInt(height) + 1)}><span className="detail_value wordBreak" style={{"color":"#31B59D"}} >{parseInt(height) + 1}</span></a>
                         </li>
                     </ul>
                 </div>

@@ -33,7 +33,7 @@ class Clipboard extends React.Component {
     	const style = this.props.style;
         const status = this.state.status;
         return (
-            <div style={{"display":"inline-block"}}>
+            <div style={{"display":"inline-block"}} className="clipboard">
                 <img className="btn" data-clipboard-target={"#"+eleId} src={icon} title = "copy" style = {style} alt="Copy to clipboard"/>
                 {status === "success" && <span style={{"fontSize":"12px","color":"#00cc99","marginLeft":"5px"}}>复制成功 ！</span>}
                 {status === "error" && <span style={{"fontSize":"12px","color":"#cc0099","marginLeft":"5px"}}>复制失败 ！</span>}
