@@ -12,7 +12,7 @@ class TransactionList extends React.Component {
         super(props);
         this.state = {
             count:0,
-            size: 10,
+            size: 50,
             current:1,
             transactions:[],
             transaction_num : {},
@@ -55,8 +55,8 @@ class TransactionList extends React.Component {
             const count = height ? await getTransactionsCountFromHeight(height) : await getTransactionsCount();
             if(height) this.props.setTransCount(count[0].count);
              this.setState({
-                count:count[0].count,
-                loading:false
+                count:count[0].count
+                
             })
         }catch(err){
           console.log(err)
@@ -73,7 +73,7 @@ class TransactionList extends React.Component {
             transactions[k].isEvent = isEvent;
             number.push(k);
              if(number.length === transactions.length){
-                this.setState({transactions:transactions})
+                this.setState({transactions:transactions,loading:false})
             }
         }catch(err){
             console.log(err)

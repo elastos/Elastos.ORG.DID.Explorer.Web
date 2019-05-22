@@ -13,7 +13,7 @@ class DidList extends React.Component {
         super(props);
         this.state = {
             count:0,
-            size: 10,
+            size: 50,
             current:1,
             dids:[],
             loading:true
@@ -36,8 +36,7 @@ class DidList extends React.Component {
             });
             const count = await getDidCount();
             this.setState({
-                count:count[0].count,
-                loading:false
+                count:count[0].count
             })
         }catch(err){
           console.log(err)
@@ -52,7 +51,7 @@ class DidList extends React.Component {
 
             number.push(k);
             if(number.length === dids.length){
-                this.setState({dids:dids})
+                this.setState({dids:dids,  loading:false})
             }
         }catch(err){
             console.log(err)

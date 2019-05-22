@@ -1,6 +1,7 @@
 import React from 'react';
 import './eappDetail.css';
 import Search from './elements/Search'
+import Clipboard from './elements/Clipboard';
 import iconCopy from '../public/images/icon-copy.svg'
 import iconLeft from '../public/images/icon-left.svg'
 import mark_l from '../public/images/mark_l.png'
@@ -21,7 +22,10 @@ class Header extends React.Component {
                 		<div><img src={mark_l} alt="profile"/></div>
                 		<div>
                 			<p className="eapp_name">ENBank</p>
-                			<p className="eapp_did"><span>elaappdid:sdasfjnklsadfnsjkalfnsdklfsnjkldfkslkdsf</span><img src={iconCopy} alt="copy"/></p>
+                			<p className="eapp_did">
+                            <span>elaappdid:</span><span id="foo">sdasfjnklsadfnsjkalfnsdklfsnjkldfkslkdsf</span>
+                            <Clipboard eleId = "foo" icon = {iconCopy} style={{"marginBotton":"5px","padding":"3px"}}/>
+                            </p>
                 			<ul className="eapp_nav">
                 				<li className = "status"><img src={privacy} alt="privacy"/> <span>Privacy</span></li>
                 				<li className = "notice"><img src={notice} alt = "notice"/> <span>Notification</span></li>
@@ -29,7 +33,7 @@ class Header extends React.Component {
                 			</ul>
                 		</div>
                 		<div>
-                			<span>{lang.website}</span>
+                			<a href="/website" style={{"textDecoration":"none"}}><span className="webbutton">{lang.website}</span></a>
                 		</div>
 
                 	</div>
@@ -52,16 +56,16 @@ class Header extends React.Component {
                                 </thead>
                                 <tbody className="ant-table-tbody">
                                      <tr className="ant-table-row ant-table-row-level-0 table_tr1" data-row-key="1">
-                                        <td>Size</td>
-                                        <td>20 MB</td>
+                                        <td style={{"width":"50%"}}>Size</td>
+                                        <td style={{"width":"50%"}}>20 MB</td>
                                      </tr>
                                      <tr className="ant-table-row ant-table-row-level-0 table_tr1" data-row-key="1">
-                                        <td>Url</td>
-                                        <td>https://eladapp.com/app</td>
+                                        <td style={{"width":"50%"}}>Url</td>
+                                        <td style={{"width":"50%"}}><a href="https://eladapp.com/" style={{"color":"#31B59D"}}>https://eladapp.com/app</a></td>
                                      </tr>
                                      <tr className="ant-table-row ant-table-row-level-0 table_tr1" data-row-key="1">
-                                        <td>Signature</td>
-                                        <td>akksdnjujsadfujkgnak;awiere;awlka;sdlkfsa;ldkfasjl;f</td>
+                                        <td style={{"width":"50%"}}>Signature</td>
+                                        <td style={{"width":"50%"}}>akksdnjujsadfujkgnak;awiere;awlka;sdlkfsa;ldkfasjl;f</td>
                                      </tr>
                                 </tbody>
                             </table>

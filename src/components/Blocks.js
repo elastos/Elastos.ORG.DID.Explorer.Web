@@ -12,7 +12,7 @@ class Blocks extends React.Component {
         super(props);
         this.state = {
             count:0,
-            size: 10,
+            size: 50,
             current:1,
             blocks:[],
             loading:true
@@ -43,8 +43,7 @@ class Blocks extends React.Component {
             });
             const count = await getBlocksCount();
             this.setState({
-                count:count[0].count,
-                loading:false
+                count:count[0].count
             })
         }catch(err){
           console.log(err)
@@ -60,7 +59,7 @@ class Blocks extends React.Component {
             blocks[k].count = count[0].count;
             number.push(k)
             if(number.length === blocks.length){
-                this.setState({blocks:blocks})
+                this.setState({blocks:blocks, loading:false})
             }
         }catch(err){
             console.log(err)
@@ -126,7 +125,7 @@ class Blocks extends React.Component {
 									<thead className="ant-table-thead">
 										<tr>
 											<th className="">
-												<span>{lang.block_height}</span>
+												<span>{lang.height}</span>
 											</th>
 											<th className="">
 												<span>{lang.transactions}</span>

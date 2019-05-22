@@ -87,6 +87,24 @@ class TransactionDetail extends React.Component {
                         </li>
             )
         })) : <li style={{"textAlign":"center"}}>{loading ? <img src={loadingImg} alt="loading"/> : <span>{lang.not_found}</span>}</li> ;
+        const transHtml = (transactions.length > 0) ? (transactions.map((transaction,k)=>{
+            return(
+                <ul key={k}>
+                    <li style={{"width":"40%"}}>
+                        <span className="detail_key wordBreak">{lang.from}</span>
+                        <a href="/address_info/transaction.inputs.replace(',','')"><span className="detail_value wordBreak" style={{"color":"#31B59D"}}>{transaction.inputs.replace(",","")}</span></a>
+                    </li>
+                    <li style={{"width":"40%"}}>
+                        <span className="detail_key wordBreak">{lang.to}</span>
+                        <a href="/address_info/transaction.outputs.replace(',','')"><span className="detail_value wordBreak" style={{"color":"#31B59D"}}>{transaction.outputs.replace(",","")}</span></a>
+                    </li>
+                    <li style={{"width":"20%"}}>
+                        <span className="detail_key wordBreak">{lang.number}</span>
+                        <span className="detail_value wordBreak">{transaction.values / 100000000} ELA</span>
+                    </li>
+                </ul>
+                );
+        })) : <li style={{"textAlign":"center"}}>{loading ? <img src={loadingImg} alt="loading"/> : <span>{lang.not_found}</span>}</li>;
         return (
             <div className="container">
             	<div className = "list_top" >
@@ -94,7 +112,7 @@ class TransactionDetail extends React.Component {
                     <div className = "list_search"><Search button="false" name="list" lang={lang}/></div>
                 </div>
                 <div className="transaction_title">
-                	<span id="foo"> {txid} </span>
+                	<span id="foo">{txid}</span>
                 	<Clipboard eleId = "foo" icon = {iconCopy} style={{"marginBotton":"5px","padding":"3px"}}/>
 
                 </div>
@@ -123,32 +141,7 @@ class TransactionDetail extends React.Component {
                 	</ul>
                 </div>
                 <div className="transaction_summery" >
-                	<ul>
-                		<li style={{"width":"40%"}}> 
-                			<span className="detail_key wordBreak">{lang.from}</span>
-                			<span className="detail_value wordBreak" style={{"color":"#31B59D"}}>{transactions.length ? transactions[0].inputs : "..."}</span>
-                		</li>
-                		<li style={{"width":"40%"}}>
-                			<span className="detail_key wordBreak">{lang.to}</span>
-                			<span className="detail_value wordBreak" style={{"color":"#31B59D"}}>{transactions.length ? transactions[0].outputs : "..."}</span>
-                		</li>
-                        <li style={{"width":"20%"}}>
-                            <span className="detail_key wordBreak">{lang.number}</span>
-                            <span className="detail_value wordBreak">{transactions.length ? transactions[0].values / 100000000 : "..."} ELA</span>
-                        </li>
-                		<li style={{"width":"40%"}}>
-                			<span className="detail_key wordBreak">{lang.from}</span>
-                			<span className="detail_value wordBreak" style={{"color":"#31B59D"}}>{transactions.length ? transactions[0].inputs : "..."}</span>
-                		</li>
-                		<li style={{"width":"40%"}}>
-                			<span className="detail_key wordBreak">{lang.to}</span>
-                			<span className="detail_value wordBreak" style={{"color":"#31B59D"}}>{transactions.length ? transactions[0].outputs : "..."}</span>
-                		</li>
-                        <li style={{"width":"20%"}}>
-                            <span className="detail_key wordBreak">{lang.number}</span>
-                            <span className="detail_value wordBreak">{transactions.length ? transactions[0].values / 100000000 : "..."} ELA</span>
-                        </li>
-                	</ul>
+                	{transHtml}
                 </div>
 				<div className="transaction_title" style={{    "marginTop": "40px"}}>
                 	<span> {lang.did_properties}</span>
