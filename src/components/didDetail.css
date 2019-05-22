@@ -9,7 +9,7 @@
 	font-family: Bio Sans Bold
 }
 .did_title img{
-margin-left:5px;
+    margin-bottom: 5px;
 }
 .did_content{
 	width:100%;
@@ -36,7 +36,7 @@ margin-left:5px;
 	display: inline-block;
 }
 .did_content span{
-	padding:3px 0px;
+	padding:5px;
 	display: block;
 }
 .did_content p{
