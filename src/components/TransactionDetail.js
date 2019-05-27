@@ -82,7 +82,7 @@ class TransactionDetail extends React.Component {
         const proHtml = (transactions.length >0 && typeof transactions[0].properties != "undefined") ? (transactions[0].properties.map((property,k)=>{
             return(
                 <li style={{"width":"50%","display":"inline-block"}} key={k}>
-                            <span className="detail_key wordBreak">{ property.property_key}</span>
+                            <span className="detail_key wordBreak">{ property.property_key} <a href={"/history/"+transactions[0].did+"/"+property.property_key} className="did_history">{lang.history}</a></span>
                             <span className="detail_value wordBreak">{ property.property_value}</span>
                             {property.property_key_status === 1 ? (
                                 <span className="detail_status" ><img src={iconNormal} alt="iconNormal"/>Normal</span>
