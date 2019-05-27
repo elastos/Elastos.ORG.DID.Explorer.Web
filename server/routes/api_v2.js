@@ -533,7 +533,10 @@ router.get('/block/getReport', function(req, res, next) {
 				console.log("mysql error")
 				console.log(error)
 			}else{
-				console.log('SELECT DATE_FORMAT(`local_system_time`,"' + time_format + '") as local_time , count('+colume+') as count from ( SELECT '+colume+',local_system_time from `chain_did_property` where `local_system_time` > "'+time+'" group by '+colume+' ) as a group by local_time')
+				const arr_total= [];
+				const arr_new = [];
+				res.send({"startTime":startTime,"data_total":arr_total,"data_new":arr_new,"results":results1});
+				/*console.log('SELECT DATE_FORMAT(`local_system_time`,"' + time_format + '") as local_time , count('+colume+') as count from ( SELECT '+colume+',local_system_time from `chain_did_property` where `local_system_time` > "'+time+'" group by '+colume+' ) as a group by local_time')
 				db.query('SELECT DATE_FORMAT(`local_system_time`,"' + time_format + '") as local_time , count('+colume+') as count from ( SELECT '+colume+',local_system_time from `chain_did_property` where `local_system_time` > "'+time+'" group by '+colume+' ) as a group by local_time', function (error, results, fields) {
 					if(error){
 						console.log("mysql error")
@@ -556,7 +559,7 @@ router.get('/block/getReport', function(req, res, next) {
 						}
 						res.send({"startTime":startTime,"data_total":arr_total,"data_new":arr_new});
 					}
-				})
+				})*/
 			}
 		})
 
