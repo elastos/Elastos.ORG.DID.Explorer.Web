@@ -297,7 +297,7 @@ router.get('/block/transactions_info', function(req, res, next) {
 	try{
 		var db =  DB.connection;
 		var txid = req.query.txid;
-		db.query('SELECT createTime,length(memo) as `length_memo`, fee FROM `chain_block_transaction_history` WHERE `type` = "spend" and `txid` = "'+ txid +'"'
+		db.query('SELECT createTime,length(memo) as `length_memo`, fee, value FROM `chain_block_transaction_history` WHERE `type` = "spend" and `txid` = "'+ txid +'"'
 		, function (error, results, fields) {
 			if(error){
 				console.log("mysql error")
@@ -491,13 +491,13 @@ router.get('/block/getReport', function(req, res, next) {
 		}else{
 			res.send("");
 		}
-		if(range === "1h"){
+		if(range === "1H"){
 			var rate = 3600;
 			var time = fn.timestampToTime(timestamp - rate * 1000, "YMDhi");
 			var time_format = "%Y-%m-%d %H:%i";
 			var data_count = 60;
 			var time_format1 = "YMDhi"
-		}else if (range === "1d"){
+		}else if (range === "24H"){
 			var rate =  24 * 3600 
 			var time = fn.timestampToTime(timestamp - rate * 1000,"YMDh");
 			var time_format = "%Y-%m-%d %H";
@@ -526,7 +526,7 @@ router.get('/block/getReport', function(req, res, next) {
 		}
 
 
-		var startTime = fn.timestampToTime(timestamp -  (data_count - 1)  * rate / data_count * 1000, time_format1);
+		var startTime = fn.timestampToTime(timestamp -  (data_count - 2)  * rate / data_count * 1000, time_format1);
 		console.log('SELECT count(distinct `'+colume+'` ) AS count FROM `chain_did_property` where `local_system_time` < "'+startTime+'" ')
 		db.query('SELECT count(distinct `'+colume+'` ) AS count FROM `chain_did_property` where `local_system_time` < "'+startTime+'" ', function (error, results1, fields) {
 			if(error){
@@ -543,7 +543,7 @@ router.get('/block/getReport', function(req, res, next) {
 						var arr_new = [];
 						var arr_total = [];
 						for(var i = 0 ;i< data_count ;i++){
-							var t = fn.timestampToTime(timestamp -  (data_count - i - 1 ) * rate / data_count * 1000, time_format1);
+							var t = fn.timestampToTime(timestamp -  (data_count - i - 2 ) * rate / data_count * 1000, time_format1);
 							var c = 0
 							results.map((v,k)=>{
 								if(v.local_time === t){

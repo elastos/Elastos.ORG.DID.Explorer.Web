@@ -20,6 +20,7 @@ class Router extends Component {
 				<Route path = "/eapp_detail/:did" render={props=>(<App {...props}  />)}  ></Route>
 				<Route path = "/address_info" render={props=>(<App {...props}  />)}  ></Route>
 				<Route path = "/reporting" render={props=>(<App {...props}  />)}  ></Route>
+				<Route path = "/history/:did/:key" render={props=>(<App {...props}  />)}  ></Route>
 				<Route render={props=>(<NoPage {...props}  />)}  ></Route>
 		    </Switch>
 		</BrowserRouter>

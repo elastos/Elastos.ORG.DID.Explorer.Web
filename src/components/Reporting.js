@@ -8,14 +8,17 @@ class Reporting extends React.Component {
         super(props);
         this.state = {
         	did_new_start:null,
-        	did_new_data:null
+        	did_new_data:null,
+        	range:"1W"
         }
        
     }
 	getDidInfo = async (type,range) => {
         try{
            	const result = await getDidReport(type,range);
-           	this.initDidReport(result.startTime,result.data_new,result.data_total);
+           	const startTime = range === "24H" ? (result.startTime + ":00") : result.startTime
+           	this.initDidReport(startTime,result.data_new,result.data_total);
+           	jQuery(".highcharts-credits").remove()
         }catch(err){
           console.log(err)
         }
@@ -23,8 +26,9 @@ class Reporting extends React.Component {
     getTransactionsInfo = async (type,range)=>{
     	try{
            	const result = await getTransactionsReport(type,range);
-           	
-           	this.initTransactionsReport(result.startTime,result.data_new,result.data_total);
+           	const startTime = range === "24H" ? (result.startTime + ":00") : result.startTime
+           	this.initTransactionsReport(startTime,result.data_new,result.data_total);
+           	jQuery(".highcharts-credits").remove()
         }catch(err){
           console.log(err)
         }
@@ -32,28 +36,45 @@ class Reporting extends React.Component {
     getEAppsInfo = async (type,range)=>{
     	try{
            	const result = await getEAppsReport(type,range);
-           
-           	this.initEappsReport(result.startTime,result.data_new,result.data_total);
+           	const startTime = range === "24H" ? (result.startTime + ":00") : result.startTime
+           	this.initEappsReport(startTime,result.data_new,result.data_total);
+           	jQuery(".highcharts-credits").remove()
         }catch(err){
           console.log(err)
         }
     }
 	componentWillMount(){
-		this.getDidInfo("did","1M");
-		this.getTransactionsInfo("transactions","1M");
+		const range = this.state.range
+		this.getDidInfo("did",range);
+		this.getTransactionsInfo("transactions",range);
 		//this.getEAppsInfo("eApps","1M");
 	}
 	componentDidMount(){
 		jQuery(".highcharts-credits").css("display","none")
 	}
-	
+	setxAxisFormate(){
+		const range = this.state.range
+		let dateTimeLabelFormats,pointInterval,pointIntervalUnit;
+		switch(range){
+			case "1H"  :  dateTimeLabelFormats = {minute: '%H:%M'};  pointInterval = 60 * 1000 ; break;
+			case "24H" :  dateTimeLabelFormats = {hour: '%H:%M'};  pointInterval = 3600 * 1000 ; break;
+			case "1W"  :  dateTimeLabelFormats = {day: '%b. %e'};  pointInterval = 24 * 3600 * 1000 ; break;
+			case "1M"  :  dateTimeLabelFormats = {day: '%b. %e'};  pointInterval = 24 * 3600 * 1000 ; break;
+			case "1Y"  :  dateTimeLabelFormats = {month: '%b \'%y'};  pointIntervalUnit = "month" ; break;
+			case "ALL" :  dateTimeLabelFormats = {day: '%b. %e'};  pointInterval = 24 * 3600 * 1000 ; break;
+		}
+		return {
+			dateTimeLabelFormats:dateTimeLabelFormats,pointInterval:pointInterval,pointIntervalUnit:pointIntervalUnit
+		}		
+	}
 	initDidReport(did_new_start,did_new_data,did_total_data){
+		const range = this.state.range
 		Highcharts.chart('container1', {
 		    chart: {
 		        zoomType: 'xy'
 		    },
 		    title: {
-		        text: '<span style="padding:30px;display:block">Total DIDs & New DIDs (1M)</span>',
+		        text: '<span style="padding:30px;display:block">Total DIDs & New DIDs ('+range+')</span>',
 		        style:{
 		        	color:"#080251",
 		        	fontSize: "20px"
@@ -66,9 +87,7 @@ class Reporting extends React.Component {
 		    },
 		    xAxis: {
 		        type: 'datetime',
-		        dateTimeLabelFormats: {
-					day: '%b. %e'
-				}
+		        dateTimeLabelFormats: this.setxAxisFormate().dateTimeLabelFormats
 		    },
 		    yAxis: [{ // Primary yAxis
 		        labels: {
@@ -168,7 +187,8 @@ class Reporting extends React.Component {
 		            valueSuffix: ''
 		        },
 		        pointStart: new Date(did_new_start).getTime(),
-		        pointInterval: 24 * 3600 * 1000
+		        pointInterval: this.setxAxisFormate().pointInterval,
+		        pointIntervalUnit:this.setxAxisFormate().pointIntervalUnit
 		        
 		    },{
 		        name: 'New DIDs',
@@ -179,18 +199,20 @@ class Reporting extends React.Component {
 		            valueSuffix: ''
 		        },
 		        pointStart: new Date(did_new_start).getTime(),
-		        pointInterval: 24 * 3600 * 1000
+		        pointInterval: this.setxAxisFormate().pointInterval,
+		        pointIntervalUnit:this.setxAxisFormate().pointIntervalUnit
 		        
 		    }]
 		});
 	}
 	initTransactionsReport(trx_new_start,trx_new_data,trx_total_data){
+		const range = this.state.range
 		Highcharts.chart('container2', {
 		    chart: {
 		        zoomType: 'xy'
 		    },
 		    title: {
-		        text: '<span style="padding:30px;display:block">Total Transactions/New Transactions (1M)</span>',
+		        text: '<span style="padding:30px;display:block">Total Transactions/New Transactions ('+range+')</span>',
 		        style:{
 		        	color:"#080251",
 		        	fontSize: "20px"
@@ -203,9 +225,8 @@ class Reporting extends React.Component {
 		    },
 		    xAxis: {
 		    	type: 'datetime',
-		        dateTimeLabelFormats: {
-					day: '%b. %e'
-				}},
+		        dateTimeLabelFormats: this.setxAxisFormate().dateTimeLabelFormats
+		    },
 		    yAxis: [{ // Primary yAxis
 		        labels: {
 		            formatter: function () {
@@ -304,7 +325,8 @@ class Reporting extends React.Component {
 		            valueSuffix: ''
 		        },
 		        pointStart: new Date(trx_new_start).getTime(),
-		        pointInterval: 24 * 3600 * 1000
+		        pointInterval: this.setxAxisFormate().pointInterval,
+		        pointIntervalUnit:this.setxAxisFormate().pointIntervalUnit
 		        
 		    },{
 		        name: 'New Transactions',
@@ -315,7 +337,8 @@ class Reporting extends React.Component {
 		            valueSuffix: ''
 		        },
 		        pointStart: new Date(trx_new_start).getTime(),
-		        pointInterval: 24 * 3600 * 1000
+		        pointInterval: this.setxAxisFormate().pointInterval,
+		        pointIntervalUnit:this.setxAxisFormate().pointIntervalUnit
 		        
 		    }]
 		});
@@ -323,13 +346,13 @@ class Reporting extends React.Component {
 
 
 	initEappsReport(){
-
+		const range = this.state.range
 		Highcharts.chart('container3', {
 		    chart: {
 		        zoomType: 'xy'
 		    },
 		    title: {
-		        text: '<span style="padding:30px;display:block">Total EApps & New EApps (1W)</span>',
+		        text: '<span style="padding:30px;display:block">Total EApps & New EApps ('+range+')</span>',
 		        style:{
 		        	color:"#080251",
 		        	fontSize: "20px"
@@ -449,22 +472,29 @@ class Reporting extends React.Component {
 		    }]
 		});
 	}
-		
+	changRange(range){
+		console.log(range)
+		this.setState({
+			range:range
+		})
+		this.getDidInfo("did",range);
+		this.getTransactionsInfo("transactions",range);
+	}
 	
     render() {
     	const lang = this.props.lang
-		
+		const range = this.state.range
     	return (
     		<div className="container" >
     			<div className = "list_top" >
                     <div className = "list_title"><span style={{"fontSize":"25px"}}>{lang.reporting}</span></div>
-                    <div className = "" style={{ "float": "right","background": "#E1E5EA","marginTop":"50px","padding": "0px 15px"}}>
-                    	<span style={{"margin": "2px 20px","display": "inline-block","color": "#364458","fontSize": "14px"}}>1H</span>
-                    	<span style={{"margin": "2px 20px","display": "inline-block","color": "#364458","fontSize": "14px"}}>24H</span>
-                    	<span style={{"margin": "2px 20px","display": "inline-block","color": "#364458","fontSize": "14px"}}>1W</span>
-                    	<span className="selected_date" style={{"margin": "2px 20px","display": "inline-block","color": "#364458","fontSize": "14px"}}>1M</span>
-                    	<span style={{"margin": "2px 20px","display": "inline-block","color": "#364458","fontSize": "14px"}}>1Y</span>
-                    	<span style={{"margin": "2px 20px","display": "inline-block","color": "#364458","fontSize": "14px"}}>ALL</span>
+                    <div className = "rangeSelecter" style={{ "float": "right","background": "#E1E5EA","marginTop":"50px","padding": "0px 15px"}}>
+                    	<span className={range==="1H"? "selected_date":""} onClick={this.changRange.bind(this,"1H")}>1H</span>
+                    	<span className={range==="24H"? "selected_date":""} onClick={this.changRange.bind(this,"24H")}>24H</span>
+                    	<span className={range==="1W"? "selected_date":""} onClick={this.changRange.bind(this,"1W")}>1W</span>
+                    	<span className={range==="1M"? "selected_date":""} onClick={this.changRange.bind(this,"1M")}>1M</span>
+                    	<span className={range==="1Y"? "selected_date":""} onClick={this.changRange.bind(this,"1Y")}>1Y</span>
+                    	<span className={range==="ALL"? "selected_date":""} onClick={this.changRange.bind(this,"ALL")}>ALL</span>
                     </div>
                 </div>
                 

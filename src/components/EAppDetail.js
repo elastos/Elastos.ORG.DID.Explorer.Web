@@ -7,12 +7,12 @@ import iconLeft from '../public/images/icon-left.svg'
 import mark_l from '../public/images/mark_l.png'
 import privacy from '../public/images/icon-privacy.svg'
 import notice from '../public/images/icon-notice.svg'
-class Header extends React.Component {
+class EappDetail extends React.Component {
 	
     render() {
         const lang = this.props.lang
     	return (
-    		 <div className="container">
+    		<div className="container">
             	<div className = "list_top" >
                     <div className = "list_title"><a href="/eapps"><img src={iconLeft} alt="back" style={{"marginBottom":"2px","marginRight":"10px"}}/><span style={{"fontSize":"14px"}}>{lang.back}</span></a></div>
                     <div className = "list_search"><Search button="false" name="list" lang={lang}/></div>
@@ -79,4 +79,4 @@ class Header extends React.Component {
     }
 }
 
-export default Header;
+export default EappDetail;

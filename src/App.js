@@ -14,6 +14,7 @@ import EApps from './components/EApps';
 import EAppDetail from './components/EAppDetail';
 import AddressInfo from './components/AddressInfo'
 import Reporting from './components/Reporting'
+import History from './components/History'
 import NoPage from './components/NoPage'
 import lang_cn from './public/lang/cn.json';
 import lang_en from './public/lang/en.json';
@@ -76,6 +77,9 @@ class App extends Component {
       break;
       case '/reporting':
         context = <Reporting  {...props} lang = {this.state.lang}/>;
+      break;
+      case '/history/:did/:key':
+        context = <History  {...props} lang = {this.state.lang}/>;
       break;
       default:
         context = <NoPage {...props} lang = {this.state.lang}/>;

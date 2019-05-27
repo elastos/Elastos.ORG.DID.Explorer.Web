@@ -65,11 +65,13 @@ class TransactionList extends React.Component {
     GetTransactionsInfo = async (k,number,transactions)=>{
         try{
             const transaction = await getTransactionsInfo(transactions[k].txid);
+            console.log(transaction)
             const properties = await getTxDetailFromTxid(transactions[k].txid);
             const isEvent = properties.length > 0 ? true : false 
             transactions[k].createTime = transaction[0].createTime;
             transactions[k].length_memo = transaction[0].length_memo;
             transactions[k].fee = transaction[0].fee;
+            transactions[k].value = transaction[0].value;
             transactions[k].isEvent = isEvent;
             number.push(k);
              if(number.length === transactions.length){
@@ -156,7 +158,7 @@ class TransactionList extends React.Component {
                     <td width="15%" style={{"position":"relative"}}>
                         { tx.height !== height1 &&  num > 1 && <div style={{"width":"5px","height":height,"background": "linear-gradient(180deg, #1DE9B6 0%, #02C67F 100%)","borderRadius": "4px","position":"absolute","left":"35px"}}></div>}
                     <span style={{"paddingLeft":"20px"}}>{tx.height}</span></td>
-                    <td width="15%"><span>{tx.fee / 100000000}</span></td>
+                    <td width="15%"><span>{tx.value / 100000000}</span></td>
                     <td width="20%"><span>{tx.createTime ? this.timestampToTime(tx.createTime) : "" }</span></td>
                 </tr>
             )
@@ -198,7 +200,7 @@ class TransactionList extends React.Component {
                                 </table>
                                 <div style={{"marginTop":"50px","textAlign":"center"}}>
                                     
-                                    {count !== 0 && <Pagination defaultCurrent={current} total={count} defaultPageSize = {size} onChange={this.onChange}  itemRender={this.itemRender}
+                                    {count !== 0 && count > size && <Pagination defaultCurrent={current} total={count} defaultPageSize = {size} onChange={this.onChange}  itemRender={this.itemRender}
                                         style={{"width":"100%","height":"50px","textAlign":"center"}}
                                     />}
                                     {loading && <div className="loadingBox"><img src={loadingImg} alt="loading"/></div>}
