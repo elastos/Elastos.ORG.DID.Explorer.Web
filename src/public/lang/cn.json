@@ -73,5 +73,7 @@
 	"total_sent":"发送总额",
 	"total_received":"接收总额",
 	"transaction_history":"交易历史",
+	"reporting":"统计报表",
+	"amount":"金额",
 	"reporting":"统计报表"
 }

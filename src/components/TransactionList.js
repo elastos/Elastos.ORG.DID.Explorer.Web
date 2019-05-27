@@ -2,7 +2,7 @@ import React from 'react';
 import { getTransactions , getTransactionsCount, getTransactionsInfo, getTransactionsFromHeight, getTransactionsCountFromHeight, getTxDetailFromTxid } from '../request/request';
 import {Link} from 'react-router-dom';
 import { Pagination } from 'antd';
-import './transactionList.css';
+import './TransactionList.css';
 import Search from './elements/Search'
 import loadingImg from '../public/images/loading.gif';
 import iconLeft from '../public/images/icon-left.svg'
@@ -185,7 +185,7 @@ class TransactionList extends React.Component {
                                                 <div>{lang.block_height}</div>
                                             </th>
                                             <th className="">
-                                                <div>{lang.fee}</div>
+                                                <div>{lang.amount}</div>
                                             </th>
                                             <th className="">
                                                 <div>{lang.time}</div>

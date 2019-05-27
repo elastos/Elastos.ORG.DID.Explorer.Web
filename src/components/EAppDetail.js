@@ -14,7 +14,7 @@ class Header extends React.Component {
     	return (
     		 <div className="container">
             	<div className = "list_top" >
-                    <div className = "list_title"><img src={iconLeft} alt="back" style={{"marginBottom":"2px","marginRight":"10px"}}/><span style={{"fontSize":"14px"}}>{lang.back}</span></div>
+                    <div className = "list_title"><a href="/eapps"><img src={iconLeft} alt="back" style={{"marginBottom":"2px","marginRight":"10px"}}/><span style={{"fontSize":"14px"}}>{lang.back}</span></a></div>
                     <div className = "list_search"><Search button="false" name="list" lang={lang}/></div>
                 </div>
                 <div className="eapp_content">

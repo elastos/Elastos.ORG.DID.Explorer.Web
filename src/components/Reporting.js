@@ -1,15 +1,59 @@
 import React from 'react';
 import jQuery from 'jquery'
-import { getDidTotalIn1h } from '../request/request';
+import { getDidReport, getTransactionsReport, getEAppsReport } from '../request/request';
 import Highcharts from 'highcharts/highstock'
+import './Reporting.css'
 class Reporting extends React.Component {
+	constructor(props){
+        super(props);
+        this.state = {
+        	did_new_start:null,
+        	did_new_data:null
+        }
+       
+    }
+	getDidInfo = async (type,range) => {
+        try{
+           	const result = await getDidReport(type,range);
+           	this.initDidReport(result.startTime,result.data_new,result.data_total);
+        }catch(err){
+          console.log(err)
+        }
+    }
+    getTransactionsInfo = async (type,range)=>{
+    	try{
+           	const result = await getTransactionsReport(type,range);
+           	
+           	this.initTransactionsReport(result.startTime,result.data_new,result.data_total);
+        }catch(err){
+          console.log(err)
+        }
+    }
+    getEAppsInfo = async (type,range)=>{
+    	try{
+           	const result = await getEAppsReport(type,range);
+           
+           	this.initEappsReport(result.startTime,result.data_new,result.data_total);
+        }catch(err){
+          console.log(err)
+        }
+    }
+	componentWillMount(){
+		this.getDidInfo("did","1M");
+		this.getTransactionsInfo("transactions","1M");
+		//this.getEAppsInfo("eApps","1M");
+	}
 	componentDidMount(){
-	 	Highcharts.chart('container1', {
+		jQuery(".highcharts-credits").css("display","none")
+	}
+	
+	initDidReport(did_new_start,did_new_data,did_total_data){
+		Highcharts.chart('container1', {
 		    chart: {
 		        zoomType: 'xy'
 		    },
 		    title: {
-		        text: '<span style="padding:30px;display:block">Total DIDs & New DIDs (1W)</span>',
+		        text: '<span style="padding:30px;display:block">Total DIDs & New DIDs (1M)</span>',
 		        style:{
 		        	color:"#080251",
 		        	fontSize: "20px"
@@ -20,12 +64,17 @@ class Reporting extends React.Component {
 		    subtitle: {
 		        text: ''
 		    },
-		    xAxis: [{
-		        crosshair: true
-		    }],
+		    xAxis: {
+		        type: 'datetime',
+		        dateTimeLabelFormats: {
+					day: '%b. %e'
+				}
+		    },
 		    yAxis: [{ // Primary yAxis
 		        labels: {
-		            format: '',
+		            formatter: function () {
+						return this.value > 1000 ? (this.value / 1000 + 'k') : this.value;
+					},
 		            style: {
 		                color: "#a8a8a8"
 		            }
@@ -46,7 +95,9 @@ class Reporting extends React.Component {
 		            }
 		        },
 		        labels: {
-		            format: '',
+		            formatter: function () {
+						return this.value > 1000 ? (this.value / 1000 + 'k') : this.value;
+					},
 		            style: {
 		                color: "#a8a8a8"
 		            }
@@ -89,7 +140,7 @@ class Reporting extends React.Component {
 							color: '#6DDBFF',
 						}
 					}
-				},
+				}
 			},
 		    tooltip: {
 		        shared: true,
@@ -112,32 +163,34 @@ class Reporting extends React.Component {
 		    series: [{
 		        name: 'Total DIDs',
 		        type: 'areaspline',
-		       	data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6,7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6,25.2, 26.5, 23.3, 18.3, 13.9, 9.6],
-		        tooltip: {
+		       	data: did_total_data,
+		       	tooltip: {
 		            valueSuffix: ''
 		        },
+		        pointStart: new Date(did_new_start).getTime(),
+		        pointInterval: 24 * 3600 * 1000
 		        
 		    },{
 		        name: 'New DIDs',
 		        type: 'column',
 		        yAxis: 1,
-		        data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4,49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4,135.6, 148.5, 216.4, 194.1, 95.6, 54.4],
+		        data: did_new_data,
 		        tooltip: {
 		            valueSuffix: ''
 		        },
+		        pointStart: new Date(did_new_start).getTime(),
+		        pointInterval: 24 * 3600 * 1000
 		        
 		    }]
 		});
-
-
-
-
+	}
+	initTransactionsReport(trx_new_start,trx_new_data,trx_total_data){
 		Highcharts.chart('container2', {
 		    chart: {
 		        zoomType: 'xy'
 		    },
 		    title: {
-		        text: '<span style="padding:30px;display:block">Total Transactions/New Transactions (1W)</span>',
+		        text: '<span style="padding:30px;display:block">Total Transactions/New Transactions (1M)</span>',
 		        style:{
 		        	color:"#080251",
 		        	fontSize: "20px"
@@ -148,12 +201,16 @@ class Reporting extends React.Component {
 		    subtitle: {
 		        text: ''
 		    },
-		    xAxis: [{
-		        crosshair: true
-		    }],
+		    xAxis: {
+		    	type: 'datetime',
+		        dateTimeLabelFormats: {
+					day: '%b. %e'
+				}},
 		    yAxis: [{ // Primary yAxis
 		        labels: {
-		            format: '',
+		            formatter: function () {
+						return this.value > 1000 ? (this.value / 1000 + 'k') : this.value;
+					},
 		            style: {
 		                color: "#a8a8a8"
 		            }
@@ -174,7 +231,9 @@ class Reporting extends React.Component {
 		            }
 		        },
 		        labels: {
-		            format: '',
+		            formatter: function () {
+						return this.value > 1000 ? (this.value / 1000 + 'k') : this.value;
+					},
 		            style: {
 		                color: "#a8a8a8"
 		            }
@@ -240,25 +299,30 @@ class Reporting extends React.Component {
 		    series: [{
 		        name: 'Total Transactions',
 		        type: 'areaspline',
-		       	data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6,7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6,25.2, 26.5, 23.3, 18.3, 13.9, 9.6],
-		        tooltip: {
+		       	 data: trx_total_data,
+		       	 tooltip: {
 		            valueSuffix: ''
 		        },
+		        pointStart: new Date(trx_new_start).getTime(),
+		        pointInterval: 24 * 3600 * 1000
 		        
 		    },{
 		        name: 'New Transactions',
 		        type: 'column',
 		        yAxis: 1,
-		        data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4,49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4,135.6, 148.5, 216.4, 194.1, 95.6, 54.4],
-		        tooltip: {
+		         data: trx_new_data,
+		         tooltip: {
 		            valueSuffix: ''
 		        },
+		        pointStart: new Date(trx_new_start).getTime(),
+		        pointInterval: 24 * 3600 * 1000
 		        
 		    }]
 		});
+	}
 
 
-
+	initEappsReport(){
 
 		Highcharts.chart('container3', {
 		    chart: {
@@ -384,8 +448,9 @@ class Reporting extends React.Component {
 		        
 		    }]
 		});
-		jQuery(".highcharts-credits").css("display","none")
 	}
+		
+	
     render() {
     	const lang = this.props.lang
 		
@@ -393,13 +458,13 @@ class Reporting extends React.Component {
     		<div className="container" >
     			<div className = "list_top" >
                     <div className = "list_title"><span style={{"fontSize":"25px"}}>{lang.reporting}</span></div>
-                    <div style={{ "float": "right","background": "#E1E5EA","marginTop":"50px","padding": "0px 15px"}}>
-                    	<span  style={{"margin": "2px 20px","display": "inline-block","borderBottom":"1px #000 solid","color": "#364458","fontSize": "14px"}}>1H</span>
-                    	<span style={{"margin": "2px 20px","display": "inline-block","borderBottom":"1px #000 solid","color": "#364458","fontSize": "14px"}}>24H</span>
-                    	<span style={{"margin": "2px 20px","display": "inline-block","borderBottom":"1px #000 solid","color": "#364458","fontSize": "14px"}}>1W</span>
-                    	<span style={{"margin": "2px 20px","display": "inline-block","borderBottom":"1px #000 solid","color": "#364458","fontSize": "14px"}}>1M</span>
-                    	<span style={{"margin": "2px 20px","display": "inline-block","borderBottom":"1px #000 solid","color": "#364458","fontSize": "14px"}}>1Y</span>
-                    	<span style={{"margin": "2px 20px","display": "inline-block","borderBottom":"1px #000 solid","color": "#364458","fontSize": "14px"}}>ALL</span>
+                    <div className = "" style={{ "float": "right","background": "#E1E5EA","marginTop":"50px","padding": "0px 15px"}}>
+                    	<span style={{"margin": "2px 20px","display": "inline-block","color": "#364458","fontSize": "14px"}}>1H</span>
+                    	<span style={{"margin": "2px 20px","display": "inline-block","color": "#364458","fontSize": "14px"}}>24H</span>
+                    	<span style={{"margin": "2px 20px","display": "inline-block","color": "#364458","fontSize": "14px"}}>1W</span>
+                    	<span className="selected_date" style={{"margin": "2px 20px","display": "inline-block","color": "#364458","fontSize": "14px"}}>1M</span>
+                    	<span style={{"margin": "2px 20px","display": "inline-block","color": "#364458","fontSize": "14px"}}>1Y</span>
+                    	<span style={{"margin": "2px 20px","display": "inline-block","color": "#364458","fontSize": "14px"}}>ALL</span>
                     </div>
                 </div>
                 

@@ -73,5 +73,7 @@
 	"total_sent":"Total Sent",
 	"total_received":"Total Received",
 	"transaction_history":"Transaction History",
+	"reporting":"Reporting",
+	"amount":"Amount",
 	"reporting":"Reporting"
 }
