@@ -64,7 +64,7 @@ class Header extends React.Component {
 									<Link to={'/eapps'}> EApps</Link>
 								</li>
 								<li className={path==='/reporting' ? 'menu_active' : undefined}>
-									<Link to={'/reporting'}>Reporting</Link>
+									<Link to={'/reporting'}>{lang.reporting}</Link>
 								</li>
 								<li className="language" onMouseOver={this.showLanguage} onMouseOut = {this.hideLanguage}>
 									<div><img alt="lang_img" src={lang_img}/><span style={{"paddingRight":"0px"}}>{lang.language}</span><img src={iconType} alt="icontype"/></div>

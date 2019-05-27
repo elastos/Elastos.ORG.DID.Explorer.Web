@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
 var DB = new (require('../db'));
+var fn = require('../source/function')
+
 DB.connect();
 function setHeaders(res){
 	res.header("Access-Control-Allow-Origin", "*");
@@ -474,19 +476,93 @@ router.get('/block/did/info', function(req, res, next) {
 	}
 });
 
-router.get('/block/didTotal', function(req, res, next) {
+router.get('/block/getReport', function(req, res, next) {
 	setHeaders(res);
 	try{
 		var db =  DB.connection;
 		var type = req.query.type;
-		db.query('SELECT * FROM `chain_did_property` WHERE `did` = "'+did+'" LIMIT 1', function (error, results, fields) {
+		var range = req.query.range;
+		console.log(type)
+		var timestamp = new Date().getTime();
+		if (type === "did"){
+			var colume = "did"
+		}else if(type === "transactions"){
+			var colume = "txid"
+		}else{
+			res.send("");
+		}
+		if(range === "1h"){
+			var rate = 3600;
+			var time = fn.timestampToTime(timestamp - rate * 1000, "YMDhi");
+			var time_format = "%Y-%m-%d %H:%i";
+			var data_count = 60;
+			var time_format1 = "YMDhi"
+		}else if (range === "1d"){
+			var rate =  24 * 3600 
+			var time = fn.timestampToTime(timestamp - rate * 1000,"YMDh");
+			var time_format = "%Y-%m-%d %H";
+			var data_count = 24;
+			var time_format1 = "YMDh"
+		}else if(range === "1W"){
+			var rate = 7 * 24 * 3600 
+			var time = fn.timestampToTime(timestamp - rate * 1000,"YMD");
+			var time_format = "%Y-%m-%d";
+			var data_count = 7;
+			var time_format1 = "YMD"
+		}else if(range === "1M"){
+			var rate = 30 * 24 * 3600 
+			var time = fn.timestampToTime(timestamp - rate * 1000,"YMD");
+			var time_format = "%Y-%m-%d";
+			var data_count = 30;
+			var time_format1 = "YMD"
+		}else if(range === "1Y"){
+			var rate = 12 * 30 * 24 * 3600 
+			var time = fn.timestampToTime(timestamp -  rate * 1000,"YM");
+			var time_format = "%Y-%m";
+			var data_count = 12;
+			var time_format1 = "YM"
+		}else{
+			res.send("");
+		}
+
+
+		var startTime = fn.timestampToTime(timestamp -  (data_count - 1)  * rate / data_count * 1000, time_format1);
+		console.log('SELECT count(distinct `'+colume+'` ) AS count FROM `chain_did_property` where `local_system_time` < "'+startTime+'" ')
+		db.query('SELECT count(distinct `'+colume+'` ) AS count FROM `chain_did_property` where `local_system_time` < "'+startTime+'" ', function (error, results1, fields) {
 			if(error){
 				console.log("mysql error")
 				console.log(error)
 			}else{
-				res.send(results);
+				console.log('SELECT DATE_FORMAT(`local_system_time`,"' + time_format + '") as local_time , count('+colume+') as count from ( SELECT '+colume+',local_system_time from `chain_did_property` where `local_system_time` > "'+time+'" group by '+colume+' ) as a group by local_time')
+				db.query('SELECT DATE_FORMAT(`local_system_time`,"' + time_format + '") as local_time , count('+colume+') as count from ( SELECT '+colume+',local_system_time from `chain_did_property` where `local_system_time` > "'+time+'" group by '+colume+' ) as a group by local_time', function (error, results, fields) {
+					if(error){
+						console.log("mysql error")
+						console.log(error)
+					}else{
+						var totalStart = results1[0].count;
+						var arr_new = [];
+						var arr_total = [];
+						for(var i = 0 ;i< data_count ;i++){
+							var t = fn.timestampToTime(timestamp -  (data_count - i - 1 ) * rate / data_count * 1000, time_format1);
+							var c = 0
+							results.map((v,k)=>{
+								if(v.local_time === t){
+									c = v.count
+								}
+							})
+							arr_new.push(c)
+							totalStart += c
+							arr_total.push(totalStart)
+						}
+						res.send({"startTime":startTime,"data_total":arr_total,"data_new":arr_new});
+					}
+				})
 			}
 		})
+
+
+
+		
 	}catch(err){
 		console.log(err)
 	}

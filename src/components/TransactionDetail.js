@@ -9,17 +9,17 @@ import iconNormal from '../public/images/icon-normal.svg'
 import confirmed from '../public/images/confirmed.svg'
 import loadingImg from '../public/images/loading.gif';
 class TransactionDetail extends React.Component {
-	constructor(props){
+    constructor(props){
         super(props);
         this.state = {
-	        txid:"",
+            txid:"",
             transactions:[],
             isEvent:true,
             loading:true
         }
     }
     componentWillMount (){
-    	const txid =this.props.match.params.txid ;
+        const txid =this.props.match.params.txid ;
         this.setState({
             txid: txid
         })
@@ -47,7 +47,7 @@ class TransactionDetail extends React.Component {
     }
 
      componentWillReceiveProps(nextProps) {
-     	const txid =nextProps.match.params.txid ;
+        const txid =nextProps.match.params.txid ;
         this.setState({
             txid: txid
         })
@@ -69,7 +69,7 @@ class TransactionDetail extends React.Component {
       (s < 10 ? '0'+ s : s );
     }
     render() {
-    	const txid = this.props.match.params.txid;
+        const txid = this.props.match.params.txid;
         const lang = this.props.lang;
         const { transactions, isEvent, loading } = this.state;
         console.log(transactions)
@@ -107,49 +107,49 @@ class TransactionDetail extends React.Component {
         })) : <li style={{"textAlign":"center"}}>{loading ? <img src={loadingImg} alt="loading"/> : <span>{lang.not_found}</span>}</li>;
         return (
             <div className="container">
-            	<div className = "list_top" >
+                <div className = "list_top" >
                     <div className = "list_title"><span style={{"fontSize":"25px"}}>{lang.transactions}</span></div>
                     <div className = "list_search"><Search button="false" name="list" lang={lang}/></div>
                 </div>
                 <div className="transaction_title">
-                	<span id="foo">{txid}</span>
-                	<Clipboard eleId = "foo" icon = {iconCopy} style={{"marginBotton":"5px","padding":"3px"}}/>
+                    <span id="foo">{txid}</span>
+                    <Clipboard eleId = "foo" icon = {iconCopy} style={{"marginBotton":"5px","padding":"3px"}}/>
 
                 </div>
                 <div className="transaction_summery">
-                	<ul>
-                		<li>
-                			<span className="detail_key wordBreak">{lang.status}</span>
-                			<span className="detail_value wordBreak" style={{"color":"#31B59D"}}><img src={confirmed} alt = "confirmed"/> Confirmed</span>
-                		</li>
-                		<li>
-                			<span className="detail_key wordBreak">{lang.did_event_included}</span>
-                			<span className="detail_value wordBreak">{transactions.length ?( isEvent ? lang.yes : lang.no) :'...'}</span>
-                		</li>
-                		<li>
-                			<span className="detail_key wordBreak">{lang.time}</span>
-                			<span className="detail_value wordBreak">{transactions.length ? this.timestampToTime(transactions[0].createTime) : "..."}</span>
-                		</li>
-                		<li>
-                			<span className="detail_key wordBreak">{lang.block_height}</span>
-                			<span className="detail_value wordBreak"> {transactions.length ? transactions[0].height : "..."}</span>
-                		</li>
-                		<li>
-                			<span className="detail_key wordBreak">{lang.fee}</span>
-                			<span className="detail_value wordBreak">{transactions.length ? transactions[0].fee / 100000000 : "..."} ELA</span>
-                		</li>
-                	</ul>
+                    <ul>
+                        <li>
+                            <span className="detail_key wordBreak">{lang.status}</span>
+                            <span className="detail_value wordBreak" style={{"color":"#31B59D"}}><img src={confirmed} alt = "confirmed"/> Confirmed</span>
+                        </li>
+                        <li>
+                            <span className="detail_key wordBreak">{lang.did_event_included}</span>
+                            <span className="detail_value wordBreak">{transactions.length ?( isEvent ? lang.yes : lang.no) :'...'}</span>
+                        </li>
+                        <li>
+                            <span className="detail_key wordBreak">{lang.time}</span>
+                            <span className="detail_value wordBreak">{transactions.length ? this.timestampToTime(transactions[0].createTime) : "..."}</span>
+                        </li>
+                        <li>
+                            <span className="detail_key wordBreak">{lang.block_height}</span>
+                            <span className="detail_value wordBreak"> {transactions.length ? transactions[0].height : "..."}</span>
+                        </li>
+                        <li>
+                            <span className="detail_key wordBreak">{lang.fee}</span>
+                            <span className="detail_value wordBreak">{transactions.length ? transactions[0].fee / 100000000 : "..."} ELA</span>
+                        </li>
+                    </ul>
                 </div>
                 <div className="transaction_summery" >
-                	{transHtml}
+                    {transHtml}
                 </div>
-				<div className="transaction_title" style={{    "marginTop": "40px"}}>
-                	<span> {lang.did_properties}</span>
+                <div className="transaction_title" style={{    "marginTop": "40px"}}>
+                    <span> {lang.did_properties}</span>
                 </div>
                 <div className="did_content">
-                	<ul>
+                    <ul>
                         {proHtml}
-                	</ul>
+                    </ul>
                 </div>   
             </div>
         );
