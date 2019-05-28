@@ -16,8 +16,14 @@ class Reporting extends React.Component {
 	getDidInfo = async (type,range) => {
         try{
            	const result = await getDidReport(type,range);
-           	const startTime = range === "24H" ? (result.startTime + ":00") : result.startTime
-           	this.initDidReport(startTime,result.data_new,result.data_total);
+           	if(result.length > 0){
+           		const startTime = range === "24H" ? (result[0].start_time + ":00") : result[0].start_time
+	           	const data_new = [];
+	           	const data_total = [];
+           		JSON.parse(result[0].data_new).map((v,k)=>{data_new.push(v.count) });
+	           	JSON.parse(result[0].data_total).map((v,k)=>{data_total.push(v.count) });
+	           	this.initDidReport(startTime,data_new,data_total);
+           	}
            	jQuery(".highcharts-credits").remove()
         }catch(err){
           console.log(err)
@@ -26,8 +32,14 @@ class Reporting extends React.Component {
     getTransactionsInfo = async (type,range)=>{
     	try{
            	const result = await getTransactionsReport(type,range);
-           	const startTime = range === "24H" ? (result.startTime + ":00") : result.startTime
-           	this.initTransactionsReport(startTime,result.data_new,result.data_total);
+           	if(result.length > 0){
+           		const startTime = range === "24H" ? (result[0].start_time + ":00") : result[0].start_time
+	           	const data_new = [];
+	           	const data_total = [];
+           		JSON.parse(result[0].data_new).map((v,k)=>{data_new.push(v.count) });
+	           	JSON.parse(result[0].data_total).map((v,k)=>{data_total.push(v.count) });
+	           	this.initTransactionsReport(startTime,data_new,data_total);
+           	}
            	jQuery(".highcharts-credits").remove()
         }catch(err){
           console.log(err)
