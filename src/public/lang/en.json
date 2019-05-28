@@ -75,5 +75,6 @@
 	"transaction_history":"Transaction History",
 	"reporting":"Reporting",
 	"amount":"Amount",
-	"reporting":"Reporting"
+	"reporting":"Reporting",
+	"history":"History"
 }

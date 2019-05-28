@@ -147,7 +147,7 @@ class Blocks extends React.Component {
 								</table>
 								<div style={{"marginTop":"50px","textAlign":"center"}}>
                                     
-                                    {count != 0 && <Pagination defaultCurrent={current} total={count} defaultPageSize = {size} onChange={this.onChange}  itemRender={this.itemRender}
+                                    {count != 0 && count > size && <Pagination defaultCurrent={current} total={count} defaultPageSize = {size} onChange={this.onChange}  itemRender={this.itemRender}
                                         style={{"width":"100%","height":"50px","textAlign":"center"}}
                                     />}
                                     {loading && <img src={loadingImg} alt="loading"/>}

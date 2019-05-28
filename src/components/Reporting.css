@@ -1,3 +1,10 @@
 .selected_date{
 	border-bottom: 1px #000 solid;
 }
+.rangeSelecter span{
+	cursor:pointer;
+	margin: 2px 20px;
+	display: inline-block;
+	color: #364458;
+	font-size: 14px;
+}

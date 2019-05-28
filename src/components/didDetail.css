@@ -60,3 +60,20 @@
 	margin-right:4px;
 	padding-bottom: 2px
 }
+.did_history{
+	width: 80px;
+    height: 25px;
+    display: inline-block;
+    border: 1px #31B59D solid;
+    text-align: center;
+    line-height: 24px;
+    border-radius: 25px;
+    color: #31B59D;
+    cursor: pointer;
+    margin-left:10px;
+}
+.did_history:hover{
+	text-decoration: none;
+	color:#fff;
+	background: #31B59D;
+}
