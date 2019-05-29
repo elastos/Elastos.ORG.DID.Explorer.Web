@@ -8,7 +8,7 @@ const config = require('./webpack.config.dev');
 const paths = require('./paths');
 const fs = require('fs');
 const apiRouter = require('../server/routes/index');
-const jobs = require('../server/jobs/index')
+//const jobs = require('../server/jobs/index')
 
 const protocol = process.env.HTTPS === 'true' ? 'https' : 'http';
 const host = process.env.HOST || '0.0.0.0';
@@ -96,7 +96,7 @@ module.exports = function(proxy, allowedHost) {
       // This lets us open files from the runtime error overlay.
       app.use(errorOverlayMiddleware());
       apiRouter(app);
-      jobs();
+      //jobs();
       // This service worker file is effectively a 'no-op' that will reset any
       // previous service worker registered for the same host:port combination.
       // We do this in development to avoid hitting the production cache if

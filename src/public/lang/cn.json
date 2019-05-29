@@ -35,7 +35,7 @@
 	"memo_size":"memo 大小",
 	"byte":"字节",
 	"property_name":"属性名称",
-	"property_value":"属性值",
+	"value":"属性值",
 	"last_update":"最后更新时间",
 	"history":"修改历史",
 	"details":"详情",
@@ -76,5 +76,6 @@
 	"reporting":"统计报表",
 	"amount":"金额",
 	"reporting":"统计报表",
-	"history":"历史记录"
+	"history":"历史记录",
+	"timestamp":"时间"
 }
