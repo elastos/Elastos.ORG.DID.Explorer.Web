@@ -35,7 +35,7 @@
 	"memo_size":"Memo Size",
 	"byte":"byte",
 	"property_name":"Property Name",
-	"property_value":"Property Value",
+	"value":"Value",
 	"last_update":"Last Update",
 	"history":"history",
 	"details":"Details",
@@ -76,5 +76,6 @@
 	"reporting":"Reporting",
 	"amount":"Amount",
 	"reporting":"Reporting",
-	"history":"History"
+	"history":"History",
+	"timestamp":"Timestamp"
 }

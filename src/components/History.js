@@ -89,7 +89,6 @@ class History extends React.Component {
             return(
                 <tr className="ant-table-row ant-table-row-level-0 table_tr1" data-row-key="1" key = {k}>
                     <td >{property.property_value}</td>
-                    <td >...</td>
                     <td >{this.timestampToTime(property.block_time)}</td>
                     <td >{property.txid}</td>
                 </tr>
@@ -109,13 +108,11 @@ class History extends React.Component {
                                 <thead className="ant-table-thead">
                                     <tr>
                                         <th className="">
-                                            <div>Value</div>
+                                            <div>{lang.value}</div>
                                         </th>
+                                        
                                         <th className="">
-                                            <div>Type</div>
-                                        </th>
-                                        <th className="">
-                                            <div>Timestamp</div>
+                                            <div>{lang.timestamp}</div>
                                         </th>
                                         <th className="">
                                             <div>Hash</div>
