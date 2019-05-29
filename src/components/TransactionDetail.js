@@ -1,6 +1,7 @@
 import React from 'react';
 import { getTxDetailFromTxid, getTransactionsFromTxid, getValuesFromTxid, getCurrentHeight} from '../request/request';
 import './transactionDetail.css'
+import U from 'urlencode';
 import Search from './elements/Search'
 import Clipboard from './elements/Clipboard';
 import iconCopy from '../public/images/icon-copy.svg'
@@ -78,37 +79,66 @@ class TransactionDetail extends React.Component {
         const txid = this.props.match.params.txid;
         const lang = this.props.lang;
         const { transactions, isEvent, loading, currentHeight } = this.state;
-        console.log(transactions)
         const proHtml = (transactions.length >0 && typeof transactions[0].properties != "undefined") ? (transactions[0].properties.map((property,k)=>{
-            return(
-                <li style={{"width":"50%","display":"inline-block"}} key={k}>
-                            <span className="detail_key wordBreak">{ property.property_key} <a href={"/history/"+transactions[0].did+"/"+property.property_key} className="did_history">{lang.history}</a></span>
+             if( k % 2 == 0){ return(
+                    <li  key={k}>
+                        <div style={{"width":"50%","display":"inline-block","verticalAlign":"top"}}>
+                            <span className="detail_key wordBreak">{ property.property_key} <a href={"/history/"+transactions[0].did+"/"+U(property.property_key)} className="did_history">{lang.history}</a></span>
                             <span className="detail_value wordBreak">{ property.property_value}</span>
                             {property.property_key_status === 1 ? (
                                 <span className="detail_status" ><img src={iconNormal} alt="iconNormal"/>Normal</span>
                                 ) :(
                                 <span className="detail_status" style={{"color":"#E25757"}}><img src={iconDeprecated} alt="iconDeprecated"/> Deprecated</span>
                                 )}
-                            
-                        </li>
-            )
+                        </div>
+                        {transactions[0].properties[k+1] ? (
+                            <div style={{"width":"50%","display":"inline-block","verticalAlign":"top"}}>
+                            <span className="detail_key wordBreak">{ transactions[0].properties[k+1].property_key} <a href={"/history/"+transactions[0].did+"/"+transactions[0].properties[k+1].property_key} className="did_history">{lang.history}</a></span>
+                            <span className="detail_value wordBreak">{ transactions[0].properties[k+1].property_value}</span>
+                            {transactions[0].properties[k+1].property_key_status === 1 ? (
+                                <span className="detail_status" ><img src={iconNormal} alt="iconNormal"/>Normal</span>
+                                ) :(
+                                <span className="detail_status" style={{"color":"#E25757"}}><img src={iconDeprecated} alt="iconDeprecated"/> Deprecated</span>
+                                )}
+                            </div>
+                        ):""}  
+                    </li> 
+            ) }
         })) : <li style={{"textAlign":"center"}}>{loading ? <img src={loadingImg} alt="loading"/> : <span>{lang.not_found}</span>}</li> ;
         const transHtml = (transactions.length > 0) ? (transactions.map((transaction,k)=>{
+            const outputs_arr = transaction.outputs.split(',');
+            const inputs_arr = transaction.inputs.split(',');
+            
+            const outputHtml = (outputs_arr.length > 0 ) ? (outputs_arr.map((output,k)=>{
+                if(output){
+                    return(
+                        <a href={"/address_info/"+output}><span className="detail_value wordBreak" style={{"color":"#31B59D"}}>{output}</span></a>
+                    )
+                }
+            })) : <li style={{"textAlign":"center"}}>{loading ? <img src={loadingImg} alt="loading"/> : <span>{lang.not_found}</span>}</li>;
+
+            const inputHtml = (inputs_arr.length > 0 ) ? (inputs_arr.map((input,k)=>{
+                if(input){
+                    return(<ul key = {k}>
+                            <li style={{"width":"40%","borderBottom":"none","verticalAlign":"top"}}>
+                                <span className="detail_key wordBreak">{lang.from}</span>
+                                <a href={"/address_info/" + input}><span className="detail_value wordBreak" style={{"color":"#31B59D"}}>{input}</span></a>
+                            </li>
+                            <li style={{"width":"40%","borderBottom":"none","verticalAlign":"top"}}>
+                                <span className="detail_key wordBreak">{lang.to}</span>
+                                {outputHtml}
+                            </li>
+                            <li style={{"width":"20%","borderBottom":"none","verticalAlign":"top"}}>
+                                <span className="detail_key wordBreak">{lang.number}</span>
+                                <span className="detail_value wordBreak">{transaction.values / 100000000} ELA</span>
+                            </li>
+                        </ul>)
+                }
+            })) : <li style={{"textAlign":"center"}}>{loading ? <img src={loadingImg} alt="loading"/> : <span>{lang.not_found}</span>}</li>;
             return(
-                <ul key={k}>
-                    <li style={{"width":"40%"}}>
-                        <span className="detail_key wordBreak">{lang.from}</span>
-                        <a href="/address_info/transaction.inputs.replace(',','')"><span className="detail_value wordBreak" style={{"color":"#31B59D"}}>{transaction.inputs.replace(",","")}</span></a>
-                    </li>
-                    <li style={{"width":"40%"}}>
-                        <span className="detail_key wordBreak">{lang.to}</span>
-                        <a href="/address_info/transaction.outputs.replace(',','')"><span className="detail_value wordBreak" style={{"color":"#31B59D"}}>{transaction.outputs.replace(",","")}</span></a>
-                    </li>
-                    <li style={{"width":"20%"}}>
-                        <span className="detail_key wordBreak">{lang.number}</span>
-                        <span className="detail_value wordBreak">{transaction.values / 100000000} ELA</span>
-                    </li>
-                </ul>
+                <div key={k}>
+                    {inputHtml}
+                </div>
                 );
         })) : <li style={{"textAlign":"center"}}>{loading ? <img src={loadingImg} alt="loading"/> : <span>{lang.not_found}</span>}</li>;
         return (

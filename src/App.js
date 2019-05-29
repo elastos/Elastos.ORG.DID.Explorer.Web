@@ -72,7 +72,7 @@ class App extends Component {
       case '/eapp_detail/:did':
         context = <EAppDetail  {...props} lang = {this.state.lang}/>;
       break;
-      case '/address_info':
+      case '/address_info/:address':
         context = <AddressInfo  {...props} lang = {this.state.lang}/>;
       break;
       case '/reporting':

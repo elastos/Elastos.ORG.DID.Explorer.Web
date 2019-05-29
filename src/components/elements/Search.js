@@ -1,5 +1,6 @@
 import React from 'react';
 import './search.css'
+import U from 'urlencode';
 import search from '../../public/images/search.png'
 class Search extends React.Component {
 	onSerchSubmit(type,event){
@@ -14,14 +15,15 @@ class Search extends React.Component {
             const reg_height = /^[0-9]*$/;
             reg_height.test(txt) && (window.location.href = "/block_detail/"+txt);
             txt.length === 64 && (window.location.href = "/transaction_detail/"+txt);
-            txt.length === 34 && (window.location.href = "/did_detail/"+txt);
+            txt.length === 34 && txt.substr(0, 1) === "i" && (window.location.href = "/did_detail/"+txt);
+            txt.length === 34 && txt.substr(0, 1) !== "i" && (window.location.href = "/address_info/"+txt);
             /:/.test(txt) && txt.indexOf(":") === 34 && this.search_did_property(event,txt);
         }
     }
     search_did_property(event,txt) {
         const did = txt.substring(0,txt.indexOf(":"));
         const property = txt.substring(txt.indexOf(":") + 1);
-        event.keyCode === 13 && (window.location.href = "/did/"+did+"/property_history/"+property);
+        event.keyCode === 13 && (window.location.href = "/history/"+did+"/"+U(property));
     }
     render() {
     	const isButton = this.props.button === "true" ? true :false;

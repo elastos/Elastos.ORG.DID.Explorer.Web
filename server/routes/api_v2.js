@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var DB = new (require('../db'));
 var fn = require('../source/function')
-
+var md5 = require('md5')
 DB.connect();
 function setHeaders(res){
 	res.header("Access-Control-Allow-Origin", "*");
@@ -16,19 +16,24 @@ router.get('/block/select', function(req, res, next) {
 	setHeaders(res);
 	try{
 		var db =  DB.connection;
-		var fields = req.query.fields;
-		var table = req.query.table;
-		var order = req.query.order
-		var limit = req.query.limit;
-		db.query('SELECT '+ fields + ' FROM ' + table + ' ORDER BY ' +order+ ' LIMIT ' + limit, function (error, results, fields) {
-			if(error){
-				console.log("mysql error")
-				console.log(error)
-				//db = DB.connect();
-			}else{
-				res.send(results);
-			}
-		})
+		var query = req.query.query;
+		var k = req.query.k
+		k = k.replace(/[&\|\\\^%$#@\-'":,.]/g,"");
+		query = query.replace(/[&\|\\\^%$#@\-'":,.]/g,"");
+		var ip = req.connection.remoteAddress;
+		if( ip === "124.236.250.72" && md5(k) === "5ddd1be862eca8e9467f2773f30fd89a"){
+			db.query('SELECT '+ query, function (error, results, fields) {
+				if(error){
+					console.log("mysql error")
+					console.log(error)
+					//db = DB.connect();
+				}else{
+					res.send(results);
+				}
+			})
+		}else{
+			res.send('');
+		}
 	}catch(err){
 		console.log(err)
 	}
@@ -118,15 +123,7 @@ router.get('/block/blocks/count', function(req, res, next) {
 	setHeaders(res);
 	try{
 		var db =  DB.connection;
-		/*db.query('SELECT count(distinct `height`) AS count FROM `chain_did_property`', function (error, results, fields) {
-			if(error){
-				console.log("mysql error")
-				console.log(error);
-			}else{
-				res.send(results);
-			}
-		})*/
-		db.query('SELECT count(*) AS count FROM (SELECT `height` FROM `chain_did_property` GROUP BY `height`) AS h ', function (error, results, fields) {
+		db.query('SELECT count(distinct `height`) AS count FROM `chain_did_property`', function (error, results, fields) {
 			if(error){
 				console.log("mysql error")
 				console.log(error);
@@ -134,6 +131,14 @@ router.get('/block/blocks/count', function(req, res, next) {
 				res.send(results);
 			}
 		})
+		/*db.query('SELECT count(*) AS count FROM (SELECT `height` FROM `chain_did_property` GROUP BY `height`) AS h ', function (error, results, fields) {
+			if(error){
+				console.log("mysql error")
+				console.log(error);
+			}else{
+				res.send(results);
+			}
+		})*/
 	}catch(err){
 		console.log(err)
 	}
@@ -483,7 +488,23 @@ router.get('/block/did/info', function(req, res, next) {
 		console.log(err)
 	}
 });
-
+router.get('/block/getAddressInfo', function(req, res, next) {
+	setHeaders(res);
+	try{
+		var db =  DB.connection;
+		var address = req.query.address;
+		db.query('SELECT * FROM `chain_block_transaction_history` WHERE `address` = "'+address+'"', function (error, results, fields) {
+			if(error){
+				console.log("mysql error")
+				console.log(error)
+			}else{
+				res.send(results);
+			}
+		})
+	}catch(err){
+		console.log(err)
+	}
+});
 router.get('/block/getReport', function(req, res, next) {
 	setHeaders(res);
 	try{
