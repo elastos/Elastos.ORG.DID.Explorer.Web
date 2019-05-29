@@ -44,6 +44,7 @@ class TransactionList extends React.Component {
             const transactions = height ? await getTransactionsFromHeight(height,start,size) : await getTransactions(start,size);
             let obj={}
             let number = [];
+            this.setState({transactions:transactions})
             Object.keys(transactions).map((transaction,k) => {
                 let num = obj[transactions[k].height] || 0
                 obj[transactions[k].height] = num + 1

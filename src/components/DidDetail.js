@@ -1,6 +1,7 @@
 import React from 'react';
 import { getPropertiesFromDid } from '../request/request';
 import './didDetail.css';
+import U from 'urlencode';
 import Search from './elements/Search';
 import Clipboard from './elements/Clipboard';
 import iconCopy from '../public/images/icon-copy.svg';
@@ -64,19 +65,31 @@ class DidDetail extends React.Component {
 
         const propertyHtml = properties.map((property,k) => {
             if(property.property_key){
-                return(
-                    
-                    <li style={{"width":"50%","display":"inline-block"}} key={k}>
-                            <span className="detail_key wordBreak">{ property.property_key} <a href={"/history/"+did+"/"+property.property_key} className="did_history">{lang.history}</a></span>
+                if( k % 2 == 0){return(
+                    <li  key={k}>
+                        <div style={{"width":"50%","display":"inline-block","verticalAlign":"top"}}>
+                            <span className="detail_key wordBreak">{ property.property_key} <a href={"/history/"+did+"/"+U(property.property_key)} className="did_history">{lang.history}</a></span>
                             <span className="detail_value wordBreak">{ property.property_value}</span>
                             {property.property_key_status === 1 ? (
                                 <span className="detail_status" ><img src={iconNormal} alt="iconNormal"/>Normal</span>
                                 ) :(
                                 <span className="detail_status" style={{"color":"#E25757"}}><img src={iconDeprecated} alt="iconDeprecated"/> Deprecated</span>
                                 )}
-                            
-                        </li>
-                )
+                        </div>
+
+                        {properties[k+1] ? (
+                            <div style={{"width":"50%","display":"inline-block","verticalAlign":"top"}}>
+                            <span className="detail_key wordBreak">{ properties[k+1].property_key} <a href={"/history/"+did+"/"+properties[k+1].property_key} className="did_history">{lang.history}</a></span>
+                            <span className="detail_value wordBreak">{ properties[k+1].property_value}</span>
+                            {properties[k+1].property_key_status === 1 ? (
+                                <span className="detail_status" ><img src={iconNormal} alt="iconNormal"/>Normal</span>
+                                ) :(
+                                <span className="detail_status" style={{"color":"#E25757"}}><img src={iconDeprecated} alt="iconDeprecated"/> Deprecated</span>
+                                )}
+                            </div>
+                        ):""}
+                    </li>
+                )}
             }else{
           return("");
         }

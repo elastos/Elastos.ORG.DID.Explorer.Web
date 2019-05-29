@@ -37,6 +37,7 @@ class Blocks extends React.Component {
         try{
             const start = ( current - 1) * size;
             const blocks = await getBlocks(start,size);
+            this.setState({blocks:blocks})
             let number = [];
             Object.keys(blocks).map((block,k) => {
                 return this.GetBlockInfo(k,number,blocks)                
