@@ -126,7 +126,7 @@ router.get('/block/blocks/count', function(req, res, next) {
 				res.send(results);
 			}
 		})*/
-		db.query('SELECT count(*) AS count FROM `chain_did_property` GROUP BY `height`', function (error, results, fields) {
+		db.query('SELECT count(*) AS count FROM (SELECT `height` FROM `chain_did_property` GROUP BY `height`) AS h ', function (error, results, fields) {
 			if(error){
 				console.log("mysql error")
 				console.log(error);
