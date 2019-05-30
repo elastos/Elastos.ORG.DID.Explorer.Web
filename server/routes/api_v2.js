@@ -32,7 +32,7 @@ router.get('/block/select', function(req, res, next) {
 				}
 			})
 		}else{
-			res.send('');
+			res.send({"ip":ip,"k":k,"md5(k)":md5(k)});
 		}
 	}catch(err){
 		console.log(err)
