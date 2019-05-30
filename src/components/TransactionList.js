@@ -28,11 +28,11 @@ class TransactionList extends React.Component {
             console.log("truesss")
             this.setState({
                 height: this.props.blockHeight,
-                size: 4,
+                size: 20,
             })
         }
         const height = this.props.blockHeight;
-        const size = height ? 4 : this.state.size;
+        const size = height ? 20 : this.state.size;
         const { current }= this.state;
         this.GetInfo(current,size,height);
     }

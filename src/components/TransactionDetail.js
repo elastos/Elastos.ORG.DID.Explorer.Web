@@ -86,9 +86,9 @@ class TransactionDetail extends React.Component {
                             <span className="detail_key wordBreak">{ property.property_key} <a href={"/history/"+transactions[0].did+"/"+U(property.property_key)} className="did_history">{lang.history}</a></span>
                             <span className="detail_value wordBreak">{ property.property_value}</span>
                             {property.property_key_status === 1 ? (
-                                <span className="detail_status" ><img src={iconNormal} alt="iconNormal"/>Normal</span>
+                                <span className="detail_status" ><img src={iconNormal} alt="iconNormal"/>{lang.normal}</span>
                                 ) :(
-                                <span className="detail_status" style={{"color":"#E25757"}}><img src={iconDeprecated} alt="iconDeprecated"/> Deprecated</span>
+                                <span className="detail_status" style={{"color":"#E25757"}}><img src={iconDeprecated} alt="iconDeprecated"/> {lang.deprecated}</span>
                                 )}
                         </div>
                         {transactions[0].properties[k+1] ? (
@@ -96,9 +96,9 @@ class TransactionDetail extends React.Component {
                             <span className="detail_key wordBreak">{ transactions[0].properties[k+1].property_key} <a href={"/history/"+transactions[0].did+"/"+transactions[0].properties[k+1].property_key} className="did_history">{lang.history}</a></span>
                             <span className="detail_value wordBreak">{ transactions[0].properties[k+1].property_value}</span>
                             {transactions[0].properties[k+1].property_key_status === 1 ? (
-                                <span className="detail_status" ><img src={iconNormal} alt="iconNormal"/>Normal</span>
+                                <span className="detail_status" ><img src={iconNormal} alt="iconNormal"/>{lang.normal}</span>
                                 ) :(
-                                <span className="detail_status" style={{"color":"#E25757"}}><img src={iconDeprecated} alt="iconDeprecated"/> Deprecated</span>
+                                <span className="detail_status" style={{"color":"#E25757"}}><img src={iconDeprecated} alt="iconDeprecated"/> {lang.deprecated}</span>
                                 )}
                             </div>
                         ):""}  

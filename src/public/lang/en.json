@@ -67,6 +67,9 @@
 	"url":"URLs",
 	"back":"Back",
 	"website":"Website",
+	"privacy":"Privacy",
+	"notification":"Notification",
+	"more":"More",
 	"not_found":"Not Found",
 	"address":"Address",
 	"balance":"Balance",
@@ -77,5 +80,7 @@
 	"amount":"Amount",
 	"reporting":"Reporting",
 	"history":"History",
-	"timestamp":"Timestamp"
+	"timestamp":"Timestamp",
+	"normal":"Normal",
+	"deprecated":"Deprecated"
 }
