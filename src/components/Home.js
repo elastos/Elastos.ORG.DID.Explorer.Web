@@ -194,7 +194,8 @@ class Home extends React.Component {
         const lis = blocks.length ? blocks.map((v,k)=>{
             let style = {
                 "right": k*2.55 +"%",
-                "height": typeof v.size === "number" ? v.size * rate : 0 +"px"
+                "height": typeof v.size === "number" ? v.size * rate : 0 +"px",
+                "background" : k === 0 ? "linear-gradient(180deg, #1DE9B6 0%, #02C67F 100%)" : ""
             }
             return <li className= {click_id === k ? "char_li char_clicked" : "char_li" } key= {k} style={style} 
             onClick={(e)=>{e.nativeEvent.stopImmediatePropagation();}} 

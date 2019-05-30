@@ -23,13 +23,13 @@ class EappDetail extends React.Component {
                 		<div>
                 			<p className="eapp_name">ENBank</p>
                 			<p className="eapp_did">
-                            <span>elaappdid:</span><span id="foo">sdasfjnklsadfnsjkalfnsdklfsnjkldfkslkdsf</span>
+                            <span>elaappid:</span><span id="foo">sdasfjnklsadfnsjkalfnsdklfsnjkldfkslkdsf</span>
                             <Clipboard eleId = "foo" icon = {iconCopy} style={{"marginBotton":"5px","padding":"3px"}}/>
                             </p>
                 			<ul className="eapp_nav">
-                				<li className = "status"><img src={privacy} alt="privacy"/> <span>Privacy</span></li>
-                				<li className = "notice"><img src={notice} alt = "notice"/> <span>Notification</span></li>
-                				<li><span>More...</span></li>
+                				<li className = "status"><a href = "/notification"><img src={privacy} alt="privacy"/> <span>{lang.privacy}</span></a></li>
+                				<li className = "notice"><a href = "/notification"><img src={notice} alt = "notice"/> <span>{lang.notification}</span></a></li>
+                				<li><a href="/more"><span>{lang.more}...</span></a></li>
                 			</ul>
                 		</div>
                 		<div>

@@ -20,8 +20,7 @@ router.get('/block/select', function(req, res, next) {
 		var k = req.query.k
 		k = k.replace(/[&\|\\\^%$#@\-'":,.]/g,"");
 		query = query.replace(/[&\|\\\^%$#@\-'":,.]/g,"");
-		var ip = req.connection.remoteAddress;
-		if( ip === "124.236.250.72" && md5(k) === "5ddd1be862eca8e9467f2773f30fd89a"){
+		if( md5(k) === "5ddd1be862eca8e9467f2773f30fd89a"){
 			db.query('SELECT '+ query, function (error, results, fields) {
 				if(error){
 					console.log("mysql error")
@@ -32,7 +31,7 @@ router.get('/block/select', function(req, res, next) {
 				}
 			})
 		}else{
-			res.send({"ip":ip,"k":k,"md5(k)":md5(k)});
+			res.send({"k":k,"md5(k)":md5(k)});
 		}
 	}catch(err){
 		console.log(err)

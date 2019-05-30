@@ -66,7 +66,10 @@
 	"name":"名称",
 	"url":"地址",
 	"back":"返回",
-	"website":"网址",
+	"website":"网页",
+	"privacy":"隐私政策",
+	"notification":"通知",
+	"more":"更多",
 	"not_found":"未搜索到记录",
 	"address":"地址",
 	"balance":"余额",
@@ -77,5 +80,7 @@
 	"amount":"金额",
 	"reporting":"统计报表",
 	"history":"历史记录",
-	"timestamp":"时间"
+	"timestamp":"时间",
+	"normal":"正常",
+	"deprecated":"弃用"
 }
