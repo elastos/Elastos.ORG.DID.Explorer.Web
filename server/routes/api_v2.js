@@ -581,16 +581,14 @@ router.get('/block/getReport', function(req, res, next) {
 			option.timeArr.push({"s":t1,"t":t})
 		}
 		option.startTime = fn.timestampToTime(timestamp -  (option.data_count - 1)  * option.rate / option.data_count * 1000, option.time_format1);
-		
-
-
-		/*db.query('SELECT count(distinct `'+cv+'` ) AS count FROM `chain_did_property` where `local_system_time` < "'+option.startTime+'" ', function (error, results, fields) {
+		/*db.query('SELECT count(distinct `'+type+'` ) AS count FROM `chain_did_property` where `local_system_time` < "'+option.startTime+'" ', function (error, results, fields) {
 			if(error){
 				console.log("mysql error")
 				console.log(error)
 			}else{
 				var totalStart = results[0].count;*/
 				var arr_new = [];
+				//var arr_total = [];
 				option.timeArr.map((v,k)=>{
 					db.query('SELECT count(distinct `'+type+'` ) AS count FROM `chain_did_property` WHERE `local_system_time` < "'+v.t+'" AND `local_system_time` >= "'+v.s+'"', function (error, results1, fields) {
 						if(error){
@@ -598,8 +596,12 @@ router.get('/block/getReport', function(req, res, next) {
 							console.log(error)
 						}else{
 							arr_new.push({"k":k,"count":results1[0].count})
+							//totalStart += results1[0].count
+							//arr_total.push({"k":k,"count":totalStart})
 							if(arr_new.length === option.data_count){
+								//var data = {"type":type,"range":range,"start_time":option.startTime,"data_new":arr_new,"data_total":arr_total};
 								var data = {"type":type,"range":range,"start_time":option.startTime,"data_new":arr_new};
+								
 								res.send(data);
 							}
 						}
@@ -609,6 +611,63 @@ router.get('/block/getReport', function(req, res, next) {
 		})*/
 
 		
+	}catch(err){
+		console.log(err)
+	}
+});
+
+
+router.get('/block/getReportTotal', function(req, res, next) {
+	setHeaders(res);
+	try{
+		var db =  DB.connection;
+		var type = req.query.type;
+		if(type === "transactions"){
+			type ="txid"
+		}
+		var range = req.query.range;
+		var option = {};
+		var timestamp = new Date().getTime();
+		if(range === "1H"){
+			option.rate = 3600;
+			option.time = fn.timestampToTime(timestamp - option.rate * 1000, "YMDhi");
+			option.time_format = "%Y-%m-%d %H:%i";
+			option.data_count = 60;
+			option.time_format1 = "YMDhi";
+		}else if (range === "24H"){
+			option.rate =  24 * 3600 
+			option.time = fn.timestampToTime(timestamp - option.rate * 1000,"YMDh");
+			option.time_format = "%Y-%m-%d %H";
+			option.data_count = 24;
+			option.time_format1 = "YMDh"
+		}else if(range === "1W"){
+			option.rate = 7 * 24 * 3600 
+			option.time = fn.timestampToTime(timestamp - option.rate * 1000,"YMD");
+			option.time_format = "%Y-%m-%d";
+			option.data_count = 7;
+			option.time_format1 = "YMD"
+		}else if(range === "1M"){
+			option.rate = 30 * 24 * 3600 
+			option.time = fn.timestampToTime(timestamp - option.rate * 1000,"YMD");
+			option.time_format = "%Y-%m-%d";
+			option.data_count = 30;
+			option.time_format1 = "YMD"
+		}else if(range === "1Y"){
+			option.rate = 12 * 30 * 24 * 3600 
+			option.time = fn.timestampToTime(timestamp -  option.rate * 1000,"YM");
+			option.time_format = "%Y-%m";
+			option.data_count = 12;
+			option.time_format1 = "YM"
+		}
+		option.startTime = fn.timestampToTime(timestamp -  (option.data_count - 1)  * option.rate / option.data_count * 1000, option.time_format1);
+		db.query('SELECT count(distinct `'+type+'` ) AS count FROM `chain_did_property` where `local_system_time` < "'+option.startTime+'" ', function (error, results, fields) {
+			if(error){
+				console.log("mysql error")
+				console.log(error)
+			}else{
+				res.send(results);
+			}
+		})
 	}catch(err){
 		console.log(err)
 	}
