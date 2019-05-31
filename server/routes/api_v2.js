@@ -541,25 +541,74 @@ router.get('/block/getReport', function(req, res, next) {
 			type ="txid"
 		}
 		var range = req.query.range;
-		db.query("SHOW TABLES LIKE 'chain_reporting'", function (error, results, fields) {
+		var option = {};
+		var timestamp = new Date().getTime();
+		if(range === "1H"){
+			option.rate = 3600;
+			option.time = fn.timestampToTime(timestamp - option.rate * 1000, "YMDhi");
+			option.time_format = "%Y-%m-%d %H:%i";
+			option.data_count = 60;
+			option.time_format1 = "YMDhi";
+		}else if (range === "24H"){
+			option.rate =  24 * 3600 
+			option.time = fn.timestampToTime(timestamp - option.rate * 1000,"YMDh");
+			option.time_format = "%Y-%m-%d %H";
+			option.data_count = 24;
+			option.time_format1 = "YMDh"
+		}else if(range === "1W"){
+			option.rate = 7 * 24 * 3600 
+			option.time = fn.timestampToTime(timestamp - option.rate * 1000,"YMD");
+			option.time_format = "%Y-%m-%d";
+			option.data_count = 7;
+			option.time_format1 = "YMD"
+		}else if(range === "1M"){
+			option.rate = 30 * 24 * 3600 
+			option.time = fn.timestampToTime(timestamp - option.rate * 1000,"YMD");
+			option.time_format = "%Y-%m-%d";
+			option.data_count = 30;
+			option.time_format1 = "YMD"
+		}else if(range === "1Y"){
+			option.rate = 12 * 30 * 24 * 3600 
+			option.time = fn.timestampToTime(timestamp -  option.rate * 1000,"YM");
+			option.time_format = "%Y-%m";
+			option.data_count = 12;
+			option.time_format1 = "YM"
+		}
+		option.timeArr = []
+		for(var i = 0 ;i< option.data_count ;i++){
+			var t = fn.timestampToTime(timestamp -  (option.data_count - i - 2 ) * option.rate / option.data_count * 1000, option.time_format1);
+			var t1 = fn.timestampToTime(timestamp -  (option.data_count - i - 1 ) * option.rate / option.data_count * 1000, option.time_format1);
+			option.timeArr.push({"s":t1,"t":t})
+		}
+		option.startTime = fn.timestampToTime(timestamp -  (option.data_count - 1)  * option.rate / option.data_count * 1000, option.time_format1);
+		
+
+
+		/*db.query('SELECT count(distinct `'+cv+'` ) AS count FROM `chain_did_property` where `local_system_time` < "'+option.startTime+'" ', function (error, results, fields) {
 			if(error){
 				console.log("mysql error")
 				console.log(error)
 			}else{
-				if(results.length > 0){
-					db.query('SELECT * FROM `chain_reporting` WHERE `type` = "'+type+'" AND `date_range` = "'+range+'"', function (error, results, fields) {
+				var totalStart = results[0].count;*/
+				var arr_new = [];
+				option.timeArr.map((v,k)=>{
+					db.query('SELECT count(distinct `'+type+'` ) AS count FROM `chain_did_property` WHERE `local_system_time` < "'+v.t+'" AND `local_system_time` >= "'+v.s+'"', function (error, results1, fields) {
 						if(error){
 							console.log("mysql error")
 							console.log(error)
 						}else{
-							res.send(results);
+							arr_new.push({"k":k,"count":results1[0].count})
+							if(arr_new.length === option.data_count){
+								var data = {"type":type,"range":range,"start_time":option.startTime,"data_new":arr_new};
+								res.send(data);
+							}
 						}
-					})
-				}else{
-					res.send({"error":"have no table"});
-				}
-			}
-		})
+					})	
+				})
+		/*	}
+		})*/
+
+		
 	}catch(err){
 		console.log(err)
 	}
