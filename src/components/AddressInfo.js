@@ -9,6 +9,7 @@ import iconDeprecated from '../public/images/icon-deprecated.svg'
 import iconNormal from '../public/images/icon-normal.svg'
 import confirmed from '../public/images/confirmed.svg'
 import loadingImg from '../public/images/loading.gif';
+import to from '../public/images/to.png';
 class AddressInfo extends React.Component {
 	constructor(props){
         super(props);
@@ -67,43 +68,52 @@ class AddressInfo extends React.Component {
                 total_received =  total_received + transaction.value;
                  balance = balance + transaction.value
             }
+            transaction.inputs = "ERkMMfMYCRUV5ofyrXn24vCcQvvf5Anorf, ERkMMfMYCRUV5ofyrXn24vCcQvvf5Anorf";
+            transaction.outputs = "ERkMMfMYCRUV5ofyrXn24vCcQvvf5Anorf,ERkMMfMYCRUV5ofyrXn24vCcQvvf5Anorf";
             const outputs_arr = transaction.outputs.split(',');
             const inputs_arr = transaction.inputs.split(',');
             console.log(inputs_arr)
             const outputHtml = (outputs_arr.length > 0 ) ? (outputs_arr.map((output,k)=>{
                 if(output){
                     return(
-                        <a  key= {k} href={"/address_info/"+output}><span className="detail_value wordBreak" style={{"color":"#31B59D"}}>{output}</span></a>
+                        <li style={{"display": "block","width":"100%","height":"45px","padding":"0","lineHeight":"45px","border":"1px #ccc solid","borderRadius":"5px","paddingLeft":"15px","marginBottom":"10px"}}>
+                            <a  key= {k} href={"/address_info/"+output}><span className="detail_value wordBreak" style={{"color":"#31B59D","display":"inline","fontSize":"14px"}}>{output}</span></a>
+                            <span></span>
+                        </li>
                     )
                 }
             })) : <li style={{"textAlign":"center"}}>{loading ? <img src={loadingImg} alt="loading"/> : <span>{lang.not_found}</span>}</li>;
 
             const inputHtml = (inputs_arr.length > 0 ) ? (inputs_arr.map((input,k)=>{
                 if(input){
-                    return(<ul key = {k}>
-                            <li style={{"width":"40%","borderBottom":"none","verticalAlign":"top"}}>
-                                <span className="detail_key wordBreak">{lang.from}</span>
-                                <a href={"/address_info/" + input}><span className="detail_value wordBreak" style={{"color":"#31B59D"}}>{input}</span></a>
+                    return(
+                            
+                            <li style={{"display": "block","width":"100%","height":"45px","padding":"0","lineHeight":"45px","border":"1px #ccc solid","borderRadius":"5px","paddingLeft":"15px","marginBottom":"10px"}}>
+                                 <a key= {k} href={"/address_info/"+input}><span className="detail_value wordBreak" style={{"color":"#31B59D","display":"inline","fontSize":"14px"}}>{input}</span></a>
                             </li>
-                            <li style={{"width":"40%","borderBottom":"none","verticalAlign":"top"}}>
-                                <span className="detail_key wordBreak">{lang.to}</span>
-                                {outputHtml}
-                            </li>
-                            <li style={{"width":"20%","borderBottom":"none","verticalAlign":"top"}}>
-                                <span className="detail_key wordBreak">{lang.number}</span>
-                                <span className="detail_value wordBreak">{transaction.value / 100000000} ELA</span>
-                            </li>
-                        </ul>)
+                            
+                        )
                 }
             })) : <li style={{"textAlign":"center"}}>{loading ? <img src={loadingImg} alt="loading"/> : <span>{lang.not_found}</span>}</li>;
            return(
                 <div className="transaction_summery" key = {k}>
                     <ul>
-                        <li style={{"width":"100%"}}>
+                        <li style={{"width":"100%","border":"none"}}>
                             <span className="detail_key wordBreak">TxID: {transaction.txid}</span>
                         </li>
                     </ul>
-                    {inputHtml}
+                    <ul>
+                        <div style={{"width":"45%","display": "inline-block","verticalAlign":"top"}}>{inputHtml}</div>
+                        <div style={{"width":"10%","display": "inline-block","verticalAlign":"top","textAlign":"center","height":"45px","lineHeight":"45px"}}><img src={to} alt = "to"/></div>
+                        <div style={{"width":"45%","display": "inline-block","verticalAlign":"top"}}>{outputHtml}</div>
+                        
+                    </ul>
+                    <ul>
+                        <li style={{"width":"20%","borderBottom":"none","verticalAlign":"top"}}>
+                            <span className="detail_key wordBreak">{lang.number}</span>
+                            <span className="detail_value wordBreak">{transaction.value / 100000000} ELA</span>
+                        </li>
+                    </ul>
                 </div> 
             )
         })) : <li style={{"textAlign":"center"}}>{loading ? <img src={loadingImg} alt="loading"/> : <span>{lang.not_found}</span>}</li> ;;

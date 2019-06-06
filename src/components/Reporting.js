@@ -20,7 +20,7 @@ class Reporting extends React.Component {
            	const data_new = [];
            	const data_total = [];
        		result.data_new.map((v,k)=>{data_new.push(v.count) });
-           	result.data_total.map((v,k)=>{data_total.push(v.count) });
+           //	result.data_total.map((v,k)=>{data_total.push(v.count) });
            	this.initDidReport(startTime,data_new,data_total);
            	jQuery(".highcharts-credits").remove()
         }catch(err){
@@ -34,7 +34,7 @@ class Reporting extends React.Component {
            	const data_new = [];
            	const data_total = [];
        		result.data_new.map((v,k)=>{data_new.push(v.count) });
-           	result.data_total.map((v,k)=>{data_total.push(v.count) });
+           	//result.data_total.map((v,k)=>{data_total.push(v.count) });
            	this.initTransactionsReport(startTime,data_new,data_total);
            	jQuery(".highcharts-credits").remove()
         }catch(err){
