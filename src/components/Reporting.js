@@ -1,6 +1,6 @@
 import React from 'react';
 import jQuery from 'jquery'
-import { getDidReport, getTransactionsReport, getEAppsReport } from '../request/request';
+import { getDidReport, getTransactionsReport, getEAppsReport, getReportTotal } from '../request/request';
 import Highcharts from 'highcharts/highstock'
 import './Reporting.css'
 class Reporting extends React.Component {
@@ -22,6 +22,13 @@ class Reporting extends React.Component {
        		result.data_new.map((v,k)=>{data_new.push(v.count) });
            //	result.data_total.map((v,k)=>{data_total.push(v.count) });
            	this.initDidReport(startTime,data_new,data_total);
+           	const result_total = await getReportTotal(type,range);
+           	var total =  result_total[0].count;
+           	result.data_new.map((v,k)=>{
+           		total += v.count;
+           		data_total.push(total)
+           	});
+           	this.initTransactionsReport(startTime,data_new,data_total);
            	jQuery(".highcharts-credits").remove()
         }catch(err){
           console.log(err)
@@ -35,6 +42,13 @@ class Reporting extends React.Component {
            	const data_total = [];
        		result.data_new.map((v,k)=>{data_new.push(v.count) });
            	//result.data_total.map((v,k)=>{data_total.push(v.count) });
+           	this.initTransactionsReport(startTime,data_new,data_total);
+           	const result_total = await getReportTotal(type,range);
+           	var total =  result_total[0].count;
+           	result.data_new.map((v,k)=>{
+           		total += v.count;
+           		data_total.push(total)
+           	});
            	this.initTransactionsReport(startTime,data_new,data_total);
            	jQuery(".highcharts-credits").remove()
         }catch(err){

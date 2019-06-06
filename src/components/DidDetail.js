@@ -100,7 +100,7 @@ class DidDetail extends React.Component {
                 </div>
                 <div className="did_title">
                 	<span>DID: ela:</span><span  id="foo">{did}</span> 
-                    <Clipboard eleId = "foo" icon = {iconCopy} style={{"marginBotton":"5px","padding":"3px"}}/>
+                    <Clipboard lang = {lang} eleId = "foo" icon = {iconCopy} style={{"marginBotton":"5px","padding":"3px"}}/>
                 </div>
                 <div className="did_content">
                 	<ul>

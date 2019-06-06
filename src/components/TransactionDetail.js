@@ -149,7 +149,7 @@ class TransactionDetail extends React.Component {
                 </div>
                 <div className="transaction_title">
                     <span id="foo">{txid}</span>
-                    <Clipboard eleId = "foo" icon = {iconCopy} style={{"marginBotton":"5px","padding":"3px"}}/>
+                    <Clipboard lang = {lang} eleId = "foo" icon = {iconCopy} style={{"marginBotton":"5px","padding":"3px"}}/>
 
                 </div>
                 <div className="transaction_summery">

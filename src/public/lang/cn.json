@@ -82,5 +82,11 @@
 	"history":"历史记录",
 	"timestamp":"时间",
 	"normal":"正常",
-	"deprecated":"弃用"
+	"deprecated":"弃用",
+	"copy_success":"复制成功",
+	"copy_failed":"复制失败",
+	"attribute":"属性",
+	"eapp_url":"地址",
+	"signature":"签名"
+
 }
