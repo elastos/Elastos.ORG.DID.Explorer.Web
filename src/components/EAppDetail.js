@@ -24,7 +24,7 @@ class EappDetail extends React.Component {
                 			<p className="eapp_name">ENBank</p>
                 			<p className="eapp_did">
                             <span>elaappid:</span><span id="foo">sdasfjnklsadfnsjkalfnsdklfsnjkldfkslkdsf</span>
-                            <Clipboard eleId = "foo" icon = {iconCopy} style={{"marginBotton":"5px","padding":"3px"}}/>
+                            <Clipboard lang = {lang} eleId = "foo" icon = {iconCopy} style={{"marginBotton":"5px","padding":"3px"}}/>
                             </p>
                 			<ul className="eapp_nav">
                 				<li className = "status"><a href = "/notification"><img src={privacy} alt="privacy"/> <span>{lang.privacy}</span></a></li>
@@ -46,21 +46,21 @@ class EappDetail extends React.Component {
                                 <thead className="ant-table-thead">
                                     <tr>
                                         <th className="">
-                                            <div>Attribute</div>
+                                            <div>{lang.attribute}</div>
                                         </th>
                                         <th className="">
-                                            <div>Value</div>
+                                            <div>{lang.value}</div>
                                         </th>
                                         
                                     </tr>
                                 </thead>
                                 <tbody className="ant-table-tbody">
                                      <tr className="ant-table-row ant-table-row-level-0 table_tr1" data-row-key="1">
-                                        <td style={{"width":"50%"}}>Size</td>
+                                        <td style={{"width":"50%"}}>{lang.size}</td>
                                         <td style={{"width":"50%"}}>20 MB</td>
                                      </tr>
                                      <tr className="ant-table-row ant-table-row-level-0 table_tr1" data-row-key="1">
-                                        <td style={{"width":"50%"}}>Url</td>
+                                        <td style={{"width":"50%"}}>{lang.eapp_url}</td>
                                         <td style={{"width":"50%"}}><a href="https://eladapp.com/" style={{"color":"#31B59D"}}>https://eladapp.com/app</a></td>
                                      </tr>
                                      <tr className="ant-table-row ant-table-row-level-0 table_tr1" data-row-key="1">

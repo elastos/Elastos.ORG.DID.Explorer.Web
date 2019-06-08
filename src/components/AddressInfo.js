@@ -68,8 +68,6 @@ class AddressInfo extends React.Component {
                 total_received =  total_received + transaction.value;
                  balance = balance + transaction.value
             }
-            transaction.inputs = "ERkMMfMYCRUV5ofyrXn24vCcQvvf5Anorf, ERkMMfMYCRUV5ofyrXn24vCcQvvf5Anorf";
-            transaction.outputs = "ERkMMfMYCRUV5ofyrXn24vCcQvvf5Anorf,ERkMMfMYCRUV5ofyrXn24vCcQvvf5Anorf";
             const outputs_arr = transaction.outputs.split(',');
             const inputs_arr = transaction.inputs.split(',');
             console.log(inputs_arr)
@@ -99,7 +97,7 @@ class AddressInfo extends React.Component {
                 <div className="transaction_summery" key = {k}>
                     <ul>
                         <li style={{"width":"100%","border":"none"}}>
-                            <span className="detail_key wordBreak">TxID: {transaction.txid}</span>
+                            <a href={"/transaction_detail/"+ transaction.txid}><span className="detail_key wordBreak">TxID: {transaction.txid}</span></a>
                         </li>
                     </ul>
                     <ul>
@@ -125,7 +123,7 @@ class AddressInfo extends React.Component {
                 </div>
                 <div className="transaction_title">
                 	<span id = "foo">{address}</span>
-                	<Clipboard eleId = "foo" icon = {iconCopy} style={{"marginBotton":"5px","padding":"3px"}}/>
+                	<Clipboard lang = {lang} eleId = "foo" icon = {iconCopy} style={{"marginBotton":"5px","padding":"3px"}}/>
 
                 </div>
                 <div className="transaction_summery">
@@ -156,34 +154,7 @@ class AddressInfo extends React.Component {
                         </li>
                 	</ul>
                 </div>
-                <div className="transaction_summery" >
-                	<ul>
-                		<li style={{"width":"40%"}}> 
-                			<span className="detail_key wordBreak">{lang.from}</span>
-                			<span className="detail_value wordBreak" style={{"color":"#31B59D"}}>{"..."}</span>
-                		</li>
-                		<li style={{"width":"40%"}}>
-                			<span className="detail_key wordBreak">{lang.to}</span>
-                			<span className="detail_value wordBreak" style={{"color":"#31B59D"}}>{"..."}</span>
-                		</li>
-                        <li style={{"width":"20%"}}>
-                            <span className="detail_key wordBreak">{lang.number}</span>
-                            <span className="detail_value wordBreak">{"..."} ELA</span>
-                        </li>
-                		<li style={{"width":"40%"}}>
-                			<span className="detail_key wordBreak">{lang.from}</span>
-                			<span className="detail_value wordBreak" style={{"color":"#31B59D"}}>{ "..."}</span>
-                		</li>
-                		<li style={{"width":"40%"}}>
-                			<span className="detail_key wordBreak">{lang.to}</span>
-                			<span className="detail_value wordBreak" style={{"color":"#31B59D"}}>{"..."}</span>
-                		</li>
-                        <li style={{"width":"20%"}}>
-                            <span className="detail_key wordBreak">{lang.number}</span>
-                            <span className="detail_value wordBreak">{"..."} ELA</span>
-                        </li>
-                	</ul>
-                </div>
+               
 				<div className="transaction_title" style={{"marginTop": "40px"}}>
                 	<span> {lang.transaction_history}</span>
                 </div>
