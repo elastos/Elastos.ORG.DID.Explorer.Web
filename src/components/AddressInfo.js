@@ -10,6 +10,7 @@ import iconNormal from '../public/images/icon-normal.svg'
 import confirmed from '../public/images/confirmed.svg'
 import loadingImg from '../public/images/loading.gif';
 import to from '../public/images/to.png';
+import moment from 'moment'
 class AddressInfo extends React.Component {
 	constructor(props){
         super(props);
@@ -70,7 +71,7 @@ class AddressInfo extends React.Component {
             }
             const outputs_arr = transaction.outputs.split(',');
             const inputs_arr = transaction.inputs.split(',');
-            console.log(inputs_arr)
+            //console.log(inputs_arr)
             const outputHtml = (outputs_arr.length > 0 ) ? (outputs_arr.map((output,k)=>{
                 if(output){
                     return(
@@ -97,9 +98,14 @@ class AddressInfo extends React.Component {
                 <div className="transaction_summery" key = {k}>
                     <ul>
                         <li style={{"width":"100%","border":"none"}}>
-                            <a href={"/transaction_detail/"+ transaction.txid}><span className="detail_key wordBreak">TxID: {transaction.txid}</span></a>
+                            <span style={{"display":"inline"}}>TxID:</span><a href={"/transaction_detail/"+ transaction.txid}><span style={{"display":"inline","color":"rgb(49, 181, 157)"}} className="detail_key wordBreak">{transaction.txid}</span></a>
+                        </li>
+                        <li style={{"padding":"0px 0px 20px 0px"}}>
+                            <span style={{"color":"#364458","display":"inline","background":"#E7F1FF","borderRadius":"4px","padding":"4px 10px","marginRight":"20px"}}>Block Height: {transaction.height}</span>
+                            <span style={{"color":"#364458","display":"inline","background":"#E7F1FF","borderRadius":"4px","padding":"4px 10px"}}>Timestamp: {moment.unix(transaction.createTime).format('h:mm:ss MMMM Do, YYYY')}</span>
                         </li>
                     </ul>
+                    
                     <ul>
                         <div style={{"width":"45%","display": "inline-block","verticalAlign":"top"}}>{inputHtml}</div>
                         <div style={{"width":"10%","display": "inline-block","verticalAlign":"top","textAlign":"center","height":"45px","lineHeight":"45px"}}><img src={to} alt = "to"/></div>
@@ -144,10 +150,7 @@ class AddressInfo extends React.Component {
                 			<span className="detail_key wordBreak">{lang.total_received}</span>
                 			<span className="detail_value wordBreak"> {loading ? '...' : (total_received / 100000000) } ELA</span>
                 		</li>
-                		<li>
-                			<span className="detail_key wordBreak">{lang.fee}</span>
-                			<span className="detail_value wordBreak">{ "..."} ELA</span>
-                		</li>
+                		
                         <li>
                             <span className="detail_key wordBreak"># of Transactions</span>
                             <span className="detail_value wordBreak">{ transactions.length}</span>
