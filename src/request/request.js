@@ -500,3 +500,55 @@ export function getAddressInfo(address){
 	});
 
 }
+
+export function getEapps(start,pageSize){
+	return new Promise(function(resolve, reject) {
+		let path = addr + '/api/'+current_version+'/block/eapps?start='+start+'&pageSize='+pageSize;
+	    let xhr = new XMLHttpRequest();
+	    xhr.open('GET',path );
+	    xhr.onload = function() {
+	      if (xhr.status === 200) {
+	        resolve(JSON.parse(xhr.responseText));
+	      } 
+	    };
+	    xhr.onerror = function() {
+	      reject(new Error(xhr.statusText));
+	    };
+	    xhr.send();
+	});
+
+}
+export function getEappsCount(){
+	return new Promise(function(resolve, reject) {
+		let path = addr + '/api/'+current_version+'/block/eapps/count';
+	    let xhr = new XMLHttpRequest();
+	    xhr.open('GET',path );
+	    xhr.onload = function() {
+	      if (xhr.status === 200) {
+	        resolve(JSON.parse(xhr.responseText));
+	      } 
+	    };
+	    xhr.onerror = function() {
+	      reject(new Error(xhr.statusText));
+	    };
+	    xhr.send();
+	});
+
+}
+export function getEappInfo(appid){
+	return new Promise(function(resolve, reject) {
+		let path = addr + '/api/'+current_version+'/block/eapp/info?appid='+appid;
+	    let xhr = new XMLHttpRequest();
+	    xhr.open('GET',path );
+	    xhr.onload = function() {
+	      if (xhr.status === 200) {
+	        resolve(JSON.parse(xhr.responseText));
+	      } 
+	    };
+	    xhr.onerror = function() {
+	      reject(new Error(xhr.statusText));
+	    };
+	    xhr.send();
+	});
+
+}

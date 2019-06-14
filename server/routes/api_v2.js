@@ -700,4 +700,60 @@ router.get('/block/getReportTotal', function(req, res, next) {
 		console.log(err)
 	}
 });
+
+
+router.get('/block/eapps', function(req, res, next) {
+	setHeaders(res);
+	try{
+		var db =  DB.connection;
+		var start = req.query.start;
+		var pageSize = req.query.pageSize;
+		db.query('SELECT * FROM `chain_did_app` WHERE `info_type` = "app_id" GROUP BY `info_value` ORDER BY id DESC LIMIT ' + start + ',' + pageSize , function (error, results, fields) {
+			if(error){
+				console.log("mysql error")
+				console.log(error)
+			}else{
+				res.send(results);
+			}
+		})
+	}catch(err){
+		console.log(err)
+	}
+});
+
+router.get('/block/eapps/count', function(req, res, next) {
+	setHeaders(res);
+	try{
+		var db =  DB.connection;
+		/*db.query('SELECT * FROM `chain_did_app` WHERE `info_type` = "app_id" GROUP BY `info_value` ORDER BY id DESC LIMIT ' + start + ',' + pageSize , function (error, results, fields) {
+			if(error){
+				console.log("mysql error")
+				console.log(error)
+			}else{
+				res.send(results);
+			}
+		})
+		*/
+	}catch(err){
+		console.log(err)
+	}
+});
+router.get('/block/eapp/info', function(req, res, next) {
+	setHeaders(res);
+	try{
+		var db =  DB.connection;
+		/*var start = req.query.start;
+		var pageSize = req.query.pageSize;
+		db.query('SELECT * FROM `chain_did_app` WHERE `info_type` = "app_id" GROUP BY `info_value` ORDER BY id DESC LIMIT ' + start + ',' + pageSize , function (error, results, fields) {
+			if(error){
+				console.log("mysql error")
+				console.log(error)
+			}else{
+				res.send(results);
+			}
+		})*/
+	}catch(err){
+		console.log(err)
+	}
+});
 module.exports = router;
