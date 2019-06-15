@@ -1,5 +1,5 @@
 import React from 'react';
-import { getTransactions , getTransactionsCount, getTransactionsInfo } from '../request/request';
+import { getEapps , getEappsCount, getEappInfo } from '../request/request';
 import {Link} from 'react-router-dom';
 import { Pagination } from 'antd';
 import './eapp.css';
@@ -16,7 +16,7 @@ class EApps extends React.Component {
             count:0,
             size: 50,
             current:1,
-            transactions:[],
+            eapps:[],
             loading:true
         }
         this.onChange = this.onChange.bind(this);
@@ -30,14 +30,15 @@ class EApps extends React.Component {
         try{
             
             const start = ( current - 1) * size;
-            const transactions = await getTransactions(start,size);
+            const eapps = await getEapps(start,size);
+            console.log(eapps)
             this.setState({
-                transactions:transactions               
+                eapps:eapps               
             })
-            Object.keys(transactions).map((transaction,k) => {
-                return this.getTransactionInfo(k,transactions[k].txid)                
+            Object.keys(eapps).map((eapp,k) => {
+                return this.getEappInfo(k,eapp[k].txid)                
             });
-            const count = await getTransactionsCount();
+            const count = await getEappsCount();
              this.setState({
                 count:count[0].count,
                  loading:false
@@ -46,13 +47,13 @@ class EApps extends React.Component {
           console.log(err)
         }
     }
-    getTransactionInfo = async (k,txid)=>{
+    getEappInfo = async (k,txid)=>{
         try{
-            const transaction = await getTransactionsInfo(txid);
-            let transactions = this.state.transactions;
-            transactions[k].createTime = transaction[0].createTime;
-            transactions[k].length_memo = transaction[0].length_memo;
-            this.setState({transactions:transactions})
+            const eapp = await getEappInfo(txid);
+           // let transactions = this.state.transactions;
+            //transactions[k].createTime = transaction[0].createTime;
+            //transactions[k].length_memo = transaction[0].length_memo;
+           // this.setState({transactions:transactions})
         }catch(err){
             console.log(err)
         }
@@ -89,12 +90,12 @@ class EApps extends React.Component {
       return originalElement;
     }
     render() {
-        const { transactions, count, size, current, loading } = this.state;
+        const { eapps, count, size, current, loading } = this.state;
         const  lang  = this.props.lang;
-        const txHtml = transactions.map((tx,k) => {
+        const txHtml = eapps.map((eapp,k) => {
             return(
                 <tr className="ant-table-row ant-table-row-level-0 table_tr" data-row-key="1" key={k}>
-                    <td width="20%"><Link to={'/eapp_detail/'+tx.did}>
+                    <td width="20%"><Link to={'/eapp_detail/'+eapp.did}>
                     	<img src={okb_mid}/><span style={{"paddingLeft":"5px"}}>ENBank</span>
                     </Link></td>
                     <td width="40%">elaapp: fhsuiwhegbwhjfksjtivhjrqgvhfieuvw</td>
