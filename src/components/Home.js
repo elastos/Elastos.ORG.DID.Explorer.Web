@@ -1,6 +1,6 @@
 import React from 'react';
 import moment from 'moment'
-import { getBlocks, getBlocksInfo, getTransactionsCount, getTransactions, getTransactionsInfo, getTransactionsCountFromHeight, getServerInfo, getDids, getDidCount, getDidInfo } from '../request/request';
+import { getBlocks, getBlocksInfo, getTransactionsCount, getTransactions, getTransactionsInfo, getTransactionsCountFromHeight, getServerInfo, getDids, getDidCount, getDidInfo, getEapps } from '../request/request';
 import './home.css'
 import mask from '../public/images/mask1.png'
 import background from '../public/images/background.svg'
@@ -20,7 +20,8 @@ class Home extends React.Component {
            transactions:[],
            s_time:null,
            dids:[],
-           didCount:null
+           didCount:null,
+           eapps:[]
         }
       
     } 
@@ -101,6 +102,7 @@ class Home extends React.Component {
     getDid = async () => {
         try{
             const dids = await getDids(0,5);
+            this.setState({dids:dids})
             var num = []
             Object.keys(dids).map((did,k) => {
                 return this.getDidsInfo(k,num,dids)                
@@ -127,10 +129,27 @@ class Home extends React.Component {
             console.log(err)
         }
     }
+    getEapp = async () => {
+        try{
+            const eapps = await getEapps(0,5);
+            /*var num = []
+            Object.keys(dids).map((did,k) => {
+                return this.getDidsInfo(k,num,dids)                
+            });
+            const count = await getDidCount();
+            this.setState({
+                didCount:count[0].count,
+            })*/
+            this.setState({eapps:eapps})
+        }catch(err){
+          console.log(err)
+        }
+    }
     componentWillMount(){
         this.getInfo();
         this.getTrans();
         this.getDid();
+        this.getEapp();
         this.setTimeFormat();
         document.onclick=function(){
             try{
@@ -188,7 +207,7 @@ class Home extends React.Component {
     }
     render() {
         this.setTimeFormat();
-        const {rate, blocks, click_id, transactionCount, transactions, s_time, dids, didCount} = this.state;
+        const {rate, blocks, click_id, transactionCount, transactions, s_time, dids, didCount, eapps} = this.state;
         const lang =this.props.lang;
 
         const lis = blocks.length ? blocks.map((v,k)=>{
@@ -234,6 +253,18 @@ class Home extends React.Component {
                         <div><a href={"/did_detail/"+v.did}><HashFormat text = {v.did} width = "70%"/></a><span className="time">{s_time ? moment(v.time).from(s_time) : "..."}</span></div>
                         <div>Register ELA DID</div>
                     </li>
+            }else{
+                return "";
+            }
+
+        }) : <img src={loadingImg} style={{"margin":"160px 110px"}} alt="loadingImg"/>
+
+        const item_eapps = eapps.length ? eapps.map((v,k)=>{
+            if(k<5){
+                return <li>
+                        <a><span>{v.info_value}</span></a>
+                        <span className="time">{s_time ? moment(v.local_system_time).from(s_time) : "..."}</span>
+                </li>
             }else{
                 return "";
             }
@@ -344,35 +375,7 @@ class Home extends React.Component {
                             </div>
                             <div className="item_content">
                                 <ul>
-                                    <li>
-                                        <img src={mask} alt="mask"/>
-                                        <span>ENBank</span>
-                                        <span className="time">17m ago</span>
-                                    </li>
-                                    <li>
-                                        <img src={mask} alt="mask"/>
-                                        <span>ENBank</span>
-                                        <span className="time">17m ago</span>
-                                    </li>
-                                    <li>
-                                        <img src={mask} alt="mask"/>
-                                        <span>ENBank</span>
-                                        <span className="time">17m ago</span>
-                                        
-                                    </li>
-                                    <li>
-                                        
-                                        <img src={mask} alt="mask"/>
-                                        <span>ENBank</span>
-                                        <span className="time">17m ago</span>
-                                    </li>
-                                    <li>
-                                        
-                                        <img src={mask} alt="mask"/>
-                                        <span>ENBank</span>
-                                        <span className="time">17m ago</span>
-                                    </li>
-
+                                 {item_eapps}
                                 </ul>
                             </div>
                         </li>

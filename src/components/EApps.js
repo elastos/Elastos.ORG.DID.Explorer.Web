@@ -35,9 +35,9 @@ class EApps extends React.Component {
             this.setState({
                 eapps:eapps               
             })
-            Object.keys(eapps).map((eapp,k) => {
-                return this.getEappInfo(k,eapp[k].txid)                
-            });
+            /*Object.keys(eapps).map((eapp,k) => {
+                return this.getEappInfo(k,eapps[k].did)                
+            });*/
             const count = await getEappsCount();
              this.setState({
                 count:count[0].count,
@@ -47,9 +47,9 @@ class EApps extends React.Component {
           console.log(err)
         }
     }
-    getEappInfo = async (k,txid)=>{
+    getEappInfo = async (k,did)=>{
         try{
-            const eapp = await getEappInfo(txid);
+            const eapp = await getEappInfo(did);
            // let transactions = this.state.transactions;
             //transactions[k].createTime = transaction[0].createTime;
             //transactions[k].length_memo = transaction[0].length_memo;
@@ -96,9 +96,9 @@ class EApps extends React.Component {
             return(
                 <tr className="ant-table-row ant-table-row-level-0 table_tr" data-row-key="1" key={k}>
                     <td width="20%"><Link to={'/eapp_detail/'+eapp.did}>
-                    	<img src={okb_mid}/><span style={{"paddingLeft":"5px"}}>ENBank</span>
+                    	{/*<img src={okb_mid}/>*/}<span style={{"paddingLeft":"5px"}}>{eapp.info_value}</span>
                     </Link></td>
-                    <td width="40%">elaapp: fhsuiwhegbwhjfksjtivhjrqgvhfieuvw</td>
+                    <td width="40%">elaapp: {eapp.property_value}</td>
                     <td width="20%">
 	                    <Link to={'/Website'}><span style={{"padding":"0px 10px"}}>{lang.website}</span></Link>
 	                    <Link to={'/Privacy'}><span style={{"padding":"0px 10px"}}>{lang.privacy}</span></Link>
