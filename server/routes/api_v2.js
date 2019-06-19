@@ -708,7 +708,7 @@ router.get('/block/eapps', function(req, res, next) {
 		var db =  DB.connection;
 		var start = req.query.start;
 		var pageSize = req.query.pageSize;
-		db.query('SELECT * FROM `chain_did_app` WHERE `info_type` = "app_id" GROUP BY `info_value` ORDER BY id DESC LIMIT ' + start + ',' + pageSize , function (error, results, fields) {
+		db.query('SELECT * FROM `chain_did_app` WHERE `info_type` = "app_name" GROUP BY `info_value` ORDER BY id DESC LIMIT ' + start + ',' + pageSize , function (error, results, fields) {
 			if(error){
 				console.log("mysql error")
 				console.log(error)
