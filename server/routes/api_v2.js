@@ -725,7 +725,7 @@ router.get('/block/eapps/count', function(req, res, next) {
 	setHeaders(res);
 	try{
 		var db =  DB.connection;
-		db.query('COUNT(*) AS count FROM (SELECT * FROM `chain_did_app` WHERE `info_type` = "app_name" GROUP BY `info_value` ) AS a', function (error, results, fields) {
+		db.query('SELECT COUNT(*) AS count FROM (SELECT * FROM `chain_did_app` WHERE `info_type` = "app_name" GROUP BY `info_value` ) AS a', function (error, results, fields) {
 			if(error){
 				console.log("mysql error")
 				console.log(error)

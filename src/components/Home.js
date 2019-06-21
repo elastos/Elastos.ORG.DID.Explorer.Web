@@ -137,11 +137,11 @@ class Home extends React.Component {
             Object.keys(dids).map((did,k) => {
                 return this.getDidsInfo(k,num,dids)                
             });*/
+            this.setState({eapps:eapps})
             const count = await getEappsCount();
             this.setState({
                 eappsCount:count[0].count,
             })
-            this.setState({eapps:eapps})
         }catch(err){
           console.log(err)
         }
