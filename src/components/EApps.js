@@ -33,7 +33,7 @@ class EApps extends React.Component {
             const eapps = await getEapps(start,size);
             console.log(eapps)
             this.setState({
-                eapps:eapps 
+                eapps:eapps, 
                 loading:false              
             })
             /*Object.keys(eapps).map((eapp,k) => {
