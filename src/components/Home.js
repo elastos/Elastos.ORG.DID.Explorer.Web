@@ -1,6 +1,6 @@
 import React from 'react';
 import moment from 'moment'
-import { getBlocks, getBlocksInfo, getTransactionsCount, getTransactions, getTransactionsInfo, getTransactionsCountFromHeight, getServerInfo, getDids, getDidCount, getDidInfo, getEapps } from '../request/request';
+import { getBlocks, getBlocksInfo, getTransactionsCount, getTransactions, getTransactionsInfo, getTransactionsCountFromHeight, getServerInfo, getDids, getDidCount, getDidInfo, getEapps, getEappsCount } from '../request/request';
 import './home.css'
 import mask from '../public/images/mask1.png'
 import background from '../public/images/background.svg'
@@ -21,7 +21,8 @@ class Home extends React.Component {
            s_time:null,
            dids:[],
            didCount:null,
-           eapps:[]
+           eapps:[],
+           eappsCount:null
         }
       
     } 
@@ -135,11 +136,11 @@ class Home extends React.Component {
             /*var num = []
             Object.keys(dids).map((did,k) => {
                 return this.getDidsInfo(k,num,dids)                
-            });
-            const count = await getDidCount();
+            });*/
+            const count = await getEappsCount();
             this.setState({
-                didCount:count[0].count,
-            })*/
+                eappsCount:count[0].count,
+            })
             this.setState({eapps:eapps})
         }catch(err){
           console.log(err)
@@ -207,7 +208,7 @@ class Home extends React.Component {
     }
     render() {
         this.setTimeFormat();
-        const {rate, blocks, click_id, transactionCount, transactions, s_time, dids, didCount, eapps} = this.state;
+        const {rate, blocks, click_id, transactionCount, transactions, s_time, dids, didCount, eapps, eappsCount} = this.state;
         const lang =this.props.lang;
 
         const lis = blocks.length ? blocks.map((v,k)=>{
@@ -262,7 +263,7 @@ class Home extends React.Component {
         const item_eapps = eapps.length ? eapps.map((v,k)=>{
             if(k<5){
                 return <li>
-                        <a><span>{v.info_value}</span></a>
+                        <a href={"/eapp_detail/"+v.property_value}><span>{v.info_value}</span></a>
                         <span className="time">{s_time ? moment(v.local_system_time).from(s_time) : "..."}</span>
                 </li>
             }else{
@@ -317,7 +318,7 @@ class Home extends React.Component {
                                     <img src={iconRight} alt="iconRight" style={{"marginBottom":"3px"}}/>
                                 </div>
                                 <div className="summary_content">
-                                    <span>...</span>
+                                    <span>{eappsCount ? eappsCount : "..."}</span>
                                 </div>
                             </li>
                         </ul>
