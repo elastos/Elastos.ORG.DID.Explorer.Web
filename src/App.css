@@ -99,6 +99,12 @@ li{
     white-space: normal;
     overflow-wrap: break-word;
 }
+.wordEllipsis{
+    white-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+}
 .loadingBox{
     text-align: center;
     min-height: 500px;
