@@ -11,6 +11,9 @@ class EappDetail extends React.Component {
 	
     render() {
         const lang = this.props.lang
+        const app_name = this.props.match.params.app_name;
+        const app_id = this.props.match.params.app_id;
+        console.log(app_name)
     	return (
     		<div className="container">
             	<div className = "list_top" >
@@ -21,9 +24,9 @@ class EappDetail extends React.Component {
                 	<div className="eapp_profile">
                 		<div><img src={mark_l} alt="profile"/></div>
                 		<div>
-                			<p className="eapp_name">ENBank</p>
+                			<p className="eapp_name">{app_name}</p>
                 			<p className="eapp_did">
-                            <span>elaappid:</span><span id="foo">sdasfjnklsadfnsjkalfnsdklfsnjkldfkslkdsf</span>
+                            <span>elaappid:</span><span id="foo" className="wordBreak">{app_id}</span>
                             <Clipboard lang = {lang} eleId = "foo" icon = {iconCopy} style={{"marginBotton":"5px","padding":"3px"}}/>
                             </p>
                 			<ul className="eapp_nav">
