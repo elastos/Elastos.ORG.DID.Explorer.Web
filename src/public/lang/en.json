@@ -83,7 +83,7 @@
 	"timestamp":"Timestamp",
 	"normal":"Normal",
 	"deprecated":"Deprecated",
-	"copy_success":"Sucess",
+	"copy_success":"Copy successful",
 	"copy_failed":"Failed",
 	"attribute":"Attribute",
 	"eapp_url":"Url",

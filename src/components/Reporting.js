@@ -9,12 +9,15 @@ class Reporting extends React.Component {
         this.state = {
         	did_new_start:null,
         	did_new_data:null,
-        	range:"1W"
+        	range_did:"1W",
+        	range_transactions:"1W"
         }
        
     }
 	getDidInfo = async (type,range) => {
-        try{
+        //try{
+        	console.log(type)
+        	console.log(range)
            	const result = await getDidReport(type,range);
        		const startTime = range === "24H" ? (result.start_time + ":00") : result.start_time
            	const data_new = [];
@@ -30,9 +33,9 @@ class Reporting extends React.Component {
            	});
            	this.initTransactionsReport(startTime,data_new,data_total);
            	jQuery(".highcharts-credits").remove()
-        }catch(err){
-          console.log(err)
-        }
+        //}catch(err){
+          //console.log(err)
+        //}
     }
     getTransactionsInfo = async (type,range)=>{
     	try{
@@ -57,6 +60,9 @@ class Reporting extends React.Component {
     }
     getEAppsInfo = async (type,range)=>{
     	try{
+
+    		console.log(type)
+    		console.log(range)
            	const result = await getEAppsReport(type,range);
            	const startTime = range === "24H" ? (result.startTime + ":00") : result.startTime
            	this.initEappsReport(startTime,result.data_new,result.data_total);
@@ -66,16 +72,16 @@ class Reporting extends React.Component {
         }
     }
 	componentWillMount(){
-		const range = this.state.range
-		this.getDidInfo("did",range);
-		//this.getTransactionsInfo("transactions",range);
+		const range_did = this.state.range_did
+		const range_transactions = this.state.range_transactions
+		this.getDidInfo("did",range_did);
+		this.getTransactionsInfo("transactions",range_transactions);
 		//this.getEAppsInfo("eApps","1M");
 	}
 	componentDidMount(){
 		jQuery(".highcharts-credits").css("display","none")
 	}
-	setxAxisFormate(){
-		const range = this.state.range
+	setxAxisFormate(range){
 		let dateTimeLabelFormats,pointInterval,pointIntervalUnit;
 		switch(range){
 			case "1H"  :  dateTimeLabelFormats = {minute: '%H:%M'};  pointInterval = 60 * 1000 ; break;
@@ -90,7 +96,7 @@ class Reporting extends React.Component {
 		}		
 	}
 	initDidReport(did_new_start,did_new_data,did_total_data){
-		const range = this.state.range
+		const range = this.state.range_did
 		Highcharts.chart('container1', {
 		    chart: {
 		        zoomType: 'xy'
@@ -109,7 +115,7 @@ class Reporting extends React.Component {
 		    },
 		    xAxis: {
 		        type: 'datetime',
-		        dateTimeLabelFormats: this.setxAxisFormate().dateTimeLabelFormats
+		        dateTimeLabelFormats: this.setxAxisFormate(range).dateTimeLabelFormats
 		    },
 		    yAxis: [{ // Primary yAxis
 		        labels: {
@@ -209,8 +215,8 @@ class Reporting extends React.Component {
 		            valueSuffix: ''
 		        },
 		        pointStart: new Date(did_new_start).getTime(),
-		        pointInterval: this.setxAxisFormate().pointInterval,
-		        pointIntervalUnit:this.setxAxisFormate().pointIntervalUnit
+		        pointInterval: this.setxAxisFormate(range).pointInterval,
+		        pointIntervalUnit:this.setxAxisFormate(range).pointIntervalUnit
 		        
 		    },{
 		        name: 'New DIDs',
@@ -221,14 +227,14 @@ class Reporting extends React.Component {
 		            valueSuffix: ''
 		        },
 		        pointStart: new Date(did_new_start).getTime(),
-		        pointInterval: this.setxAxisFormate().pointInterval,
-		        pointIntervalUnit:this.setxAxisFormate().pointIntervalUnit
+		        pointInterval: this.setxAxisFormate(range).pointInterval,
+		        pointIntervalUnit:this.setxAxisFormate(range).pointIntervalUnit
 		        
 		    }]
 		});
 	}
 	initTransactionsReport(trx_new_start,trx_new_data,trx_total_data){
-		const range = this.state.range
+		const range = this.state.range_transactions
 		Highcharts.chart('container2', {
 		    chart: {
 		        zoomType: 'xy'
@@ -247,7 +253,7 @@ class Reporting extends React.Component {
 		    },
 		    xAxis: {
 		    	type: 'datetime',
-		        dateTimeLabelFormats: this.setxAxisFormate().dateTimeLabelFormats
+		        dateTimeLabelFormats: this.setxAxisFormate(range).dateTimeLabelFormats
 		    },
 		    yAxis: [{ // Primary yAxis
 		        labels: {
@@ -347,8 +353,8 @@ class Reporting extends React.Component {
 		            valueSuffix: ''
 		        },
 		        pointStart: new Date(trx_new_start).getTime(),
-		        pointInterval: this.setxAxisFormate().pointInterval,
-		        pointIntervalUnit:this.setxAxisFormate().pointIntervalUnit
+		        pointInterval: this.setxAxisFormate(range).pointInterval,
+		        pointIntervalUnit:this.setxAxisFormate(range).pointIntervalUnit
 		        
 		    },{
 		        name: 'New Transactions',
@@ -359,8 +365,8 @@ class Reporting extends React.Component {
 		            valueSuffix: ''
 		        },
 		        pointStart: new Date(trx_new_start).getTime(),
-		        pointInterval: this.setxAxisFormate().pointInterval,
-		        pointIntervalUnit:this.setxAxisFormate().pointIntervalUnit
+		        pointInterval: this.setxAxisFormate(range).pointInterval,
+		        pointIntervalUnit:this.setxAxisFormate(range).pointIntervalUnit
 		        
 		    }]
 		});
@@ -494,33 +500,53 @@ class Reporting extends React.Component {
 		    }]
 		});
 	}
-	changRange(range){
+	changRange(type,range){
 		console.log(range)
-		this.setState({
-			range:range
-		})
-		this.getDidInfo("did",range);
-		this.getTransactionsInfo("transactions",range);
+		if(type === "did"){
+			this.setState({
+				range_did:range
+			})
+			this.getDidInfo("did",range);
+		}
+		if(type === "transactions"){
+			this.setState({
+				range_transactions:range
+			})
+			this.getTransactionsInfo("transactions",range);
+		}
+		
+		
 	}
 	
     render() {
     	const lang = this.props.lang
-		const range = this.state.range
+		const range_did = this.state.range_did;
+    	const range_transactions = this.state.range_transactions;
     	return (
     		<div className="container" >
     			<div className = "list_top" >
                     <div className = "list_title"><span style={{"fontSize":"25px"}}>{lang.reporting}</span></div>
                     <div className = "rangeSelecter" style={{ "float": "right","background": "#E1E5EA","marginTop":"50px","padding": "0px 15px"}}>
-                    	<span className={range==="1H"? "selected_date":""} onClick={this.changRange.bind(this,"1H")}>1H</span>
-                    	<span className={range==="24H"? "selected_date":""} onClick={this.changRange.bind(this,"24H")}>24H</span>
-                    	<span className={range==="1W"? "selected_date":""} onClick={this.changRange.bind(this,"1W")}>1W</span>
-                    	<span className={range==="1M"? "selected_date":""} onClick={this.changRange.bind(this,"1M")}>1M</span>
-                    	<span className={range==="1Y"? "selected_date":""} onClick={this.changRange.bind(this,"1Y")}>1Y</span>
-                    	<span className={range==="ALL"? "selected_date":""} onClick={this.changRange.bind(this,"ALL")}>ALL</span>
+                    	<span className={range_did==="1H"? "selected_date":""} onClick={this.changRange.bind(this,"did","1H")}>1H</span>
+                    	<span className={range_did==="24H"? "selected_date":""} onClick={this.changRange.bind(this,"did","24H")}>24H</span>
+                    	<span className={range_did==="1W"? "selected_date":""} onClick={this.changRange.bind(this,"did","1W")}>1W</span>
+                    	<span className={range_did==="1M"? "selected_date":""} onClick={this.changRange.bind(this,"did","1M")}>1M</span>
+                    	<span className={range_did==="1Y"? "selected_date":""} onClick={this.changRange.bind(this,"did","1Y")}>1Y</span>
+                    	<span className={range_did==="ALL"? "selected_date":""} onClick={this.changRange.bind(this,"did","ALL")}>ALL</span>
                     </div>
                 </div>
                 
 				<div id="container1" style={{"minWidth":"400px","height":"400px","marginTop":"50px"}}></div>
+				<div className = "list_top" style={{"margin":"0px"}}>
+					<div className = "rangeSelecter" style={{ "float": "right","background": "#E1E5EA","marginTop":"50px","padding": "0px 15px"}}>
+                    	<span className={range_transactions==="1H"? "selected_date":""} onClick={this.changRange.bind(this,"transactions","1H")}>1H</span>
+                    	<span className={range_transactions==="24H"? "selected_date":""} onClick={this.changRange.bind(this,"transactions","24H")}>24H</span>
+                    	<span className={range_transactions==="1W"? "selected_date":""} onClick={this.changRange.bind(this,"transactions","1W")}>1W</span>
+                    	<span className={range_transactions==="1M"? "selected_date":""} onClick={this.changRange.bind(this,"transactions","1M")}>1M</span>
+                    	<span className={range_transactions==="1Y"? "selected_date":""} onClick={this.changRange.bind(this,"transactions","1Y")}>1Y</span>
+                    	<span className={range_transactions==="ALL"? "selected_date":""} onClick={this.changRange.bind(this,"transactions","ALL")}>ALL</span>
+                    </div>
+				</div>
 				<div id="container2" style={{"minWidth":"400px","height":"400px","marginTop":"50px"}}></div>
 				<div id="container3" style={{"minWidth":"400px","height":"400px","marginTop":"50px"}}></div>
 			</div>
