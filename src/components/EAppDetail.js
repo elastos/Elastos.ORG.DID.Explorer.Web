@@ -58,7 +58,7 @@ class EappDetail extends React.Component {
                                     </tr>
                                 </thead>
                                 <tbody className="ant-table-tbody">
-                                     <tr className="ant-table-row ant-table-row-level-0 table_tr1" data-row-key="1">
+                                     {/*<tr className="ant-table-row ant-table-row-level-0 table_tr1" data-row-key="1">
                                         <td style={{"width":"50%"}}>{lang.size}</td>
                                         <td style={{"width":"50%"}}>20 MB</td>
                                      </tr>
@@ -69,7 +69,7 @@ class EappDetail extends React.Component {
                                      <tr className="ant-table-row ant-table-row-level-0 table_tr1" data-row-key="1">
                                         <td style={{"width":"50%"}}>Signature</td>
                                         <td style={{"width":"50%"}}>akksdnjujsadfujkgnak;awiere;awlka;sdlkfsa;ldkfasjl;f</td>
-                                     </tr>
+                                     </tr>*/}
                                 </tbody>
                             </table>
                             

@@ -103,10 +103,11 @@ class EApps extends React.Component {
                     </Link></td>
                     <td width="40%">{eapp.property_key != null && eapp.property_key.indexOf("AppID") > -1 ? eapp.property_value : '...'}</td>
                     <td width="20%">
-	                    <Link to={'/Website'}><span style={{"padding":"0px 10px"}}>{lang.website}</span></Link>
+	                    {/*
+                        <Link to={'/Website'}><span style={{"padding":"0px 10px"}}>{lang.website}</span></Link>
 	                    <Link to={'/Privacy'}><span style={{"padding":"0px 10px"}}>{lang.privacy}</span></Link>
 	                  	<Link to={'/Notification'}><span style={{"padding":"0px 10px"}}>{lang.notification}</span></Link>
-                    </td>
+                    */}</td>
                     <td width="20%">
                     	{/*<Link to={'#'}><span style={{"padding":"2px 20px","border":"1px #4F92D0 solid","borderRadius":"15px","color":"#4F92D0"}}>iOS</span></Link>
 	                    <Link to={'#'}><span style={{"padding":"2px 20px","border":"1px #31B59D solid","borderRadius":"15px","color":"#31B59D","marginLeft":"10px"}}>Android</span></Link>
