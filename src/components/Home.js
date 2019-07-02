@@ -166,7 +166,7 @@ class Home extends React.Component {
             self.getTrans();
             self.getDid();
             self.getEapp();  
-        },15000)
+        },60000)
     }
     showBlockInfo(id,event){
         event.nativeEvent.stopImmediatePropagation();

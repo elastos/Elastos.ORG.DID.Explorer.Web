@@ -36,7 +36,9 @@ class EappDetail extends React.Component {
                 			</ul>
                 		</div>
                 		<div>
-                			<a href="/website" style={{"textDecoration":"none"}}><span className="webbutton">{lang.website}</span></a>
+                			{/*<a href="/website" style={{"textDecoration":"none"}}>*/}
+                                <span className="webbutton" style={{"background":"#ccc"}}>{lang.website}</span>
+                            {/* </a> */}
                 		</div>
 
                 	</div>
