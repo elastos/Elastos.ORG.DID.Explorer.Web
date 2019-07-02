@@ -15,9 +15,9 @@ class Reporting extends React.Component {
        
     }
 	getDidInfo = async (type,range) => {
-        //try{
-        	console.log(type)
-        	console.log(range)
+        try{
+        	//console.log(type)
+        	//console.log(range)
            	const result = await getDidReport(type,range);
        		const startTime = range === "24H" ? (result.start_time + ":00") : result.start_time
            	const data_new = [];
@@ -33,9 +33,9 @@ class Reporting extends React.Component {
            	});
            	this.initTransactionsReport(startTime,data_new,data_total);
            	jQuery(".highcharts-credits").remove()
-        //}catch(err){
-          //console.log(err)
-        //}
+        }catch(err){
+          console.log(err)
+        }
     }
     getTransactionsInfo = async (type,range)=>{
     	try{
@@ -61,8 +61,8 @@ class Reporting extends React.Component {
     getEAppsInfo = async (type,range)=>{
     	try{
 
-    		console.log(type)
-    		console.log(range)
+    		//console.log(type)
+    		//console.log(range)
            	const result = await getEAppsReport(type,range);
            	const startTime = range === "24H" ? (result.startTime + ":00") : result.startTime
            	this.initEappsReport(startTime,result.data_new,result.data_total);
@@ -501,7 +501,7 @@ class Reporting extends React.Component {
 		});
 	}
 	changRange(type,range){
-		console.log(range)
+		//console.log(range)
 		if(type === "did"){
 			this.setState({
 				range_did:range

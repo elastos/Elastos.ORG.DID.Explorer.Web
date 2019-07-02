@@ -158,6 +158,15 @@ class Home extends React.Component {
                jQuery(".char_li ").removeClass("char_clicked")
             }catch(e){}
         }
+
+        const self = this
+        setInterval(function(){
+            console.log("interval")
+            self.getInfo();
+            self.getTrans();
+            self.getDid();
+            self.getEapp();  
+        },15000)
     }
     showBlockInfo(id,event){
         event.nativeEvent.stopImmediatePropagation();
@@ -263,7 +272,7 @@ class Home extends React.Component {
         const item_eapps = eapps.length ? eapps.map((v,k)=>{
             if(k<5){
                 return <li>
-                        <a href={"/eapp_detail/"+v.property_value}><span>{v.info_value}</span></a>
+                        <a href={'/eapp_detail/'+v.info_value+'/'+(v.property_key != null && v.property_key.indexOf("AppID") > -1 ? v.property_value : '...')}><span>{v.info_value}</span></a>
                         <span className="time">{s_time ? moment(v.local_system_time).from(s_time) : "..."}</span>
                 </li>
             }else{
@@ -288,7 +297,7 @@ class Home extends React.Component {
                             <li>
                                 <div className="summary_title">
                                     <span>{lang.total_ela_did}</span>
-                                    <img src={iconRight} alt="iconRight" style={{"marginBottom":"3px"}}/>
+                                    <a href="/ela_did"><img src={iconRight} alt="iconRight" style={{"marginBottom":"3px"}}/></a>
                                 </div>
                                 <div className="summary_content">
                                     <span>{didCount ? didCount : "..."}</span>
@@ -297,7 +306,7 @@ class Home extends React.Component {
                             <li className="has_border">
                                 <div className="summary_title">
                                     <span>{lang.total_transactions}</span>
-                                    <img src={iconRight} alt="iconRight" style={{"marginBottom":"3px"}}/>
+                                    <a href="/transactions"><img src={iconRight} alt="iconRight" style={{"marginBottom":"3px"}}/></a>
                                 </div>
                                 <div className="summary_content">
                                     <span>{transactionCount ? transactionCount : "..."}</span>
@@ -306,7 +315,7 @@ class Home extends React.Component {
                             <li className="has_border">
                                 <div className="summary_title">
                                     <span>{lang.block_height}</span>
-                                    <img src={iconRight} alt="iconRight" style={{"marginBottom":"3px"}}/>
+                                    <a href="/blocks"><img src={iconRight} alt="iconRight" style={{"marginBottom":"3px"}}/></a>
                                 </div>
                                 <div className="summary_content">
                                     <span>{blocks.length ? blocks[0]["height"] : "..."}</span>
@@ -315,7 +324,7 @@ class Home extends React.Component {
                             <li className="has_border">
                                 <div className="summary_title">
                                     <span>{lang.total_eApps}</span>
-                                    <img src={iconRight} alt="iconRight" style={{"marginBottom":"3px"}}/>
+                                    <a href="/eapps"><img src={iconRight} alt="iconRight" style={{"marginBottom":"3px"}}/></a>
                                 </div>
                                 <div className="summary_content">
                                     <span>{eappsCount ? eappsCount : "..."}</span>
