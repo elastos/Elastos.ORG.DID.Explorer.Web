@@ -31,7 +31,7 @@ class Reporting extends React.Component {
            		total += v.count;
            		data_total.push(total)
            	});
-           	this.initTransactionsReport(startTime,data_new,data_total);
+           	this.initDidReport(startTime,data_new,data_total);
            	jQuery(".highcharts-credits").remove()
         }catch(err){
           console.log(err)
