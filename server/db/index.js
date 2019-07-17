@@ -12,11 +12,11 @@ class DB{
 	}
 	connect(){
 		var self = this;
-		var connection = mysql.createConnection(this.option);
-		connection.connect(function(e){
+		var connection = mysql.createPool(this.option);
+		/*connection.connect(function(e){
 			console.log("connecting mysql")
 		});
-		connection.on("error",function(e){
+		/*connection.on("error",function(e){
 			//console.log("db error ",e);
 			if (e.code === 'PROTOCOL_CONNECTION_LOST') {
 				console.log("error PROTOCOL_CONNECTION_LOST");
@@ -24,7 +24,7 @@ class DB{
 	        } else {
 	            throw e;
 	        }
-		})
+		})*/
 		this.connection = connection
 	}
 }
