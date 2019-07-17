@@ -159,7 +159,7 @@ class TransactionList extends React.Component {
                     <td width="15%" style={{"position":"relative"}}>
                         { tx.height !== height1 &&  num > 1 && <div style={{"width":"5px","height":height,"background": "linear-gradient(180deg, #1DE9B6 0%, #02C67F 100%)","borderRadius": "4px","position":"absolute","left":"35px"}}></div>}
                     <span style={{"paddingLeft":"20px"}}>{tx.height}</span></td>
-                    <td width="15%"><span>{tx.value ? tx.value/ 100000000 : ""}</span></td>
+                    <td width="15%"><span>{tx.value ? (tx.value-tx.fee)/ 100000000 : ""}</span></td>
                     <td width="20%"><span>{tx.createTime ? this.timestampToTime(tx.createTime) : "" }</span></td>
                 </tr>
             )

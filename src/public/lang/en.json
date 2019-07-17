@@ -29,7 +29,7 @@
 	"confirmations":"Confirmations",
 	"property":"Property",
 	"search":"SEARCH",
-	"searchPlaceholder":"Search DID, TxID, Block Height, DID:Attribute",
+	"searchPlaceholder":"Search DID, TxID, Block Height, DID:Attribute, ELA address, [Attribute]",
 	"transactions_list":"Transactions",
 	"latest_blocks":"Latest Blocks",
 	"memo_size":"Memo Size",
@@ -86,5 +86,6 @@
 	"copy_failed":"Failed",
 	"attribute":"Attribute",
 	"eapp_url":"Url",
-	"signature":"Signature"
+	"signature":"Signature",
+	"confirmed":"Confirmed"
 }

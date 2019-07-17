@@ -115,7 +115,7 @@ class AddressInfo extends React.Component {
                     <ul>
                         <li style={{"width":"20%","borderBottom":"none","verticalAlign":"top"}}>
                             <span className="detail_key wordBreak">{lang.number}</span>
-                            <span className="detail_value wordBreak">{transaction.value / 100000000} ELA</span>
+                            <span className="detail_value wordBreak">{(transaction.value - transaction.fee ) / 100000000} ELA</span>
                         </li>
                     </ul>
                 </div> 
@@ -136,7 +136,7 @@ class AddressInfo extends React.Component {
                 	<ul>
                 		<li>
                 			<span className="detail_key wordBreak">{lang.status}</span>
-                			<span className="detail_value wordBreak" style={{"color":"#31B59D"}}><img src={confirmed} alt = "confirmed"/> Confirmed</span>
+                			<span className="detail_value wordBreak" style={{"color":"#31B59D"}}><img src={confirmed} alt = "confirmed"/> {lang.confirmed}</span>
                 		</li>
                 		<li>
                 			<span className="detail_key wordBreak">{lang.balance}</span>

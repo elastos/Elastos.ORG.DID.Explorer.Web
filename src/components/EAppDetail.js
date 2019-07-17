@@ -30,9 +30,21 @@ class EappDetail extends React.Component {
                             <Clipboard lang = {lang} eleId = "foo" icon = {iconCopy} style={{"marginBotton":"5px","padding":"3px"}}/>
                             </p>
                 			<ul className="eapp_nav">
-                				<li className = "status"><a href = "/notification"><img src={privacy} alt="privacy"/> <span>{lang.privacy}</span></a></li>
-                				<li className = "notice"><a href = "/notification"><img src={notice} alt = "notice"/> <span>{lang.notification}</span></a></li>
-                				<li><a href="/more"><span>{lang.more}...</span></a></li>
+                				<li className = "status">
+                                    {/*<a href = "/notification">*/}
+                                    <img src={privacy} alt="privacy"/> <span>{lang.privacy}</span>
+                                    {/*</a>*/}
+                                </li>
+                				<li className = "notice">
+                                    {/*<a href = "/notification"><img src={notice} alt = "notice"/>*/}
+                                     <span>{lang.notification}</span>
+                                    {/* </a>*/}
+                                 </li>
+                				<li>
+                                    {/*<a href="/more">*/}
+                                        <span>{lang.more}...</span>
+                                    {/*</a>*/}
+                                </li>
                 			</ul>
                 		</div>
                 		<div>

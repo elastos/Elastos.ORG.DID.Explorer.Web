@@ -82,7 +82,8 @@ class App extends Component {
         context = <History  {...props} lang = {this.state.lang}/>;
       break;
       default:
-        context = <NoPage {...props} lang = {this.state.lang}/>;
+        //context = <NoPage {...props} lang = {this.state.lang}/>;
+        context = "";
     }
     return (
       <div className="App">

@@ -29,7 +29,7 @@
 	"confirmations":"确认数",
 	"property":"属性",
 	"search":"查 询",
-	"searchPlaceholder":"查询 DID, 交易ID, 区块高度, DID:属性",
+	"searchPlaceholder":"查询 DID, 交易ID, 区块高度, DID:属性, ELA地址, [属性]",
 	"transactions_list":"交易列表",
 	"latest_blocks":"最新区块",
 	"memo_size":"memo 大小",
@@ -86,6 +86,7 @@
 	"copy_failed":"复制失败",
 	"attribute":"属性",
 	"eapp_url":"地址",
-	"signature":"签名"
+	"signature":"签名",
+	"confirmed":"已确认"
 
 }
