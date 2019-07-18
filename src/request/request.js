@@ -535,9 +535,9 @@ export function getEappsCount(){
 	});
 
 }
-export function getEappInfo(appid){
+export function getEappId(app_name){
 	return new Promise(function(resolve, reject) {
-		let path = addr + '/api/'+current_version+'/block/eapp/info?appid='+appid;
+		let path = addr + '/api/'+current_version+'/block/eapp/eapp_id?app_name='+app_name;
 	    let xhr = new XMLHttpRequest();
 	    xhr.open('GET',path );
 	    xhr.onload = function() {
