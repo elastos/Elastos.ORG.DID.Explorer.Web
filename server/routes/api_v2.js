@@ -360,7 +360,7 @@ router.get('/block/transactions/txid', function(req, res, next) {
 		var db =  DB.connection;
 		var txid = req.query.txid;
 		db.getConnection(function(err,conn){
-			conn.query('SELECT * FROM `chain_block_transaction_history`  WHERE `txid` = "' + txid + '" AND `txType` = "TransferAsset" AND `type` = "spend" GROUP BY `txid` ORDER BY `id` DESC', function (error, results, fields) {
+			conn.query('SELECT * FROM `chain_block_transaction_history`  WHERE `txid` = "' + txid + '" AND `type` = "spend" GROUP BY `txid` ORDER BY `id` DESC', function (error, results, fields) {
 				conn.release();
 				if(error){
 					console.log("mysql error")
@@ -796,7 +796,7 @@ router.get('/block/eapps', function(req, res, next) {
 		var start = req.query.start;
 		var pageSize = req.query.pageSize;
 		db.getConnection(function(err,conn){
-			conn.query('SELECT * FROM `chain_did_app` WHERE `info_type` = "app_name" AND `property_key` LIKE "%AppID" GROUP BY `info_value` ORDER BY id DESC LIMIT ' + start + ',' + pageSize , function (error, results, fields) {
+			conn.query('SELECT * FROM `chain_did_app` WHERE `info_type` = "app_name" AND `property_key` LIKE "%AppID" GROUP BY `info_value` ORDER BY `local_system_time` DESC LIMIT ' + start + ',' + pageSize , function (error, results, fields) {
 				conn.release();
 				if(error){
 					console.log("mysql error")
@@ -831,13 +831,13 @@ router.get('/block/eapps/count', function(req, res, next) {
 		console.log(err)
 	}
 });
-router.get('/block/eapp/info', function(req, res, next) {
+router.get('/block/eapp/eapp_id', function(req, res, next) {
 	setHeaders(res);
 	try{
 		var db =  DB.connection;
-		var appid = req.query.appid;
+		var app_name = req.query.app_name;
 		db.getConnection(function(err,conn){
-			conn.query('SELECT * FROM `chain_did_app` WHERE `info_type` = "app_name" AND `property_value` = "'+ appid +'" ORDER BY id DESC LIMIT ' + start + ',' + pageSize , function (error, results, fields) {
+			conn.query('SELECT * FROM `chain_did_app` WHERE `info_type` = "app_name" AND `info_value` = "'+ app_name +'" AND `property_key` LIKE "%AppID" ORDER BY `local_system_time` DESC LIMIT 1' , function (error, results, fields) {
 				conn.release();
 				if(error){
 					console.log("mysql error")

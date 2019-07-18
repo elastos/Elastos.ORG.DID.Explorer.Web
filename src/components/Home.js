@@ -238,17 +238,11 @@ class Home extends React.Component {
             </li> 
         }): <img src={loadingImg} style={{"marginTop":"150px"}} alt="loadingImg"/>  
         const item_blocks = blocks.length ? blocks.map((v,k)=>{
-            let time;
-            if(s_time && (v.time * 1000 < s_time)){
-                time = moment(v.time * 1000).from(s_time)
-
-            }else{
-                time = "..."
-            }
+           
             if(k<5){
                 return <li key= {k}>
                         <div><a href={"/block_detail/"+v.height}><span>{v.height}</span></a><span className="txns">{v.count ? v.count + "Txns" : "..." }</span></div>
-                        <div><span>{v.size} bytes </span><span className="time">{time}</span></div>
+                        <div><span>{v.size} bytes </span><span className="time">{s_time && moment(v.time * 1000) < moment(s_time) ? moment(v.time * 1000).from(s_time) : "..."}</span></div>
                     </li>
             }else{
                 return "";
@@ -270,7 +264,8 @@ class Home extends React.Component {
             
             if(k<5){
                 return <li key= {k}>
-                        <div><a href={"/did_detail/"+v.did}><HashFormat text = {v.did} width = "70%"/></a><span className="time">{s_time && moment(v.time) < moment(s_time) ? moment(v.time).from(s_time) : "..."}</span></div>
+                        <div><a href={"/did_detail/"+v.did}><HashFormat text = {v.did} width = "70%"/></a>
+                        <span className="time">{s_time && moment(v.time) < moment(s_time) ? moment(v.time).from(s_time) : "..."}</span></div>
                         <div>Register ELA DID</div>
                     </li>
             }else{
@@ -280,17 +275,10 @@ class Home extends React.Component {
         }) : <img src={loadingImg} style={{"margin":"160px 110px"}} alt="loadingImg"/>
 
         const item_eapps = eapps.length ? eapps.map((v,k)=>{
-            let time;
-            if(s_time && (v.local_system_time  < s_time)){
-                time = moment(v.local_system_time).from(s_time)
-
-            }else{
-                time = "..."
-            }
             if(k<5){
                 return <li>
                         <a href={'/eapp_detail/'+v.info_value+'/'+(v.property_key != null && v.property_key.indexOf("AppID") > -1 ? v.property_value : '...')}><span>{v.info_value}</span></a>
-                        <span className="time">{time}</span>
+                        <span className="time">{s_time && moment(v.local_system_time) < moment(s_time) ? moment(v.local_system_time).from(s_time) : "..."}</span>
                 </li>
             }else{
                 return "";

@@ -1,5 +1,6 @@
 import React from 'react';
 import './eappDetail.css';
+import { getEappId } from '../request/request';
 import Search from './elements/Search'
 import Clipboard from './elements/Clipboard';
 import iconCopy from '../public/images/icon-copy.svg'
@@ -8,12 +9,29 @@ import mark_l from '../public/images/mark_l.png'
 import privacy from '../public/images/icon-privacy.svg'
 import notice from '../public/images/icon-notice.svg'
 class EappDetail extends React.Component {
-	
+	constructor(props){
+        super(props);
+        this.state = {
+           app_id:"..."
+        }
+    }
+    componentWillMount (){
+        const app_name = this.props.match.params.app_name;
+        this.GetEappId(app_name)
+       
+    }
+     GetEappId = async (app_name)=>{
+        try{
+            const eapp = await getEappId(app_name);
+            this.setState({app_id:eapp[0].property_value})
+        }catch(err){
+            console.log(err)
+        }
+    }
     render() {
         const lang = this.props.lang
         const app_name = this.props.match.params.app_name;
-        const app_id = this.props.match.params.app_id;
-        console.log(app_name)
+        const app_id = this.state.app_id;
     	return (
     		<div className="container">
             	<div className = "list_top" >
