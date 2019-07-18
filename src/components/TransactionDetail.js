@@ -148,7 +148,7 @@ class TransactionDetail extends React.Component {
                     <ul>
                         <li style={{"width":"20%","borderBottom":"none","verticalAlign":"top"}}>
                             <span className="detail_key wordBreak">{lang.number}</span>
-                            <span className="detail_value wordBreak">{transaction.value / 100000000} ELA</span>
+                            <span className="detail_value wordBreak">{(transaction.value - transaction.fee ) / 100000000} ELA</span>
                         </li>
                     </ul>
                 </div> 
