@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { getAddressInfo } from '../request/request';
+import { getAddressInfo, getCurrentHeight } from '../request/request';
 import './transactionDetail.css'
 import Search from './elements/Search'
 import Clipboard from './elements/Clipboard';
@@ -17,6 +17,7 @@ class AddressInfo extends React.Component {
         this.state = {
           transactions:[],
           loading:true ,
+          currentHeight:null
         }
     }
     componentWillMount (){
@@ -30,6 +31,10 @@ class AddressInfo extends React.Component {
             this.setState({
                 transactions:info,
                 loading:false
+            })
+             const currentHeight = await getCurrentHeight();
+            this.setState({
+                currentHeight:currentHeight[0].height
             })
         }catch(err){
           console.log(err)
@@ -57,7 +62,8 @@ class AddressInfo extends React.Component {
     render() {
     	const address = this.props.match.params.address;
         const lang = this.props.lang;
-        const { transactions, loading } = this.state;
+        const { transactions, loading, currentHeight } = this.state;
+        console.log(currentHeight)
         var total_sent = 0;
         var total_received = 0;
         var balance = 0;
@@ -101,8 +107,8 @@ class AddressInfo extends React.Component {
                             <span style={{"display":"inline"}}>TxID:</span><a href={"/transaction_detail/"+ transaction.txid}><span style={{"display":"inline","color":"rgb(49, 181, 157)"}} className="detail_key wordBreak">{transaction.txid}</span></a>
                         </li>
                         <li style={{"padding":"0px 0px 20px 0px"}}>
-                            <span style={{"color":"#364458","display":"inline","background":"#E7F1FF","borderRadius":"4px","padding":"4px 10px","marginRight":"20px"}}>Block Height: {transaction.height}</span>
-                            <span style={{"color":"#364458","display":"inline","background":"#E7F1FF","borderRadius":"4px","padding":"4px 10px"}}>Timestamp: {moment.unix(transaction.createTime).format('h:mm:ss MMMM Do, YYYY')}</span>
+                            <span style={{"color":"#364458","display":"inline","background":"#E7F1FF","borderRadius":"4px","padding":"4px 10px","marginRight":"20px"}}>{lang.block_height}: {transaction.height}</span>
+                            <span style={{"color":"#364458","display":"inline","background":"#E7F1FF","borderRadius":"4px","padding":"4px 10px"}}>{lang.timestamp}: {moment.unix(transaction.createTime).format('YYYY-MM-DD hh:mm:ss')}</span>
                         </li>
                     </ul>
                     
@@ -114,8 +120,12 @@ class AddressInfo extends React.Component {
                     </ul>
                     <ul>
                         <li style={{"width":"20%","borderBottom":"none","verticalAlign":"top"}}>
-                            <span className="detail_key wordBreak">{lang.number}</span>
-                            <span className="detail_value wordBreak">{(transaction.value - transaction.fee ) / 100000000} ELA</span>
+                            <span className="trx_bottom" style={{"float":"left","background":"#EAEEF4","color":"#364458"}}>{lang.fee} : { transaction.fee / 100000000} ELA</span>
+                            
+                        </li>
+                        <li style={{"width":"40%","borderBottom":"none","verticalAlign":"top","float":"right"}}>
+                            <span className="trx_bottom">{lang.number} : {(transaction.value - transaction.fee ) / 100000000} ELA</span>
+                            <span style={{"marginRight":"20px"}}className="trx_bottom">{lang.confirmations} : {currentHeight ? (currentHeight - transaction.height + 1) : '...' }</span>
                         </li>
                     </ul>
                 </div> 
