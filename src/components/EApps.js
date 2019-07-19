@@ -3,7 +3,7 @@ import { getEapps , getEappsCount, getEappId } from '../request/request';
 import {Link} from 'react-router-dom';
 import { Pagination } from 'antd';
 import './eapp.css';
-
+import U from 'urlencode';
 import Search from './elements/Search'
 import loadingImg from '../public/images/loading.gif';
 import iconLeft from '../public/images/icon-left.svg'
@@ -51,8 +51,9 @@ class EApps extends React.Component {
     GetEappId = async (k,app_name)=>{
         try{
 
-            const eapp = await getEappId(app_name);
+            const eapp = await getEappId(U(app_name));
             let eapps = this.state.eapps;
+            console.log(eapp)
             eapps[k].property_value = eapp[0].property_value;
             eapps[k].loaded = true;
             this.setState({eapps:eapps})
@@ -97,7 +98,7 @@ class EApps extends React.Component {
         const txHtml = eapps.map((eapp,k) => {
             return(
                 <tr className="ant-table-row ant-table-row-level-0 table_tr" data-row-key="1" key={k}>
-                    <td width="20%"><Link to={'/eapp_detail/'+eapp.info_value}>
+                    <td width="20%"><Link to={'/eapp_detail/'+U(eapp.info_value)}>
                     	{/*<img src={okb_mid}/>*/}<span style={{"paddingLeft":"5px"}}>{eapp.info_value}</span>
                     </Link></td>
                     <td width="40%">{eapp.property_key != null && eapp.property_key.indexOf("AppID") > -1 && eapp.loaded != null ? eapp.property_value : '...'}</td>

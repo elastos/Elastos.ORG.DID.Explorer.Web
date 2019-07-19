@@ -483,9 +483,26 @@ export function getReportTotal(type,range){
 	    xhr.send();
 	});
 }
-export function getAddressInfo(address){
+export function getAddressInfo(address,start,pageSize){
 	return new Promise(function(resolve, reject) {
-		let path = addr + '/api/'+current_version+'/block/getAddressInfo?address='+address;
+		let path = addr + '/api/'+current_version+'/block/getAddressInfo?address='+address+'&start='+start+'&pageSize='+pageSize;
+	    let xhr = new XMLHttpRequest();
+	    xhr.open('GET',path );
+	    xhr.onload = function() {
+	      if (xhr.status === 200) {
+	        resolve(JSON.parse(xhr.responseText));
+	      } 
+	    };
+	    xhr.onerror = function() {
+	      reject(new Error(xhr.statusText));
+	    };
+	    xhr.send();
+	});
+
+}
+export function getTransactionsCountFromAddress(address){
+	return new Promise(function(resolve, reject) {
+		let path = addr + '/api/'+current_version+'/block/getTransactionsCountFromAddress?address='+address;
 	    let xhr = new XMLHttpRequest();
 	    xhr.open('GET',path );
 	    xhr.onload = function() {
