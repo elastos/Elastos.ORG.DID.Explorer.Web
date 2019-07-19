@@ -105,11 +105,11 @@ class Blocks extends React.Component {
         const txHtml = blocks.map((block,k) => {
         	return(
         		<tr className="ant-table-row ant-table-row-level-0 table_tr1" data-row-key="1" key={k}>
-	        		<td width="30%"><Link to={'/block_detail/'+block.height}><span>{block.height}</span></Link></td>
-	        		<td width="40%"><span>{block.count}</span></td>
-	        		<td width="10%"><span>{block.miner_info}</span></td>
-	        		<td width="10%"><span>{block.size}</span></td>
-	        		<td width="10%"><span>{block.time ? this.timestampToTime(block.time) : "" }</span></td>
+	        		<td width="20%"><Link to={'/block_detail/'+block.height}><span>{block.height}</span></Link></td>
+	        		<td width="20%"><span>{block.count}</span></td>
+	        		<td width="20%"><span>{block.miner_info}</span></td>
+	        		<td width="20%"><span>{block.size}</span></td>
+	        		<td width="20%"><span>{block.time ? this.timestampToTime(block.time) : "" }</span></td>
 				</tr>
         	)
         });

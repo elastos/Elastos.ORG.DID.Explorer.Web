@@ -49,3 +49,20 @@ margin-left:5px;
     word-wrap: break-word;
     word-break: break-all;	
 }
+
+
+/***addressinfo***/
+
+.transaction_summery .trx_bottom{
+	width: auto;
+    height: 40px;
+    float:right;
+    display:inline-block;
+    background: #364458;
+    border-radius: 10px;
+    text-align: center;
+    line-height: 40px;
+    margin: 0;
+    padding: 0px 20px;
+    color: #fff;
+}

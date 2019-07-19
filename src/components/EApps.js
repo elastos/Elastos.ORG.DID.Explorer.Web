@@ -31,12 +31,13 @@ class EApps extends React.Component {
             
             const start = ( current - 1) * size;
             const eapps = await getEapps(start,size);
+            console.log(eapps)
             this.setState({
                 eapps:eapps, 
                 loading:false              
             })
             Object.keys(eapps).map((eapp,k) => {
-                return this.GetEappId(k,eapps[k].app_name)                
+                return this.GetEappId(k,eapps[k].info_value)                
             });
             const count = await getEappsCount();
              this.setState({

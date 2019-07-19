@@ -283,13 +283,13 @@
 	    text-shadow: 0px 0px 50px rgba(0, 255, 224, 0.6);  
 	}
 	.container.container_banner .banner_search{
-		width:672px;
+		width:720px;
 		height:64px;
 		background: #FFFFFF;
 		border-radius: 80px;
 	    position: absolute;
 	    left: 50%;
-	    margin-left: -336px;
+	    margin-left: -360px;
 	    top: 270px;
 		box-shadow: 0px 10px 120px rgba(29, 233, 182, 0.5), 0px 2px 6px rgba(29, 233, 182, 0.1);
 	}
