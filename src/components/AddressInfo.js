@@ -1,48 +1,58 @@
 
 import React from 'react';
-import { getAddressInfo, getCurrentHeight } from '../request/request';
+import { getAddressInfo, getCurrentHeight, getTransactionsCountFromAddress } from '../request/request';
 import './transactionDetail.css'
 import Search from './elements/Search'
+import { Pagination } from 'antd';
 import Clipboard from './elements/Clipboard';
 import iconCopy from '../public/images/icon-copy.svg'
 import iconDeprecated from '../public/images/icon-deprecated.svg'
 import iconNormal from '../public/images/icon-normal.svg'
 import confirmed from '../public/images/confirmed.svg'
 import loadingImg from '../public/images/loading.gif';
+import iconLeft from '../public/images/icon-left.svg'
+import iconRight from '../public/images/icon-right.svg'
 import to from '../public/images/to.png';
 import moment from 'moment'
 class AddressInfo extends React.Component {
 	constructor(props){
         super(props);
         this.state = {
+            count:0,
           transactions:[],
           loading:true ,
-          currentHeight:null
+          currentHeight:null,
+          size: 10,
+          current:1,
         }
+        this.onChange = this.onChange.bind(this);
     }
     componentWillMount (){
-        this.GetInfo();
+        const { current, size }= this.state;
+        this.GetInfo(current,size);
     }
-    GetInfo = async () => {
+    GetInfo = async (current,size) => {
          try{
+            const start = ( current - 1) * size;
             const address = this.props.match.params.address;
-            const info = await getAddressInfo(address)
+            const info = await getAddressInfo(address,start,size)
             console.log(info)
             this.setState({
                 transactions:info,
-                loading:false
             })
-             const currentHeight = await getCurrentHeight();
+            const currentHeight = await getCurrentHeight();
             this.setState({
                 currentHeight:currentHeight[0].height
+            })
+            const count = await getTransactionsCountFromAddress(address);
+            console.log(count)
+             this.setState({
+                count:count[0].count,
+                 loading:false
             })
         }catch(err){
           console.log(err)
         }
-    }
-
-     componentWillReceiveProps(nextProps) {
-        this.GetInfo();
     }
      timestampToTime(timestamp) {
       let date = new Date(timestamp * 1000);
@@ -59,10 +69,26 @@ class AddressInfo extends React.Component {
       (m < 10 ? '0'+ m : m ) + ':' + 
       (s < 10 ? '0'+ s : s );
     }
+    itemRender(current, type, originalElement) {
+      if (type === 'prev' ) {
+        return <a href="#"><img src={iconLeft} alt = "iconleft"/></a>;
+      } if (type === 'next') {
+        return <a href="#"><img src={iconRight} alt = "iconright"/></a>;
+      }
+      return originalElement;
+    }
+    onChange(pageNumber) {
+        this.setState({
+            loading:true,
+            current : pageNumber
+        })
+        const { size }= this.state;
+        this.GetInfo(pageNumber,size);
+    }
     render() {
     	const address = this.props.match.params.address;
         const lang = this.props.lang;
-        const { transactions, loading, currentHeight } = this.state;
+        const { transactions, loading, currentHeight, count, size, current } = this.state;
         console.log(currentHeight)
         var total_sent = 0;
         var total_received = 0;
@@ -130,7 +156,7 @@ class AddressInfo extends React.Component {
                     </ul>
                 </div> 
             )
-        })) : <li style={{"textAlign":"center"}}>{loading ? <img src={loadingImg} alt="loading"/> : <span>{lang.not_found}</span>}</li> ;;
+        })) : <li style={{"textAlign":"center"}}>{loading ? <img src={loadingImg} alt="loading"/> : <span>{lang.not_found}</span>}</li> ;
         return (
             <div className="container">
             	<div className = "list_top" >
@@ -173,6 +199,12 @@ class AddressInfo extends React.Component {
                 </div>
                
                 {txHtml}
+                <div style={{"marginTop":"50px","textAlign":"center"}}>
+                    {count != 0 && count > size && <Pagination defaultCurrent={current} total={count} defaultPageSize = {size} onChange={this.onChange}  itemRender={this.itemRender}
+                        style={{"width":"100%","height":"50px","textAlign":"center"}}
+                    />}
+                    {loading && <img src={loadingImg} alt="loading"/>}
+                </div>
             </div>
         );
     }
