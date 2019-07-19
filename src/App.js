@@ -69,7 +69,7 @@ class App extends Component {
       case '/block_detail/:height':
         context = <BlockDetail  {...props} lang = {this.state.lang}/>;
       break;
-      case '/eapp_detail/:app_name/:app_id':
+      case '/eapp_detail/:app_name':
         context = <EAppDetail  {...props} lang = {this.state.lang}/>;
       break;
       case '/address_info/:address':
