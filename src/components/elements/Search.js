@@ -14,6 +14,7 @@ class Search extends React.Component {
             ele.value = "";
             const reg_height = /^[0-9]*$/;
             reg_height.test(txt) && (window.location.href = "/block_detail/"+txt);
+            txt[0] === "[" && txt[txt.length-1] === "]" && (window.location.href = "/ela_did/"+txt.substr(1,txt.length-2))
             txt.length === 64 && (window.location.href = "/transaction_detail/"+txt);
             txt.length === 34 && txt.substr(0, 1) === "i" && (window.location.href = "/did_detail/"+txt);
             txt.length === 34 && txt.substr(0, 1) !== "i" && (window.location.href = "/address_info/"+txt);

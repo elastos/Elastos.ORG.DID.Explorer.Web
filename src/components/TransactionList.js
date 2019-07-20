@@ -25,7 +25,7 @@ class TransactionList extends React.Component {
     componentWillMount (){
         
        if(this.props.name === "block_detail" && this.props.blockHeight) {
-            console.log("truesss")
+            
             this.setState({
                 height: this.props.blockHeight,
                 size: 20,

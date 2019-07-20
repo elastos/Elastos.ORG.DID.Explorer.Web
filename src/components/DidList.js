@@ -1,5 +1,5 @@
 import React from 'react';
-import { getDids, getDidCount, getDidInfo } from '../request/request';
+import { getDids, getDidCount, getDidInfo, getDidsWithProperty, getDidCountWidthProperty } from '../request/request';
 import {Link} from 'react-router-dom';
 import { Pagination } from 'antd';
 import './didList.css';
@@ -16,25 +16,31 @@ class DidList extends React.Component {
             size: 50,
             current:1,
             dids:[],
+            property:null,
             loading:true
         }
         this.onChange = this.onChange.bind(this);
     }
     componentWillMount (){
+        const property = this.props.match.params.property;
+        console.log(property)
+        this.setState({
+            property:property
+        })
         const { current, size }= this.state;
-        this.getInfo(current,size);
+        this.getInfo(current,size,property);
        
     }
-    getInfo = async (current,size) => {
+    getInfo = async (current,size,property) => {
         try{
             const start = ( current - 1) * size;
-            const dids = await getDids(start,size);
+            const dids = property ? await getDidsWithProperty(start,size,property) : await getDids(start,size);
             this.setState({dids:dids})
             var number = []
             Object.keys(dids).map((did,k) => {
                 return this.getDidsInfo(k,number,dids)                
             });
-            const count = await getDidCount();
+            const count = property ? await getDidCountWidthProperty(property) : await getDidCount();
             this.setState({
                 count:count[0].count
             })
@@ -62,8 +68,8 @@ class DidList extends React.Component {
             loading:true,
             current : pageNumber
         })
-        const { size }= this.state;
-        this.getInfo(pageNumber,size);
+        const { size, property } = this.state;
+        this.getInfo(pageNumber,size, property);
     }
     timestampToTime(time) {
       let date = new Date(time);

@@ -51,6 +51,9 @@ class App extends Component {
       case '/ela_did':
         context = <DidList  {...props} lang = {this.state.lang}/>;
       break;
+      case '/ela_did/:property':
+        context = <DidList  {...props} lang = {this.state.lang}/>;
+      break;
       case '/transactions':
         context = <TransactionList  {...props} lang = {this.state.lang}/>;
       break;
