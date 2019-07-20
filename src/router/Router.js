@@ -10,7 +10,8 @@ class Router extends Component {
 		<BrowserRouter>
 			<Switch>
 				<Route exact path = "/" render={props=>(<App {...props}  />)}  ></Route>
-				<Route path = "/ela_did" render={props=>(<App {...props}  />)}  ></Route>
+				<Route exact path = "/ela_did" render={props=>(<App {...props}  />)}  ></Route>
+				<Route path = "/ela_did/:property" render={props=>(<App {...props}  />)}  ></Route>
 				<Route path = "/transactions" render={props=>(<App {...props}  />)}  ></Route>
 				<Route path = "/blocks" render={props=>(<App {...props}  />)}  ></Route>
 				<Route path = "/eapps" render={props=>(<App {...props}  />)}  ></Route>

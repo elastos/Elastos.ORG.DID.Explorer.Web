@@ -600,6 +600,27 @@ router.get('/block/dids/count', function(req, res, next) {
 		console.log(err)
 	}
 });
+router.get('/block/dids/countWithProperty', function(req, res, next) {
+	setHeaders(res);
+	try{
+		var db =  DB.connection;
+		var property = req.query.property;
+		db.getConnection(function(err,conn){
+			conn.query('SELECT count(distinct `did` ) AS count  FROM `chain_did_property` WHERE `property_key` = "'+property+'"', function (error, results, fields) {
+				conn.release();
+				if(error){
+					console.log("mysql error")
+					console.log(error)
+				}else{
+					res.send(results);
+				}
+			})
+		})
+	}catch(err){
+		console.log(err)
+	}
+});
+
 router.get('/block/did/info', function(req, res, next) {
 	setHeaders(res);
 	try{
@@ -607,6 +628,28 @@ router.get('/block/did/info', function(req, res, next) {
 		var did = req.query.did;
 		db.getConnection(function(err,conn){
 			conn.query('SELECT * FROM `chain_did_property` WHERE `did` = "'+did+'" LIMIT 1', function (error, results, fields) {
+				conn.release();
+				if(error){
+					console.log("mysql error")
+					console.log(error)
+				}else{
+					res.send(results);
+				}
+			})
+		})
+	}catch(err){
+		console.log(err)
+	}
+});
+router.get('/block/didsWidthProperty', function(req, res, next) {
+	setHeaders(res);
+	try{
+		var db =  DB.connection;
+		var property = req.query.property
+		var start = req.query.start;
+		var pageSize = req.query.pageSize;
+		db.getConnection(function(err,conn){
+			conn.query('SELECT  distinct did FROM `chain_did_property` WHERE `property_key` = "'+property+'" ORDER BY id DESC LIMIT ' + start + ',' + pageSize, function (error, results, fields) {
 				conn.release();
 				if(error){
 					console.log("mysql error")

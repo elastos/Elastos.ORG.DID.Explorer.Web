@@ -387,9 +387,42 @@ export function getDids(start,pageSize){
 	    xhr.send();
 	});
 }
+export function getDidsWithProperty(start,pageSize,property){
+	return new Promise(function(resolve, reject) {
+		let path = addr + '/api/'+current_version+'/block/didsWidthProperty?property='+property+'&start='+start+'&pageSize='+pageSize;
+	    let xhr = new XMLHttpRequest();
+	    xhr.open('GET',path );
+	    xhr.onload = function() {
+	      if (xhr.status === 200) {
+	        resolve(JSON.parse(xhr.responseText));
+	      } 
+	    };
+	    xhr.onerror = function() {
+	      reject(new Error(xhr.statusText));
+	    };
+	    xhr.send();
+	});
+}
+
 export function getDidCount(){
 	return new Promise(function(resolve, reject) {
 		let path = addr + '/api/'+current_version+'/block/dids/count';
+	    let xhr = new XMLHttpRequest();
+	    xhr.open('GET',path );
+	    xhr.onload = function() {
+	      if (xhr.status === 200) {
+	        resolve(JSON.parse(xhr.responseText));
+	      } 
+	    };
+	    xhr.onerror = function() {
+	      reject(new Error(xhr.statusText));
+	    };
+	    xhr.send();
+	});
+}
+export function getDidCountWidthProperty(property){
+	return new Promise(function(resolve, reject) {
+		let path = addr + '/api/'+current_version+'/block/dids/countWithProperty?property='+property;
 	    let xhr = new XMLHttpRequest();
 	    xhr.open('GET',path );
 	    xhr.onload = function() {
