@@ -47,7 +47,7 @@
 	"block_size":"区块大小",
 	"view_more":"更多",
 	"txid":"交易ID",
-	"did_event_included":"DID Event Included",
+	"did_event_included":"包含DID事件",
 	"transactions_in_this_block":"当前区块交易列表",
 	"status":"确认状态",
 	"yes":"是",
@@ -87,6 +87,7 @@
 	"attribute":"属性",
 	"eapp_url":"地址",
 	"signature":"签名",
-	"confirmed":"已确认"
+	"confirmed":"已确认",
+	"create_an_eapp":"创建一个EApp"
 
 }

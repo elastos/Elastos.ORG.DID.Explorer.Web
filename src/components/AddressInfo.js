@@ -48,7 +48,7 @@ class AddressInfo extends React.Component {
             console.log(count)
              this.setState({
                 count:count[0].count,
-                 loading:false
+                loading:false
             })
         }catch(err){
           console.log(err)
@@ -189,7 +189,7 @@ class AddressInfo extends React.Component {
                 		
                         <li>
                             <span className="detail_key wordBreak"># of Transactions</span>
-                            <span className="detail_value wordBreak">{ transactions.length}</span>
+                            <span className="detail_value wordBreak">{count}</span>
                         </li>
                 	</ul>
                 </div>

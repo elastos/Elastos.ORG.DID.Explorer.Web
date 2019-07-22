@@ -19,7 +19,7 @@ class Footer extends React.Component {
 								{/*<li><a href="/reporting" target="_blank"><span>Report</span></a></li>*/}
 								<li><a href="https://www.elastos.org/" target="_blank"><span>Elastos.org</span></a></li>
 								<li>
-									<div className="tips">Create an EApp</div>
+									<div className="tips">{lang.create_an_eapp}</div>
 									<a href="https://developer.elastos.org/" target="_blank"><span>Developer</span></a>
 								</li>
 							</ul>
