@@ -88,5 +88,6 @@
 	"eapp_url":"Url",
 	"signature":"Signature",
 	"confirmed":"Confirmed",
-	"create_an_eapp":"Create an EApp"
+	"create_an_eapp":"Create an EApp",
+	"transaction_count": "# of Transactions"
 }
