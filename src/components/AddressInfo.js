@@ -188,7 +188,7 @@ class AddressInfo extends React.Component {
                 		</li>
                 		
                         <li>
-                            <span className="detail_key wordBreak"># of Transactions</span>
+                            <span className="detail_key wordBreak">{lang.transaction_count}</span>
                             <span className="detail_value wordBreak">{count}</span>
                         </li>
                 	</ul>

@@ -88,6 +88,7 @@
 	"eapp_url":"地址",
 	"signature":"签名",
 	"confirmed":"已确认",
-	"create_an_eapp":"创建一个EApp"
+	"create_an_eapp":"创建一个EApp",
+	"transaction_count": "交易次数"
 
 }

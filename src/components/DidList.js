@@ -36,7 +36,7 @@ class DidList extends React.Component {
             const start = ( current - 1) * size;
             const dids = property ? await getDidsWithProperty(start,size,property) : await getDids(start,size);
             this.setState({dids:dids})
-            
+            console.log(dids)
             var number = []
             Object.keys(dids).map((did,k) => {
                 return this.getDidsInfo(k,number,dids)                

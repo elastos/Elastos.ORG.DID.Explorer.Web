@@ -452,7 +452,26 @@ router.get('/block/transactions/count', function(req, res, next) {
 	}
 });
 
+router.get('/block/transactions/info', function(req, res, next) {
+	setHeaders(res);
+	try{
+		var db =  DB.connection;
+		var txid = req.query.txid;
+		db.getConnection(function(err,conn){
+			conn.query('SELECT * FROM (SELECT * FROM `chain_did_property` WHERE txid = "'+ txid +'" ORDER BY `block_time` DESC) a GROUP BY `property_key`', function (error, results, fields) {
+				conn.release();
+				if(error){
+					console.log("mysql error")
+					console.log(error)
+				}else{
+					res.send(results);
+				}
+			})
+		})
+	}catch(err){
 
+	}
+});
 
 router.get('/block/transactions/did', function(req, res, next) {
 	setHeaders(res);
@@ -608,7 +627,7 @@ router.get('/block/did/info', function(req, res, next) {
 		var db =  DB.connection;
 		var did = req.query.did;
 		db.getConnection(function(err,conn){
-			conn.query('SELECT * FROM `chain_did_property` WHERE `did` = "'+did+'" LIMIT 1', function (error, results, fields) {
+			conn.query('SELECT * FROM `chain_did_property` WHERE `did` = "'+did+'" ORDER BY `local_system_time` DESC LIMIT 1', function (error, results, fields) {
 				conn.release();
 				if(error){
 					console.log("mysql error")
