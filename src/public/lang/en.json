@@ -87,5 +87,6 @@
 	"attribute":"Attribute",
 	"eapp_url":"Url",
 	"signature":"Signature",
-	"confirmed":"Confirmed"
+	"confirmed":"Confirmed",
+	"create_an_eapp":"Create an EApp"
 }

@@ -360,7 +360,7 @@ router.get('/block/transactions/txid', function(req, res, next) {
 		var db =  DB.connection;
 		var txid = req.query.txid;
 		db.getConnection(function(err,conn){
-			conn.query('SELECT * FROM `chain_block_transaction_history`  WHERE `txid` = "' + txid + '" AND `type` = "spend" GROUP BY `txid` ORDER BY `id` DESC', function (error, results, fields) {
+			conn.query('SELECT * FROM `chain_block_transaction_history`  WHERE `txid` = "' + txid + '"  GROUP BY `txid` ORDER BY `id` DESC', function (error, results, fields) {
 				conn.release();
 				if(error){
 					console.log("mysql error")
@@ -414,7 +414,7 @@ router.get('/block/transactions_info', function(req, res, next) {
 		var db =  DB.connection;
 		var txid = req.query.txid;
 		db.getConnection(function(err,conn){
-			conn.query('SELECT createTime,length(memo) as `length_memo`, fee, value FROM `chain_block_transaction_history` WHERE `type` = "spend" and `txid` = "'+ txid +'"'
+			conn.query('SELECT createTime,length(memo) as `length_memo`, fee, value FROM `chain_block_transaction_history`  and `txid` = "'+ txid +'"'
 			, function (error, results, fields) {
 				conn.release();
 				if(error){
@@ -452,26 +452,7 @@ router.get('/block/transactions/count', function(req, res, next) {
 	}
 });
 
-router.get('/block/transactions/info', function(req, res, next) {
-	setHeaders(res);
-	try{
-		var db =  DB.connection;
-		var txid = req.query.txid;
-		db.getConnection(function(err,conn){
-			conn.query('SELECT * FROM (SELECT * FROM `chain_did_property` WHERE txid = "'+ txid +'" ORDER BY `block_time` DESC) a GROUP BY `property_key`', function (error, results, fields) {
-				conn.release();
-				if(error){
-					console.log("mysql error")
-					console.log(error)
-				}else{
-					res.send(results);
-				}
-			})
-		})
-	}catch(err){
 
-	}
-});
 
 router.get('/block/transactions/did', function(req, res, next) {
 	setHeaders(res);
@@ -649,7 +630,7 @@ router.get('/block/didsWidthProperty', function(req, res, next) {
 		var start = req.query.start;
 		var pageSize = req.query.pageSize;
 		db.getConnection(function(err,conn){
-			conn.query('SELECT  distinct did FROM `chain_did_property` WHERE `property_key` = "'+property+'" ORDER BY id DESC LIMIT ' + start + ',' + pageSize, function (error, results, fields) {
+			conn.query('SELECT  distinct did FROM `chain_did_property` WHERE `property_key` = "'+property+'" ORDER BY `local_system_time` DESC LIMIT ' + start + ',' + pageSize, function (error, results, fields) {
 				conn.release();
 				if(error){
 					console.log("mysql error")

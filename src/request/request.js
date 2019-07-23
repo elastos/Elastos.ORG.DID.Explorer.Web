@@ -285,23 +285,6 @@ export function getTransactionsFromTxid(txid){
 	});
 }
 
-
-export function getTxFromTxid(txid){
-	return new Promise(function(resolve, reject) {
-		let path = addr + '/api/'+current_version+'/block/transactions/info?txid='+txid
-	    let xhr = new XMLHttpRequest();
-	    xhr.open('GET',path );
-	    xhr.onload = function() {
-	      if (xhr.status === 200) {
-	        resolve(JSON.parse(xhr.responseText));
-	      } 
-	    };
-	    xhr.onerror = function() {
-	      reject(new Error(xhr.statusText));
-	    };
-	    xhr.send();
-	});
-}
 export function getTxDetailFromTxid(txid){
 	return new Promise(function(resolve, reject) {
 		let path = addr + '/api/'+current_version+'/block/transactions/info?txid='+txid

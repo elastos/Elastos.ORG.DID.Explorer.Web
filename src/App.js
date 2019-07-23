@@ -81,6 +81,9 @@ class App extends Component {
       case '/reporting':
         context = <Reporting  {...props} lang = {this.state.lang}/>;
       break;
+      case '/history/:did':
+        context = <History  {...props} lang = {this.state.lang}/>;
+      break;
       case '/history/:did/:key':
         context = <History  {...props} lang = {this.state.lang}/>;
       break;
