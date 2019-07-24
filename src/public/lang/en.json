@@ -90,10 +90,14 @@
 	"confirmed":"Confirmed",
 	"create_an_eapp":"Create an EApp",
 	"transaction_count": "# of Transactions",
-	"1h":"1 小时",
-	"24h":"24 小时",
-	"1w":"1 周",
-	"1m":"1 月",
-	"1y":"1 年",
-	"all":"全部"
+	"1h":"1H",
+	"24h":"24H",
+	"1w":"1W",
+	"1m":"1M",
+	"1y":"1Y",
+	"all":"All",
+	"total_dids":"Total DIDs",
+	"new_dids":"New DIDs",
+	"total_transactions":"Total Transactions",
+	"new_transactions":"New Transactions"
 }

@@ -90,11 +90,15 @@
 	"confirmed":"已确认",
 	"create_an_eapp":"创建一个EApp",
 	"transaction_count": "交易次数",
-	"1h":"1H",
-	"24h":"24H",
-	"1w":"1W",
-	"1m":"1M",
-	"1y":"1Y",
-	"all":"All"
+	"1h":"1 小时",
+	"24h":"24 小时",
+	"1w":"1 周",
+	"1m":"1 月",
+	"1y":"1 年",
+	"all":"全部",
+	"total_dids":"总DID数",
+	"new_dids":"新DID数",
+	"total_transactions":"总交易数",
+	"new_transactions":"新交易数"
 
 }

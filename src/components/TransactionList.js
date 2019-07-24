@@ -182,7 +182,7 @@ class TransactionList extends React.Component {
                                                 <div>{lang.txid}</div>
                                             </th>
                                             <th className="">
-                                                <div>DID Event Included</div>
+                                                <div>{lang.did_event_included}</div>
                                             </th>
                                             <th className="">
                                                 <div>{lang.block_height}</div>

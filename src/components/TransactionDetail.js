@@ -35,9 +35,13 @@ class TransactionDetail extends React.Component {
             const isEvent = properties.length > 0 ? true : false
             const values = await getValuesFromTxid(txid)
             console.log(transactions)
-            transactions[0].properties = properties;
-            transactions[0].did = properties[0].did;
-            transactions[0].didstatus = properties[0].did_status;
+            console.log(properties)
+            
+                transactions[0].properties = properties;
+            if(properties.length > 0){
+                transactions[0].did = properties[0].did;
+                transactions[0].didstatus = properties[0].did_status;
+            }
             transactions[0].values = values[0].value;
             this.setState({
                 transactions:transactions,
@@ -80,7 +84,7 @@ class TransactionDetail extends React.Component {
         const txid = this.props.match.params.txid;
         const lang = this.props.lang;
         const { transactions, isEvent, loading, currentHeight } = this.state;
-        const proHtml = (transactions.length >0 && typeof transactions[0].properties != "undefined") ? (transactions[0].properties.map((property,k)=>{
+        const proHtml = (transactions.length >0 && typeof transactions[0].properties != "undefined" && transactions[0].properties.length > 0) ? (transactions[0].properties.map((property,k)=>{
              if( k % 2 == 0){ return(
                     <li  key={k}>
                         <div style={{"width":"50%","display":"inline-block","verticalAlign":"top"}}>

@@ -97,12 +97,13 @@ class Reporting extends React.Component {
 	}
 	initDidReport(did_new_start,did_new_data,did_total_data){
 		const range = this.state.range_did
+		const lang = this.props.lang
 		Highcharts.chart('container1', {
 		    chart: {
 		        zoomType: 'xy'
 		    },
 		    title: {
-		        text: '<span style="padding:30px;display:block">Total DIDs & New DIDs ('+range+')</span>',
+		        text: '<span style="padding:30px;display:block">'+lang.total_dids+' & '+lang.new_dids+' ('+range+')</span>',
 		        style:{
 		        	color:"#080251",
 		        	fontSize: "20px"
@@ -127,7 +128,7 @@ class Reporting extends React.Component {
 		            }
 		        },
 		        title: {
-		            text: 'Total DIDs',
+		            text: lang.total_dids,
 		            align: 'high',
 		            style: {
 		                color: "#A3A0FB"
@@ -135,7 +136,7 @@ class Reporting extends React.Component {
 		        }
 		    }, { // Secondary yAxis
 		        title: {
-		            text: 'New DIDs',
+		            text: lang.new_dids,
 		            align: 'high',
 		            style: {
 		                color: "#6DDBFF"
@@ -208,7 +209,7 @@ class Reporting extends React.Component {
 		    },
 		    
 		    series: [{
-		        name: 'Total DIDs',
+		        name: lang.total_dids,
 		        type: 'areaspline',
 		       	data: did_total_data,
 		       	tooltip: {
@@ -219,7 +220,7 @@ class Reporting extends React.Component {
 		        pointIntervalUnit:this.setxAxisFormate(range).pointIntervalUnit
 		        
 		    },{
-		        name: 'New DIDs',
+		        name: lang.new_dids,
 		        type: 'column',
 		        yAxis: 1,
 		        data: did_new_data,
@@ -235,12 +236,13 @@ class Reporting extends React.Component {
 	}
 	initTransactionsReport(trx_new_start,trx_new_data,trx_total_data){
 		const range = this.state.range_transactions
+		const lang = this.props.lang
 		Highcharts.chart('container2', {
 		    chart: {
 		        zoomType: 'xy'
 		    },
 		    title: {
-		        text: '<span style="padding:30px;display:block">Total Transactions/New Transactions ('+range+')</span>',
+		        text: '<span style="padding:30px;display:block">'+lang.total_transactions+'/'+lang.new_transactions+' ('+range+')</span>',
 		        style:{
 		        	color:"#080251",
 		        	fontSize: "20px"
@@ -265,7 +267,7 @@ class Reporting extends React.Component {
 		            }
 		        },
 		        title: {
-		            text: 'Total Transactions',
+		            text: lang.total_transactions,
 		            align: 'high',
 		            style: {
 		                color: "#A3A0FB"
@@ -273,7 +275,7 @@ class Reporting extends React.Component {
 		        }
 		    }, { // Secondary yAxis
 		        title: {
-		            text: 'New Transactions',
+		            text: lang.new_transactions,
 		            align: 'high',
 		            style: {
 		                color: "#6DDBFF"
@@ -346,7 +348,7 @@ class Reporting extends React.Component {
 		    },
 		    
 		    series: [{
-		        name: 'Total Transactions',
+		        name: lang.total_transactions,
 		        type: 'areaspline',
 		       	 data: trx_total_data,
 		       	 tooltip: {
@@ -357,7 +359,7 @@ class Reporting extends React.Component {
 		        pointIntervalUnit:this.setxAxisFormate(range).pointIntervalUnit
 		        
 		    },{
-		        name: 'New Transactions',
+		        name: lang.new_transactions,
 		        type: 'column',
 		        yAxis: 1,
 		         data: trx_new_data,
@@ -527,24 +529,24 @@ class Reporting extends React.Component {
     			<div className = "list_top" >
                     <div className = "list_title"><span style={{"fontSize":"25px"}}>{lang.reporting}</span></div>
                     <div className = "rangeSelecter" style={{ "float": "right","background": "#E1E5EA","marginTop":"50px","padding": "0px 15px"}}>
-                    	<span className={range_did==="1H"? "selected_date":""} onClick={this.changRange.bind(this,"did","1H")}>1H</span>
-                    	<span className={range_did==="24H"? "selected_date":""} onClick={this.changRange.bind(this,"did","24H")}>24H</span>
-                    	<span className={range_did==="1W"? "selected_date":""} onClick={this.changRange.bind(this,"did","1W")}>1W</span>
-                    	<span className={range_did==="1M"? "selected_date":""} onClick={this.changRange.bind(this,"did","1M")}>1M</span>
-                    	<span className={range_did==="1Y"? "selected_date":""} onClick={this.changRange.bind(this,"did","1Y")}>1Y</span>
-                    	<span className={range_did==="ALL"? "selected_date":""} onClick={this.changRange.bind(this,"did","ALL")}>ALL</span>
+                    	<span className={range_did==="1H"? "selected_date":""} onClick={this.changRange.bind(this,"did","1H")}>{lang["1h"]}</span>
+                    	<span className={range_did==="24H"? "selected_date":""} onClick={this.changRange.bind(this,"did","24H")}>{lang["24h"]}</span>
+                    	<span className={range_did==="1W"? "selected_date":""} onClick={this.changRange.bind(this,"did","1W")}>{lang["1w"]}</span>
+                    	<span className={range_did==="1M"? "selected_date":""} onClick={this.changRange.bind(this,"did","1M")}>{lang["1m"]}</span>
+                    	<span className={range_did==="1Y"? "selected_date":""} onClick={this.changRange.bind(this,"did","1Y")}>{lang["1y"]}</span>
+                    	<span className={range_did==="ALL"? "selected_date":""} onClick={this.changRange.bind(this,"did","ALL")}>{lang.all}</span>
                     </div>
                 </div>
                 
 				<div id="container1" style={{"minWidth":"400px","height":"400px","marginTop":"50px"}}></div>
 				<div className = "list_top" style={{"margin":"0px"}}>
 					<div className = "rangeSelecter" style={{ "float": "right","background": "#E1E5EA","marginTop":"50px","padding": "0px 15px"}}>
-                    	<span className={range_transactions==="1H"? "selected_date":""} onClick={this.changRange.bind(this,"transactions","1H")}>1H</span>
-                    	<span className={range_transactions==="24H"? "selected_date":""} onClick={this.changRange.bind(this,"transactions","24H")}>24H</span>
-                    	<span className={range_transactions==="1W"? "selected_date":""} onClick={this.changRange.bind(this,"transactions","1W")}>1W</span>
-                    	<span className={range_transactions==="1M"? "selected_date":""} onClick={this.changRange.bind(this,"transactions","1M")}>1M</span>
-                    	<span className={range_transactions==="1Y"? "selected_date":""} onClick={this.changRange.bind(this,"transactions","1Y")}>1Y</span>
-                    	<span className={range_transactions==="ALL"? "selected_date":""} onClick={this.changRange.bind(this,"transactions","ALL")}>ALL</span>
+                    	<span className={range_transactions==="1H"? "selected_date":""} onClick={this.changRange.bind(this,"transactions","1H")}>{lang["1h"]}</span>
+                    	<span className={range_transactions==="24H"? "selected_date":""} onClick={this.changRange.bind(this,"transactions","24H")}>{lang["24h"]}</span>
+                    	<span className={range_transactions==="1W"? "selected_date":""} onClick={this.changRange.bind(this,"transactions","1W")}>{lang["1w"]}</span>
+                    	<span className={range_transactions==="1M"? "selected_date":""} onClick={this.changRange.bind(this,"transactions","1M")}>{lang["1m"]}</span>
+                    	<span className={range_transactions==="1Y"? "selected_date":""} onClick={this.changRange.bind(this,"transactions","1Y")}>{lang["1y"]}</span>
+                    	<span className={range_transactions==="ALL"? "selected_date":""} onClick={this.changRange.bind(this,"transactions","ALL")}>{lang.all}</span>
                     </div>
 				</div>
 				<div id="container2" style={{"minWidth":"400px","height":"400px","marginTop":"50px"}}></div>
