@@ -414,7 +414,7 @@ router.get('/block/transactions_info', function(req, res, next) {
 		var db =  DB.connection;
 		var txid = req.query.txid;
 		db.getConnection(function(err,conn){
-			conn.query('SELECT createTime,length(memo) as `length_memo`, fee, value FROM `chain_block_transaction_history`  and `txid` = "'+ txid +'"'
+			conn.query('SELECT createTime,length(memo) as `length_memo`, fee, value FROM `chain_block_transaction_history`  WHERE `txid` = "'+ txid +'"'
 			, function (error, results, fields) {
 				conn.release();
 				if(error){
