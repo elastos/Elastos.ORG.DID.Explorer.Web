@@ -89,5 +89,11 @@
 	"signature":"Signature",
 	"confirmed":"Confirmed",
 	"create_an_eapp":"Create an EApp",
-	"transaction_count": "# of Transactions"
+	"transaction_count": "# of Transactions",
+	"1h":"1 小时",
+	"24h":"24 小时",
+	"1w":"1 周",
+	"1m":"1 月",
+	"1y":"1 年",
+	"all":"全部"
 }
