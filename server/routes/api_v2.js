@@ -514,6 +514,47 @@ router.get('/block/properteis/did', function(req, res, next) {
 	}
 });
 
+
+router.get('/block/address/txid', function(req, res, next) {
+	setHeaders(res);
+	try{
+		var db =  DB.connection;
+		var txid = req.query.txid;
+		db.getConnection(function(err,conn){
+			conn.query('SELECT * FROM `chain_block_transaction_history` WHERE `txid` = "'+txid+'" ORDER BY `id` DESC LIMIT 1', function (error, results, fields) {
+				conn.release();
+				if(error){
+					console.log("mysql error")
+					console.log(error)
+				}else{
+					res.send(results);
+				}
+			})
+		})
+	}catch(err){
+		console.log(err)
+	}
+});
+router.get('/block/did/txid', function(req, res, next) {
+	setHeaders(res);
+	try{
+		var db =  DB.connection;
+		var txid = req.query.txid;
+		db.getConnection(function(err,conn){
+			conn.query('SELECT * FROM `chain_did_property` WHERE `txid` = "'+txid+'" ORDER BY `id` DESC LIMIT 1', function (error, results, fields) {
+				conn.release();
+				if(error){
+					console.log("mysql error")
+					console.log(error)
+				}else{
+					res.send(results);
+				}
+			})
+		})
+	}catch(err){
+		console.log(err)
+	}
+});
 router.get('/block/properteis/history', function(req, res, next) {
 	setHeaders(res);
 	try{

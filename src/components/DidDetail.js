@@ -1,5 +1,5 @@
 import React from 'react';
-import { getPropertiesFromDid } from '../request/request';
+import { getPropertiesFromDid, getAddressFromTxid } from '../request/request';
 import './didDetail.css';
 import U from 'urlencode';
 import Search from './elements/Search';
@@ -12,7 +12,8 @@ class DidDetail extends React.Component {
         super(props);
         this.state = {
 	        did : "",
-	        properties:[]
+	        properties:[],
+            address:"..."
         }
     }
     componentWillMount (){
@@ -27,9 +28,18 @@ class DidDetail extends React.Component {
     GetInfo = async (did) => {
         try{
             const properties = await getPropertiesFromDid(did);
+            console.log(properties)
             this.setState({
                 properties:properties
             })
+            if(properties.length > 0 ){
+                const getAddress = await getAddressFromTxid(properties[0].txid)
+                console.log(getAddress)
+                this.setState({
+                    address:getAddress[0].address
+                })
+            }
+            
 
         }catch(err){
           console.log(err)
@@ -59,7 +69,7 @@ class DidDetail extends React.Component {
       (s < 10 ? '0'+ s : s );
     }
     render() {
-    	const {properties,did } = this.state;
+    	const {properties,did, address } = this.state;
     	const lang = this.props.lang;
         const propertyHtml = properties.map((property,k) => {
             if( k % 2 == 0){return(
@@ -109,6 +119,14 @@ class DidDetail extends React.Component {
                 			<span  className="detail_value wordBreak">{properties.length > 0 ? properties[0].public_key : '...'}</span>
                 		</li>
                 	</ul>
+                </div>
+                <div className="did_content">
+                    <ul>
+                        <li>
+                            <span className="detail_key wordBreak">{lang.address}</span>
+                            <a style={{"color":"rgb(49, 181, 157)"}} href = {"/address_info/"+address}><span  className=" wordBreak">{address}</span></a>
+                        </li>
+                    </ul>
                 </div>
                 <div className="did_content">
                 	<ul>

@@ -18,7 +18,7 @@ class TransactionDetail extends React.Component {
             transactions:[],
             currentHeight:0,
             isEvent:true,
-            loading:true
+            loading:true,
         }
     }
     componentWillMount (){
@@ -196,6 +196,20 @@ class TransactionDetail extends React.Component {
                 
                     {transHtml}
                 
+
+                <div className="did_content">
+                    <ul>
+                        <li>
+                            <span className="detail_key wordBreak">DID</span>
+                            {transactions.length ?
+                                <a style={{"color":"rgb(49, 181, 157)"}} href = {"/did_detail/"+ transactions[0].did}><span  className=" wordBreak">{transactions[0].did}</span></a>
+
+                                : "..."}
+                        </li>
+                    </ul>
+                </div>
+
+
                 <div className="transaction_title" style={{    "marginTop": "40px"}}>
                     <span> {lang.did_properties}</span>
                 </div>
