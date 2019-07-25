@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { getAddressInfo, getCurrentHeight, getTransactionsCountFromAddress } from '../request/request';
+import { getAddressInfo, getCurrentHeight, getTransactionsCountFromAddress,getDidFromTxid } from '../request/request';
 import './transactionDetail.css'
 import Search from './elements/Search'
 import { Pagination } from 'antd';
@@ -24,6 +24,7 @@ class AddressInfo extends React.Component {
           currentHeight:null,
           size: 10,
           current:1,
+          did:null
         }
         this.onChange = this.onChange.bind(this);
     }
@@ -40,6 +41,13 @@ class AddressInfo extends React.Component {
             this.setState({
                 transactions:info,
             })
+            if(info.length > 0){
+                const getDid = await getDidFromTxid(info[0].txid)
+                this.setState({
+                    did:getDid[0].did,
+                })
+            }
+            
             const currentHeight = await getCurrentHeight();
             this.setState({
                 currentHeight:currentHeight[0].height
@@ -88,7 +96,7 @@ class AddressInfo extends React.Component {
     render() {
     	const address = this.props.match.params.address;
         const lang = this.props.lang;
-        const { transactions, loading, currentHeight, count, size, current } = this.state;
+        const { transactions, loading, currentHeight, count, size, current, did } = this.state;
         console.log(currentHeight)
         var total_sent = 0;
         var total_received = 0;
@@ -192,6 +200,15 @@ class AddressInfo extends React.Component {
                             <span className="detail_value wordBreak">{count}</span>
                         </li>
                 	</ul>
+                </div>
+                <div className="transaction_summery">
+                    <ul>
+                        <li>
+                            <span className="detail_key wordBreak">DID</span>
+                            <a style={{"color":"rgb(49, 181, 157)"}} href={"/did_detail/"+ did}><span className=" wordBreak" > {did ? did : "..."}</span></a>
+                        </li>
+                        
+                    </ul>
                 </div>
                
 				<div className="transaction_title" style={{"marginTop": "40px"}}>

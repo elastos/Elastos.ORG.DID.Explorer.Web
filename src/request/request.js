@@ -319,6 +319,39 @@ export function getPropertiesFromDid(did){
 	    xhr.send();
 	});
 }
+export function getAddressFromTxid(txid){
+	return new Promise(function(resolve, reject) {
+		let path = addr + '/api/'+current_version+'/block/address/txid?txid='+txid
+	    let xhr = new XMLHttpRequest();
+	    xhr.open('GET',path );
+	    xhr.onload = function() {
+	      if (xhr.status === 200) {
+	        resolve(JSON.parse(xhr.responseText));
+	      } 
+	    };
+	    xhr.onerror = function() {
+	      reject(new Error(xhr.statusText));
+	    };
+	    xhr.send();
+	});
+}
+export function getDidFromTxid(txid){
+	return new Promise(function(resolve, reject) {
+		let path = addr + '/api/'+current_version+'/block/did/txid?txid='+txid
+	    let xhr = new XMLHttpRequest();
+	    xhr.open('GET',path );
+	    xhr.onload = function() {
+	      if (xhr.status === 200) {
+	        resolve(JSON.parse(xhr.responseText));
+	      } 
+	    };
+	    xhr.onerror = function() {
+	      reject(new Error(xhr.statusText));
+	    };
+	    xhr.send();
+	});
+}
+
 
 export function getPropertyChanges(key,did,start,pageSize){
 	return new Promise(function(resolve, reject) {
