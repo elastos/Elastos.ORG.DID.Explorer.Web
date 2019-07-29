@@ -10,7 +10,8 @@ class Reporting extends React.Component {
         	did_new_start:null,
         	did_new_data:null,
         	range_did:"1W",
-        	range_transactions:"1W"
+        	range_transactions:"1W",
+        	range_app:"1W"
         }
        
     }
@@ -58,14 +59,31 @@ class Reporting extends React.Component {
           console.log(err)
         }
     }
+    componentWillReceiveProps(nextProps) {
+       	const range_did = this.state.range_did
+		const range_transactions = this.state.range_transactions
+		const reange_app = this.state.range_app
+		this.getDidInfo("did",range_did);
+		this.getTransactionsInfo("transactions",range_transactions);
+		this.getEAppsInfo("apps",reange_app);
+    }
     getEAppsInfo = async (type,range)=>{
     	try{
-
     		//console.log(type)
     		//console.log(range)
            	const result = await getEAppsReport(type,range);
-           	const startTime = range === "24H" ? (result.startTime + ":00") : result.startTime
-           	this.initEappsReport(startTime,result.data_new,result.data_total);
+           	const startTime = range === "24H" ? (result.start_time + ":00") : result.start_time
+           	const data_new = [];
+           	const data_total = [];
+           	result.data_new.map((v,k)=>{data_new.push(v.count) });
+           	this.initEappsReport(startTime,data_new,data_total);
+           	const result_total = await getReportTotal(type,range);
+           	var total =  result_total[0].count;
+           	result.data_new.map((v,k)=>{
+           		total += v.count;
+           		data_total.push(total)
+           	});
+           	this.initEappsReport(startTime,data_new,data_total);
            	jQuery(".highcharts-credits").remove()
         }catch(err){
           console.log(err)
@@ -74,9 +92,10 @@ class Reporting extends React.Component {
 	componentWillMount(){
 		const range_did = this.state.range_did
 		const range_transactions = this.state.range_transactions
+		const reange_app = this.state.range_app
 		this.getDidInfo("did",range_did);
 		this.getTransactionsInfo("transactions",range_transactions);
-		//this.getEAppsInfo("eApps","1M");
+		this.getEAppsInfo("apps",reange_app);
 	}
 	componentDidMount(){
 		jQuery(".highcharts-credits").css("display","none")
@@ -350,8 +369,8 @@ class Reporting extends React.Component {
 		    series: [{
 		        name: lang.total_transactions,
 		        type: 'areaspline',
-		       	 data: trx_total_data,
-		       	 tooltip: {
+		       	data: trx_total_data,
+		       	tooltip: {
 		            valueSuffix: ''
 		        },
 		        pointStart: new Date(trx_new_start).getTime(),
@@ -375,14 +394,15 @@ class Reporting extends React.Component {
 	}
 
 
-	initEappsReport(){
-		const range = this.state.range
+	initEappsReport(app_new_start,app_new_data,app_total_data){
+		const range = this.state.range_app
+		const lang = this.props.lang
 		Highcharts.chart('container3', {
 		    chart: {
 		        zoomType: 'xy'
 		    },
 		    title: {
-		        text: '<span style="padding:30px;display:block">Total EApps & New EApps ('+range+')</span>',
+		        text: '<span style="padding:30px;display:block">'+lang.new_apps+' & '+lang.new_apps+' ('+range+')</span>',
 		        style:{
 		        	color:"#080251",
 		        	fontSize: "20px"
@@ -393,9 +413,10 @@ class Reporting extends React.Component {
 		    subtitle: {
 		        text: ''
 		    },
-		    xAxis: [{
-		        crosshair: true
-		    }],
+		    xAxis: {
+		        type: 'datetime',
+		       dateTimeLabelFormats: this.setxAxisFormate(range).dateTimeLabelFormats
+		    },
 		    yAxis: [{ // Primary yAxis
 		        labels: {
 		            format: '',
@@ -404,7 +425,7 @@ class Reporting extends React.Component {
 		            }
 		        },
 		        title: {
-		            text: 'Total EApps',
+		            text: lang.total_apps,
 		            align: 'high',
 		            style: {
 		                color: "#A3A0FB"
@@ -412,7 +433,7 @@ class Reporting extends React.Component {
 		        }
 		    }, { // Secondary yAxis
 		        title: {
-		            text: 'New EApps',
+		            text: lang.new_apps,
 		            align: 'high',
 		            style: {
 		                color: "#6DDBFF"
@@ -483,27 +504,33 @@ class Reporting extends React.Component {
 		    },
 		    
 		    series: [{
-		        name: 'Total EApps',
+		        name: lang.total_apps,
 		        type: 'areaspline',
-		       	data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6,7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6,25.2, 26.5, 23.3, 18.3, 13.9, 9.6],
-		        tooltip: {
+		       	data: app_total_data,
+		       	tooltip: {
 		            valueSuffix: ''
 		        },
+		        pointStart: new Date(app_new_start).getTime(),
+		        pointInterval: this.setxAxisFormate(range).pointInterval,
+		        pointIntervalUnit:this.setxAxisFormate(range).pointIntervalUnit
 		        
 		    },{
-		        name: 'New EApps',
+		        name: lang.new_apps,
 		        type: 'column',
 		        yAxis: 1,
-		        data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4,49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4,135.6, 148.5, 216.4, 194.1, 95.6, 54.4],
-		        tooltip: {
+		         data: app_new_data,
+		         tooltip: {
 		            valueSuffix: ''
 		        },
+		        pointStart: new Date(app_new_start).getTime(),
+		        pointInterval: this.setxAxisFormate(range).pointInterval,
+		        pointIntervalUnit:this.setxAxisFormate(range).pointIntervalUnit
 		        
 		    }]
 		});
 	}
 	changRange(type,range){
-		//console.log(range)
+		
 		if(type === "did"){
 			this.setState({
 				range_did:range
@@ -516,6 +543,12 @@ class Reporting extends React.Component {
 			})
 			this.getTransactionsInfo("transactions",range);
 		}
+		if(type==="apps"){
+			this.setState({
+				range_app:range
+			})
+			this.getEAppsInfo("apps",range);
+		}
 		
 		
 	}
@@ -524,6 +557,7 @@ class Reporting extends React.Component {
     	const lang = this.props.lang
 		const range_did = this.state.range_did;
     	const range_transactions = this.state.range_transactions;
+    	const range_app = this.state.range_app
     	return (
     		<div className="container" >
     			<div className = "list_top" >
@@ -550,6 +584,16 @@ class Reporting extends React.Component {
                     </div>
 				</div>
 				<div id="container2" style={{"minWidth":"400px","height":"400px","marginTop":"50px"}}></div>
+				<div className = "list_top" style={{"margin":"0px"}}>
+					<div className = "rangeSelecter" style={{ "float": "right","background": "#E1E5EA","marginTop":"50px","padding": "0px 15px"}}>
+                    	<span className={range_app==="1H"? "selected_date":""} onClick={this.changRange.bind(this,"apps","1H")}>{lang["1h"]}</span>
+                    	<span className={range_app==="24H"? "selected_date":""} onClick={this.changRange.bind(this,"apps","24H")}>{lang["24h"]}</span>
+                    	<span className={range_app==="1W"? "selected_date":""} onClick={this.changRange.bind(this,"apps","1W")}>{lang["1w"]}</span>
+                    	<span className={range_app==="1M"? "selected_date":""} onClick={this.changRange.bind(this,"apps","1M")}>{lang["1m"]}</span>
+                    	<span className={range_app==="1Y"? "selected_date":""} onClick={this.changRange.bind(this,"apps","1Y")}>{lang["1y"]}</span>
+                    	<span className={range_app==="ALL"? "selected_date":""} onClick={this.changRange.bind(this,"apps","ALL")}>{lang.all}</span>
+                    </div>
+				</div>
 				<div id="container3" style={{"minWidth":"400px","height":"400px","marginTop":"50px"}}></div>
 			</div>
     	)

@@ -99,5 +99,7 @@
 	"total_dids":"Total DIDs",
 	"new_dids":"New DIDs",
 	"total_transactions":"Total Transactions",
-	"new_transactions":"New Transactions"
+	"new_transactions":"New Transactions",
+	"total_apps":"Total EApps",
+	"new_apps":"New EApps"
 }

@@ -751,10 +751,6 @@ router.get('/block/getReport', function(req, res, next) {
 	setHeaders(res);
 	try{
 		var db =  DB.connection;
-		var type = req.query.type;
-		if(type === "transactions"){
-			type ="txid"
-		}
 		var range = req.query.range;
 		var option = {};
 		var timestamp = new Date().getTime();
@@ -805,9 +801,20 @@ router.get('/block/getReport', function(req, res, next) {
 				var totalStart = results[0].count;*/
 				var arr_new = [];
 				//var arr_total = [];
+				
 				option.timeArr.map((v,k)=>{
 					db.getConnection(function(err,conn){
-						conn.query('SELECT count(distinct `'+type+'` ) AS count FROM `chain_did_property` WHERE `local_system_time` < "'+v.t+'" AND `local_system_time` >= "'+v.s+'"', function (error, results1, fields) {
+						var type = req.query.type;
+						if(type === "transactions"){
+							type = "txid"
+						}
+						var query = 'SELECT count(distinct `'+type+'` ) AS count FROM `chain_did_property` WHERE `local_system_time` < "'+v.t+'" AND `local_system_time` >= "'+v.s+'"';
+						
+						if(type === "apps"){
+							query ='SELECT count(distinct `info_value` ) AS count FROM `chain_did_app` WHERE `info_type` = "app_name" AND `property_key` LIKE "%AppID" AND `local_system_time` < "'+v.t+'" AND `local_system_time` >= "'+v.s+'"'
+						}
+						//console.log(query)
+						conn.query(query, function (error, results1, fields) {
 							conn.release();
 							if(error){
 								console.log("mysql error")
@@ -819,7 +826,6 @@ router.get('/block/getReport', function(req, res, next) {
 								if(arr_new.length === option.data_count){
 									//var data = {"type":type,"range":range,"start_time":option.startTime,"data_new":arr_new,"data_total":arr_total};
 									var data = {"type":type,"range":range,"start_time":option.startTime,"data_new":arr_new};
-									
 									res.send(data);
 								}
 							}
@@ -880,7 +886,16 @@ router.get('/block/getReportTotal', function(req, res, next) {
 		}
 		option.startTime = fn.timestampToTime(timestamp -  (option.data_count - 1)  * option.rate / option.data_count * 1000, option.time_format1);
 		db.getConnection(function(err,conn){
-			conn.query('SELECT count(distinct `'+type+'` ) AS count FROM `chain_did_property` where `local_system_time` < "'+option.startTime+'" ', function (error, results, fields) {
+			var type = req.query.type;
+			if(type === "transactions"){
+				type = "txid"
+			}
+			var query = 'SELECT count(distinct `'+type+'` ) AS count FROM `chain_did_property` where `local_system_time` < "'+option.startTime+'"';
+			
+			if(type === "apps"){
+				query ='SELECT count(distinct `info_value` ) AS count FROM `chain_did_app` WHERE `info_type` = "app_name" AND `property_key` LIKE "%AppID" AND `local_system_time` < "'+option.startTime+'"';
+			}
+			conn.query(query, function (error, results, fields) {
 				conn.release();
 				if(error){
 					console.log("mysql error")

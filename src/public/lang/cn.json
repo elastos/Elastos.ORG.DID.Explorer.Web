@@ -99,6 +99,8 @@
 	"total_dids":"总DID数",
 	"new_dids":"新DID数",
 	"total_transactions":"总交易数",
-	"new_transactions":"新交易数"
+	"new_transactions":"新交易数",
+	"total_apps":"总EApp数",
+	"new_apps":"新EApp数"
 
 }

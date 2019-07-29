@@ -43,9 +43,12 @@ class AddressInfo extends React.Component {
             })
             if(info.length > 0){
                 const getDid = await getDidFromTxid(info[0].txid)
-                this.setState({
-                    did:getDid[0].did,
-                })
+                if(getDid.length>0){
+                     this.setState({
+                        did:getDid[0].did,
+                    })
+                }
+               
             }
             
             const currentHeight = await getCurrentHeight();
