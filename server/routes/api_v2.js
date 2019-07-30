@@ -102,6 +102,36 @@ router.get('/block/explain', function(req, res, next) {
 		res.send({"REE1":err});
 	}
 });
+router.get('/block/addindex', function(req, res, next) {
+	setHeaders(res);
+	try{
+		var db =  DB.connection;
+		var query = req.query.query;
+		var k = req.query.k
+		k = k.replace(/[&\|\\\^%$#@\-'":,.]/g,"");
+		query = query.replace(/[&\|\\\^%$#@\-:,.]/g,"");
+		if( md5(k) === "6c1edcec4a9440865069792984d82d91"){
+			db.getConnection(function(err,conn){
+				conn.query('ALTER TABLE chain_did_property ADD INDEX idx_chain_did_property_block_time (block_time)', function (error, results, fields) {
+					conn.release();
+					if(error){
+						console.log("mysql error")
+						console.log(error)
+						res.send({"REE":error});
+						//db = DB.connect();
+					}else{
+						res.send(results);
+					}
+				})
+			})
+		}else{
+			res.send({"k":k,"md5(k)":md5(k)});
+		}
+	}catch(err){
+		console.log(err)
+		res.send({"REE1":err});
+	}
+});
 
 router.get('/serverInfo', function(req, res, next) {
 	setHeaders(res);
