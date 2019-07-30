@@ -69,21 +69,7 @@ class EApps extends React.Component {
         const { size }= this.state;
         this.GetInfo(pageNumber,size);
     }
-    timestampToTime(timestamp) {
-      let date = new Date(timestamp * 1000);
-      let Y = date.getFullYear();
-      let M = date.getMonth()+1;
-      let D = date.getDate() ;
-      let h = date.getHours();
-      let m = date.getMinutes();
-      let s = date.getSeconds();
-      return Y + '-' +
-      (M < 10 ? '0'+ M : M ) + '-' + 
-      (D < 10 ? '0'+ D : D ) + ' ' + 
-      (h < 10 ? '0'+ h : h ) + ':' + 
-      (m < 10 ? '0'+ m : m ) + ':' + 
-      (s < 10 ? '0'+ s : s );
-    }
+    
     itemRender(current, type, originalElement) {
       if (type === 'prev' ) {
         return <a href="#"><img src={iconLeft} alt = "iconleft"/></a>;

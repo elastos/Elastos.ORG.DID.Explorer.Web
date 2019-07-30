@@ -402,7 +402,7 @@ class Reporting extends React.Component {
 		        zoomType: 'xy'
 		    },
 		    title: {
-		        text: '<span style="padding:30px;display:block">'+lang.new_apps+' & '+lang.new_apps+' ('+range+')</span>',
+		        text: '<span style="padding:30px;display:block">'+lang.new_apps+' & '+lang.total_apps+' ('+range+')</span>',
 		        style:{
 		        	color:"#080251",
 		        	fontSize: "20px"

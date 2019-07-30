@@ -608,7 +608,7 @@ router.get('/block/dids', function(req, res, next) {
 		var start = req.query.start;
 		var pageSize = req.query.pageSize;
 		db.getConnection(function(err,conn){
-			conn.query('SELECT  distinct did FROM `chain_did_property` ORDER BY id DESC LIMIT ' + start + ',' + pageSize, function (error, results, fields) {
+			conn.query('SELECT  distinct did FROM `chain_did_property` ORDER BY `block_time` DESC LIMIT ' + start + ',' + pageSize, function (error, results, fields) {
 				conn.release();
 				if(error){
 					console.log("mysql error")
@@ -668,7 +668,7 @@ router.get('/block/did/info', function(req, res, next) {
 		var db =  DB.connection;
 		var did = req.query.did;
 		db.getConnection(function(err,conn){
-			conn.query('SELECT * FROM `chain_did_property` WHERE `did` = "'+did+'" ORDER BY `local_system_time` DESC LIMIT 1', function (error, results, fields) {
+			conn.query('SELECT * FROM `chain_did_property` WHERE `did` = "'+did+'" ORDER BY `block_time` ASC LIMIT 1', function (error, results, fields) {
 				conn.release();
 				if(error){
 					console.log("mysql error")
@@ -690,7 +690,7 @@ router.get('/block/didsWidthProperty', function(req, res, next) {
 		var start = req.query.start;
 		var pageSize = req.query.pageSize;
 		db.getConnection(function(err,conn){
-			conn.query('SELECT  distinct did FROM `chain_did_property` WHERE `property_key` = "'+property+'" ORDER BY `local_system_time` DESC LIMIT ' + start + ',' + pageSize, function (error, results, fields) {
+			conn.query('SELECT  distinct did FROM `chain_did_property` WHERE `property_key` = "'+property+'" ORDER BY `block_time` DESC LIMIT ' + start + ',' + pageSize, function (error, results, fields) {
 				conn.release();
 				if(error){
 					console.log("mysql error")
@@ -808,10 +808,10 @@ router.get('/block/getReport', function(req, res, next) {
 						if(type === "transactions"){
 							type = "txid"
 						}
-						var query = 'SELECT count(distinct `'+type+'` ) AS count FROM `chain_did_property` WHERE `local_system_time` < "'+v.t+'" AND `local_system_time` >= "'+v.s+'"';
+						var query = 'SELECT count(distinct `'+type+'` ) AS count FROM `chain_did_property` WHERE `block_time` < "'+v.t+'" AND `block_time` >= "'+v.s+'"';
 						
 						if(type === "apps"){
-							query ='SELECT count(distinct `info_value` ) AS count FROM `chain_did_app` WHERE `info_type` = "app_name" AND `property_key` LIKE "%AppID" AND `local_system_time` < "'+v.t+'" AND `local_system_time` >= "'+v.s+'"'
+							query ='SELECT count(distinct `info_value` ) AS count FROM `chain_did_app` WHERE `info_type` = "app_name" AND `property_key` LIKE "%AppID" AND `block_time` < "'+v.t+'" AND `block_time` >= "'+v.s+'"'
 						}
 						//console.log(query)
 						conn.query(query, function (error, results1, fields) {
@@ -890,10 +890,10 @@ router.get('/block/getReportTotal', function(req, res, next) {
 			if(type === "transactions"){
 				type = "txid"
 			}
-			var query = 'SELECT count(distinct `'+type+'` ) AS count FROM `chain_did_property` where `local_system_time` < "'+option.startTime+'"';
+			var query = 'SELECT count(distinct `'+type+'` ) AS count FROM `chain_did_property` where `block_time` < "'+option.startTime+'"';
 			
 			if(type === "apps"){
-				query ='SELECT count(distinct `info_value` ) AS count FROM `chain_did_app` WHERE `info_type` = "app_name" AND `property_key` LIKE "%AppID" AND `local_system_time` < "'+option.startTime+'"';
+				query ='SELECT count(distinct `info_value` ) AS count FROM `chain_did_app` WHERE `info_type` = "app_name" AND `property_key` LIKE "%AppID" AND `block_time` < "'+option.startTime+'"';
 			}
 			conn.query(query, function (error, results, fields) {
 				conn.release();
@@ -918,7 +918,7 @@ router.get('/block/eapps', function(req, res, next) {
 		var start = req.query.start;
 		var pageSize = req.query.pageSize;
 		db.getConnection(function(err,conn){
-			conn.query('SELECT * FROM `chain_did_app` WHERE `info_type` = "app_name" AND `property_key` LIKE "%AppID" GROUP BY `info_value` ORDER BY `local_system_time` DESC LIMIT ' + start + ',' + pageSize , function (error, results, fields) {
+			conn.query('SELECT * FROM `chain_did_app` WHERE `info_type` = "app_name" AND `property_key` LIKE "%AppID" GROUP BY `info_value` ORDER BY `block_time` DESC LIMIT ' + start + ',' + pageSize , function (error, results, fields) {
 				conn.release();
 				if(error){
 					console.log("mysql error")
@@ -938,7 +938,7 @@ router.get('/block/eapps/count', function(req, res, next) {
 	try{
 		var db =  DB.connection;
 		db.getConnection(function(err,conn){
-			conn.query('SELECT COUNT(*) AS count FROM (SELECT * FROM `chain_did_app` WHERE `info_type` = "app_name" GROUP BY `info_value` ) AS a', function (error, results, fields) {
+			conn.query('SELECT count(distinct `info_value` ) AS count FROM `chain_did_app` WHERE `info_type` = "app_name" AND `property_key` LIKE "%AppID"', function (error, results, fields) {
 				conn.release();
 				if(error){
 					console.log("mysql error")
@@ -959,7 +959,7 @@ router.get('/block/eapp/eapp_id', function(req, res, next) {
 		var db =  DB.connection;
 		var app_name = req.query.app_name;
 		db.getConnection(function(err,conn){
-			conn.query('SELECT * FROM `chain_did_app` WHERE `info_type` = "app_name" AND `info_value` = "'+ app_name +'" AND `property_key` LIKE "%AppID" ORDER BY `local_system_time` DESC LIMIT 1' , function (error, results, fields) {
+			conn.query('SELECT * FROM `chain_did_app` WHERE `info_type` = "app_name" AND `info_value` = "'+ app_name +'" AND `property_key` LIKE "%AppID" ORDER BY `block_time` DESC LIMIT 1' , function (error, results, fields) {
 				conn.release();
 				if(error){
 					console.log("mysql error")
