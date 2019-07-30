@@ -54,7 +54,7 @@ class DidList extends React.Component {
             const didDetail = await getDidInfo(dids[k].did)
             dids[k].txid = didDetail[0].txid;
             dids[k].height = didDetail[0].height;
-            dids[k].time = didDetail[0].local_system_time
+            dids[k].block_time = didDetail[0].block_time
 
             number.push(k);
             if(number.length === dids.length){
@@ -73,7 +73,7 @@ class DidList extends React.Component {
         this.getInfo(pageNumber,size, property);
     }
     timestampToTime(time) {
-      let date = new Date(time);
+      let date = new Date(time * 1000);
       let Y = date.getFullYear();
       let M = date.getMonth()+1;
       let D = date.getDate() ;
@@ -104,7 +104,7 @@ class DidList extends React.Component {
                     <td width="30%"><Link to={'/did_detail/'+did.did}>{did.did}</Link></td>
                     <td width="30%"><Link to={'/transaction_detail/'+did.txid}>{did.txid}</Link></td>
                     <td width="20%" style={{"textAlign":"center"}}>{did.height}</td>
-                    <td width="20%">{did.time ? this.timestampToTime(did.time) : ''}</td>
+                    <td width="20%">{did.block_time ? this.timestampToTime(did.block_time) : ''}</td>
                 </tr>
             )
         });
