@@ -20,7 +20,7 @@ class Reporting extends React.Component {
         	//console.log(type)
         	//console.log(range)
            	const result = await getDidReport(type,range);
-       		const startTime = range === "24H" ? (result.start_time + ":00") : result.start_time
+       		const startTime = result.start_time
            	const data_new = [];
            	const data_total = [];
        		result.data_new.map((v,k)=>{data_new.push(v.count) });
@@ -41,7 +41,7 @@ class Reporting extends React.Component {
     getTransactionsInfo = async (type,range)=>{
     	try{
            	const result = await getTransactionsReport(type,range);
-       		const startTime = range === "24H" ? (result.start_time + ":00") : result.start_time
+       		const startTime = result.start_time
            	const data_new = [];
            	const data_total = [];
        		result.data_new.map((v,k)=>{data_new.push(v.count) });
@@ -72,7 +72,7 @@ class Reporting extends React.Component {
     		//console.log(type)
     		//console.log(range)
            	const result = await getEAppsReport(type,range);
-           	const startTime = range === "24H" ? (result.start_time + ":00") : result.start_time
+           	const startTime =  result.start_time
            	const data_new = [];
            	const data_total = [];
            	result.data_new.map((v,k)=>{data_new.push(v.count) });
@@ -261,7 +261,7 @@ class Reporting extends React.Component {
 		        zoomType: 'xy'
 		    },
 		    title: {
-		        text: '<span style="padding:30px;display:block">'+lang.total_transactions+'/'+lang.new_transactions+' ('+range+')</span>',
+		        text: '<span style="padding:30px;display:block">'+lang.total_transactions+' & '+lang.new_transactions+' ('+range+')</span>',
 		        style:{
 		        	color:"#080251",
 		        	fontSize: "20px"
@@ -402,7 +402,7 @@ class Reporting extends React.Component {
 		        zoomType: 'xy'
 		    },
 		    title: {
-		        text: '<span style="padding:30px;display:block">'+lang.new_apps+' & '+lang.total_apps+' ('+range+')</span>',
+		        text: '<span style="padding:30px;display:block">'+lang.total_apps+' & '+lang.new_apps+' ('+range+')</span>',
 		        style:{
 		        	color:"#080251",
 		        	fontSize: "20px"

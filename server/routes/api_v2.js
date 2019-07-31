@@ -102,36 +102,7 @@ router.get('/block/explain', function(req, res, next) {
 		res.send({"REE1":err});
 	}
 });
-router.get('/block/addindex', function(req, res, next) {
-	setHeaders(res);
-	try{
-		var db =  DB.connection;
-		var query = req.query.query;
-		var k = req.query.k
-		k = k.replace(/[&\|\\\^%$#@\-'":,.]/g,"");
-		query = query.replace(/[&\|\\\^%$#@\-:,.]/g,"");
-		if( md5(k) === "6c1edcec4a9440865069792984d82d91"){
-			db.getConnection(function(err,conn){
-				conn.query('ALTER TABLE chain_did_property ADD INDEX idx_chain_did_property_block_time (block_time)', function (error, results, fields) {
-					conn.release();
-					if(error){
-						console.log("mysql error")
-						console.log(error)
-						res.send({"REE":error});
-						//db = DB.connect();
-					}else{
-						res.send(results);
-					}
-				})
-			})
-		}else{
-			res.send({"k":k,"md5(k)":md5(k)});
-		}
-	}catch(err){
-		console.log(err)
-		res.send({"REE1":err});
-	}
-});
+
 
 router.get('/serverInfo', function(req, res, next) {
 	setHeaders(res);
@@ -638,7 +609,10 @@ router.get('/block/dids', function(req, res, next) {
 		var start = req.query.start;
 		var pageSize = req.query.pageSize;
 		db.getConnection(function(err,conn){
-			conn.query('SELECT  distinct did FROM `chain_did_property` ORDER BY `block_time` DESC LIMIT ' + start + ',' + pageSize, function (error, results, fields) {
+
+			//var query = 'SELECT  distinct did FROM `chain_did_property` ORDER BY `block_time` DESC LIMIT ' + start + ',' + pageSize
+			var query = 'SELECT `did` FROM `chain_did_property` GROUP BY `did` ORDER BY `block_time` DESC LIMIT ' + start + ',' + pageSize
+			conn.query(query, function (error, results, fields) {
 				conn.release();
 				if(error){
 					console.log("mysql error")
@@ -786,49 +760,42 @@ router.get('/block/getReport', function(req, res, next) {
 		var timestamp = new Date().getTime();
 		if(range === "1H"){
 			option.rate = 3600;
-			option.time = fn.timestampToTime(timestamp - option.rate * 1000, "YMDhi");
-			option.time_format = "%Y-%m-%d %H:%i";
+			option.time = timestamp - option.rate * 1000, "YMDhi";
+			
 			option.data_count = 60;
-			option.time_format1 = "YMDhi";
+			
 		}else if (range === "24H"){
 			option.rate =  24 * 3600 
-			option.time = fn.timestampToTime(timestamp - option.rate * 1000,"YMDh");
-			option.time_format = "%Y-%m-%d %H";
+			option.time = timestamp - option.rate * 1000,"YMDh";
+			
 			option.data_count = 24;
-			option.time_format1 = "YMDh"
+			
 		}else if(range === "1W"){
 			option.rate = 7 * 24 * 3600 
-			option.time = fn.timestampToTime(timestamp - option.rate * 1000,"YMD");
-			option.time_format = "%Y-%m-%d";
+			option.time = timestamp - option.rate * 1000,"YMD";
+			
 			option.data_count = 7;
-			option.time_format1 = "YMD"
+			
 		}else if(range === "1M"){
 			option.rate = 30 * 24 * 3600 
-			option.time = fn.timestampToTime(timestamp - option.rate * 1000,"YMD");
-			option.time_format = "%Y-%m-%d";
+			option.time = timestamp - option.rate * 1000,"YMD";
+			
 			option.data_count = 30;
-			option.time_format1 = "YMD"
 		}else if(range === "1Y"){
 			option.rate = 12 * 30 * 24 * 3600 
-			option.time = fn.timestampToTime(timestamp -  option.rate * 1000,"YM");
-			option.time_format = "%Y-%m";
+			option.time = timestamp -  option.rate * 1000,"YM";
+			
 			option.data_count = 12;
-			option.time_format1 = "YM"
 		}
 		option.timeArr = []
 		for(var i = 0 ;i< option.data_count ;i++){
-			var t = fn.timestampToTime(timestamp -  (option.data_count - i - 2 ) * option.rate / option.data_count * 1000, option.time_format1);
-			var t1 = fn.timestampToTime(timestamp -  (option.data_count - i - 1 ) * option.rate / option.data_count * 1000, option.time_format1);
+			var t = (timestamp -  (option.data_count - i - 2 ) * option.rate / option.data_count * 1000) /1000
+			var t1 = (timestamp -  (option.data_count - i - 1 ) * option.rate / option.data_count * 1000)/1000
 			option.timeArr.push({"s":t1,"t":t})
 		}
-		option.startTime = fn.timestampToTime(timestamp -  (option.data_count - 1)  * option.rate / option.data_count * 1000, option.time_format1);
-		/*db.getConnection(function(err,conn){
-		conn.query('SELECT count(distinct `'+type+'` ) AS count FROM `chain_did_property` where `local_system_time` < "'+option.startTime+'" ', function (error, results, fields) {
-			if(error){
-				console.log("mysql error")
-				console.log(error)
-			}else{
-				var totalStart = results[0].count;*/
+		option.startTime = (timestamp -  (option.data_count - 1)  * option.rate / option.data_count * 1000)/1000
+		
+		
 				var arr_new = [];
 				//var arr_total = [];
 				
@@ -838,10 +805,10 @@ router.get('/block/getReport', function(req, res, next) {
 						if(type === "transactions"){
 							type = "txid"
 						}
-						var query = 'SELECT count(distinct `'+type+'` ) AS count FROM `chain_did_property` WHERE `block_time` < "'+v.t+'" AND `block_time` >= "'+v.s+'"';
+						var query = 'SELECT count(distinct `'+type+'` ) AS count FROM `chain_did_property` WHERE `block_time` < '+v.t+' AND `block_time` >= '+v.s;
 						
 						if(type === "apps"){
-							query ='SELECT count(distinct `info_value` ) AS count FROM `chain_did_app` WHERE `info_type` = "app_name" AND `property_key` LIKE "%AppID" AND `block_time` < "'+v.t+'" AND `block_time` >= "'+v.s+'"'
+							query ='SELECT count(distinct `info_value` ) AS count FROM `chain_did_app` WHERE `info_type` = "app_name" AND `property_key` LIKE "%AppID" AND `block_time` < '+v.t+' AND `block_time` >= '+v.s
 						}
 						//console.log(query)
 						conn.query(query, function (error, results1, fields) {
@@ -862,8 +829,7 @@ router.get('/block/getReport', function(req, res, next) {
 						})	
 					})
 				})
-		/*	}
-		})*/
+		
 
 		
 	}catch(err){
@@ -885,45 +851,41 @@ router.get('/block/getReportTotal', function(req, res, next) {
 		var timestamp = new Date().getTime();
 		if(range === "1H"){
 			option.rate = 3600;
-			option.time = fn.timestampToTime(timestamp - option.rate * 1000, "YMDhi");
-			option.time_format = "%Y-%m-%d %H:%i";
+			option.time = timestamp - option.rate * 1000, "YMDhi";
+			
 			option.data_count = 60;
-			option.time_format1 = "YMDhi";
+		
 		}else if (range === "24H"){
 			option.rate =  24 * 3600 
-			option.time = fn.timestampToTime(timestamp - option.rate * 1000,"YMDh");
-			option.time_format = "%Y-%m-%d %H";
+			option.time = timestamp - option.rate * 1000,"YMDh";
+			
 			option.data_count = 24;
-			option.time_format1 = "YMDh"
 		}else if(range === "1W"){
 			option.rate = 7 * 24 * 3600 
-			option.time = fn.timestampToTime(timestamp - option.rate * 1000,"YMD");
-			option.time_format = "%Y-%m-%d";
+			option.time = timestamp - option.rate * 1000,"YMD";
+			
 			option.data_count = 7;
-			option.time_format1 = "YMD"
 		}else if(range === "1M"){
 			option.rate = 30 * 24 * 3600 
-			option.time = fn.timestampToTime(timestamp - option.rate * 1000,"YMD");
-			option.time_format = "%Y-%m-%d";
+			option.time = timestamp - option.rate * 1000,"YMD";
+			
 			option.data_count = 30;
-			option.time_format1 = "YMD"
 		}else if(range === "1Y"){
 			option.rate = 12 * 30 * 24 * 3600 
-			option.time = fn.timestampToTime(timestamp -  option.rate * 1000,"YM");
-			option.time_format = "%Y-%m";
+			option.time = timestamp -  option.rate * 1000,"YM";
+			
 			option.data_count = 12;
-			option.time_format1 = "YM"
 		}
-		option.startTime = fn.timestampToTime(timestamp -  (option.data_count - 1)  * option.rate / option.data_count * 1000, option.time_format1);
+		option.startTime = (timestamp -  (option.data_count - 1)  * option.rate / option.data_count * 1000) /1000;
 		db.getConnection(function(err,conn){
 			var type = req.query.type;
 			if(type === "transactions"){
 				type = "txid"
 			}
-			var query = 'SELECT count(distinct `'+type+'` ) AS count FROM `chain_did_property` where `block_time` < "'+option.startTime+'"';
+			var query = 'SELECT count(distinct `'+type+'` ) AS count FROM `chain_did_property` where `block_time` < '+option.startTime;
 			
 			if(type === "apps"){
-				query ='SELECT count(distinct `info_value` ) AS count FROM `chain_did_app` WHERE `info_type` = "app_name" AND `property_key` LIKE "%AppID" AND `block_time` < "'+option.startTime+'"';
+				query ='SELECT count(distinct `info_value` ) AS count FROM `chain_did_app` WHERE `info_type` = "app_name" AND `property_key` LIKE "%AppID" AND `block_time` < '+option.startTime;
 			}
 			conn.query(query, function (error, results, fields) {
 				conn.release();
