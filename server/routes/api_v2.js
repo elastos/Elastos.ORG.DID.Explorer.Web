@@ -610,8 +610,8 @@ router.get('/block/dids', function(req, res, next) {
 		var pageSize = req.query.pageSize;
 		db.getConnection(function(err,conn){
 
-			//var query = 'SELECT  distinct did FROM `chain_did_property` ORDER BY `block_time` DESC LIMIT ' + start + ',' + pageSize
-			var query = 'SELECT `did` FROM `chain_did_property` GROUP BY `did` ORDER BY `block_time` DESC LIMIT ' + start + ',' + pageSize
+			var query = 'SELECT  distinct did FROM `chain_did_property` ORDER BY `block_time` DESC LIMIT ' + start + ',' + pageSize
+			//var query = 'SELECT `did` FROM `chain_did_property` GROUP BY `did` ORDER BY `block_time` DESC LIMIT ' + start + ',' + pageSize
 			conn.query(query, function (error, results, fields) {
 				conn.release();
 				if(error){
