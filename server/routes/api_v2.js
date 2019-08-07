@@ -672,7 +672,7 @@ router.get('/block/did/info', function(req, res, next) {
 		var db =  DB.connection;
 		var did = req.query.did;
 		db.getConnection(function(err,conn){
-			conn.query('SELECT * FROM `chain_did_property` WHERE `did` = "'+did+'" ORDER BY `block_time` ASC LIMIT 1', function (error, results, fields) {
+			conn.query('SELECT * FROM `chain_did_property` WHERE `did` = "'+did+'" ORDER BY `block_time` DESC LIMIT 1', function (error, results, fields) {
 				conn.release();
 				if(error){
 					console.log("mysql error")
