@@ -204,7 +204,7 @@ class AddressInfo extends React.Component {
                         </li>
                 	</ul>
                 </div>
-                <div className="transaction_summery">
+                {/*<div className="transaction_summery">
                     <ul>
                         <li>
                             <span className="detail_key wordBreak">DID</span>
@@ -212,7 +212,7 @@ class AddressInfo extends React.Component {
                         </li>
                         
                     </ul>
-                </div>
+                </div>*/}
                
 				<div className="transaction_title" style={{"marginTop": "40px"}}>
                 	<span> {lang.transaction_history}</span>

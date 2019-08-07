@@ -120,14 +120,14 @@ class DidDetail extends React.Component {
                 		</li>
                 	</ul>
                 </div>
-                <div className="did_content">
+                {/*<div className="did_content">
                     <ul>
                         <li>
                             <span className="detail_key wordBreak">{lang.address}</span>
                             <a style={{"color":"rgb(49, 181, 157)"}} href = {"/address_info/"+address}><span  className=" wordBreak">{address}</span></a>
                         </li>
                     </ul>
-                </div>
+                </div>*/}
                 <div className="did_content">
                 	<ul>
                         {propertyHtml}
