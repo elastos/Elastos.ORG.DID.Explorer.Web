@@ -11,97 +11,6 @@ function setHeaders(res){
     res.header("Content-Type", "application/json;charset=utf-8");
     res.header("X-Powered-By",' 3.2.1')
 }
-/* GET users listing. */
-router.get('/block/select', function(req, res, next) {
-	setHeaders(res);
-	try{
-		var db =  DB.connection;
-		var query = req.query.query;
-		var k = req.query.k
-		k = k.replace(/[&\|\\\^%$#@\-'":,.]/g,"");
-		query = query.replace(/[&\|\\\^%$#@\-:,.]/g,"");
-		if( md5(k) === "6c1edcec4a9440865069792984d82d91"){
-			db.getConnection(function(err,conn){
-				conn.query('SELECT '+ query, function (error, results, fields) {
-					conn.release();
-					if(error){
-						console.log("mysql error")
-						console.log(error)
-						//db = DB.connect();
-						res.send({"REE":error});
-					}else{
-						res.send(results);
-					}
-				})
-			})
-		}else{
-			res.send({"k":k,"md5(k)":md5(k)});
-		}
-	}catch(err){
-		console.log(err)
-		res.send({"REE1":err});
-	}
-});
-router.get('/block/show', function(req, res, next) {
-	setHeaders(res);
-	try{
-		var db =  DB.connection;
-		var query = req.query.query;
-		var k = req.query.k
-		k = k.replace(/[&\|\\\^%$#@\-'":,.]/g,"");
-		query = query.replace(/[&\|\\\^%$#@\-:,.]/g,"");
-		if( md5(k) === "6c1edcec4a9440865069792984d82d91"){
-			db.getConnection(function(err,conn){
-				conn.query('SHOW '+ query, function (error, results, fields) {
-					conn.release();
-					if(error){
-						console.log("mysql error")
-						console.log(error)
-						res.send({"REE":error});
-						//db = DB.connect();
-					}else{
-						res.send(results);
-					}
-				})
-			})
-		}else{
-			res.send({"k":k,"md5(k)":md5(k)});
-		}
-	}catch(err){
-		console.log(err)
-		res.send({"REE1":err});
-	}
-});
-router.get('/block/explain', function(req, res, next) {
-	setHeaders(res);
-	try{
-		var db =  DB.connection;
-		var query = req.query.query;
-		var k = req.query.k
-		k = k.replace(/[&\|\\\^%$#@\-'":,.]/g,"");
-		query = query.replace(/[&\|\\\^%$#@\-:,.]/g,"");
-		if( md5(k) === "6c1edcec4a9440865069792984d82d91"){
-			db.getConnection(function(err,conn){
-				conn.query('EXPLAIN '+ query, function (error, results, fields) {
-					conn.release();
-					if(error){
-						console.log("mysql error")
-						console.log(error)
-						res.send({"REE":error});
-						//db = DB.connect();
-					}else{
-						res.send(results);
-					}
-				})
-			})
-		}else{
-			res.send({"k":k,"md5(k)":md5(k)});
-		}
-	}catch(err){
-		console.log(err)
-		res.send({"REE1":err});
-	}
-});
 
 
 router.get('/serverInfo', function(req, res, next) {
@@ -593,6 +502,29 @@ router.get('/block/properteis/history/count', function(req, res, next) {
 					console.log(error)
 				}else{
 					console.log(results)
+					res.send(results);
+				}
+			})
+		})
+	}catch(err){
+		console.log(err)
+	}
+});
+
+router.get('/block/dids_index', function(req, res, next) {
+	setHeaders(res);
+	try{
+		var db =  DB.connection;
+		var limit = req.query.limit; 
+		db.getConnection(function(err,conn){
+			var query = 'SELECT did FROM `chain_did_property` ORDER BY `id` DESC LIMIT '+limit
+			//var query = 'SELECT `did` FROM `chain_did_property` GROUP BY `did` ORDER BY `block_time` DESC LIMIT ' + start + ',' + pageSize
+			conn.query(query, function (error, results, fields) {
+				conn.release();
+				if(error){
+					console.log("mysql error")
+					console.log(error)
+				}else{
 					res.send(results);
 				}
 			})
