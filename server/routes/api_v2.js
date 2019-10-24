@@ -725,9 +725,7 @@ router.get('/block/getReport', function(req, res, next) {
 			var t1 = (timestamp -  (option.data_count - i - 1 ) * option.rate / option.data_count * 1000)/1000
 			option.timeArr.push({"s":t1,"t":t})
 		}
-		option.startTime = Math.floor((timestamp -  (option.data_count - 1)  * option.rate / option.data_count * 1000)/1000);
-		
-		
+		option.startTime = timestamp -  (option.data_count - 1)  * option.rate / option.data_count * 1000;
 				var arr_new = [];
 				//var arr_total = [];
 				
@@ -808,7 +806,7 @@ router.get('/block/getReportTotal', function(req, res, next) {
 			
 			option.data_count = 12;
 		}
-		option.startTime = Math.floor((timestamp -  (option.data_count - 1)  * option.rate / option.data_count * 1000) /1000);
+		option.startTime = timestamp -  (option.data_count - 1)  * option.rate / option.data_count * 1000 ;
 		db.getConnection(function(err,conn){
 			var type = req.query.type;
 			if(type === "transactions"){

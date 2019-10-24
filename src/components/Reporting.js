@@ -66,6 +66,7 @@ class Reporting extends React.Component {
 		this.getDidInfo("did",range_did);
 		this.getTransactionsInfo("transactions",range_transactions);
 		this.getEAppsInfo("apps",reange_app);
+
     }
     getEAppsInfo = async (type,range)=>{
     	try{
@@ -96,6 +97,11 @@ class Reporting extends React.Component {
 		this.getDidInfo("did",range_did);
 		this.getTransactionsInfo("transactions",range_transactions);
 		this.getEAppsInfo("apps",reange_app);
+		Highcharts.setOptions({
+		　　global: {
+		　　　　timezoneOffset: -8 * 60
+		　　　　　　}
+		});
 	}
 	componentDidMount(){
 		jQuery(".highcharts-credits").css("display","none")
@@ -117,6 +123,8 @@ class Reporting extends React.Component {
 	initDidReport(did_new_start,did_new_data,did_total_data){
 		const range = this.state.range_did
 		const lang = this.props.lang
+		console.log(did_new_start)
+
 		Highcharts.chart('container1', {
 		    chart: {
 		        zoomType: 'xy'
