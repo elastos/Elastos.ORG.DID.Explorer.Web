@@ -604,7 +604,7 @@ router.get('/block/did/info', function(req, res, next) {
 		var db =  DB.connection;
 		var did = req.query.did;
 		db.getConnection(function(err,conn){
-			conn.query('SELECT * FROM `chain_did_property` WHERE `did` = "'+did+'" ORDER BY `block_time` DESC LIMIT 1', function (error, results, fields) {
+			conn.query('SELECT * FROM `chain_did_property` WHERE `did` = "'+did+'" ORDER BY `block_time` LIMIT 1', function (error, results, fields) {
 				conn.release();
 				if(error){
 					console.log("mysql error")
@@ -725,7 +725,7 @@ router.get('/block/getReport', function(req, res, next) {
 			var t1 = (timestamp -  (option.data_count - i - 1 ) * option.rate / option.data_count * 1000)/1000
 			option.timeArr.push({"s":t1,"t":t})
 		}
-		option.startTime = (timestamp -  (option.data_count - 1)  * option.rate / option.data_count * 1000)/1000
+		option.startTime = Math.floor((timestamp -  (option.data_count - 1)  * option.rate / option.data_count * 1000)/1000);
 		
 		
 				var arr_new = [];
@@ -808,7 +808,7 @@ router.get('/block/getReportTotal', function(req, res, next) {
 			
 			option.data_count = 12;
 		}
-		option.startTime = (timestamp -  (option.data_count - 1)  * option.rate / option.data_count * 1000) /1000;
+		option.startTime = Math.floor((timestamp -  (option.data_count - 1)  * option.rate / option.data_count * 1000) /1000);
 		db.getConnection(function(err,conn){
 			var type = req.query.type;
 			if(type === "transactions"){
