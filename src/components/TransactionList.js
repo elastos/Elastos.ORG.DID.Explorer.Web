@@ -42,6 +42,7 @@ class TransactionList extends React.Component {
         try{
             const start = ( current - 1) * size;
             const transactions = height ? await getTransactionsFromHeight(height,start,size) : await getTransactions(start,size);
+            if(transactions.length === 0 ){this.setState({transactions:[],loading:false})}
             let obj={}
             let number = [];
             this.setState({transactions:transactions})
@@ -66,7 +67,7 @@ class TransactionList extends React.Component {
     GetTransactionsInfo = async (k,number,transactions)=>{
         try{
             const transaction = await getTransactionsInfo(transactions[k].txid);
-            console.log(transaction)
+           
             const properties = await getTxDetailFromTxid(transactions[k].txid);
             const isEvent = properties.length > 0 ? true : false 
             transactions[k].createTime = transaction[0].createTime;
@@ -75,7 +76,7 @@ class TransactionList extends React.Component {
             transactions[k].value = transaction[0].value;
             transactions[k].isEvent = isEvent;
             number.push(k);
-             if(number.length === transactions.length){
+             if(number.length === transactions.length ){
                 this.setState({transactions:transactions,loading:false})
             }
         }catch(err){

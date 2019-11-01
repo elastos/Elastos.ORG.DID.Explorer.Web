@@ -1,6 +1,6 @@
 import React from 'react';
 import moment from 'moment'
-import { getBlocks, getBlocksInfo, getTransactionsCount, getTransactions, getTransactionsInfo, getTransactionsCountFromHeight, getServerInfo, getDids, getDidCount, getDidInfo, getEapps, getEappsCount, getDidsIndex } from '../request/request';
+import { getBlocks, getBlocksInfo, getTransactionsCount, getTransactions, getTransactionsInfo, getTransactionsCountFromHeight, getServerInfo, getDids, getDidCount, getDidInfo, getEapps, getEappsCount, getDidsIndex,getLastBlocks } from '../request/request';
 import './home.css'
 import mask from '../public/images/mask1.png'
 import background from '../public/images/background.svg'
@@ -33,7 +33,17 @@ class Home extends React.Component {
                 s_time:info.s_time
             })
             
-            const blocks = await getBlocks(0,40);
+            //const blocks = await getBlocks(0,40);
+            //const block_last = await getBlocks(0,1);
+            const block_last = await getLastBlocks();
+            const block_height = block_last[0].height;
+            let blocks = []
+            for(var i=0;i<=40;i++){
+                let block = {"height":block_height  - i}
+                blocks.push(block);
+            }
+
+
             var num = []
             Object.keys(blocks).map((block,k) => {
                 return this.getBlockInfo(k,num,blocks)                
@@ -254,7 +264,7 @@ class Home extends React.Component {
            
             if(k<5){
                 return <li key= {k}>
-                        <div><a href={"/block_detail/"+v.height}><span>{v.height}</span></a><span className="txns">{v.count ? v.count + "Txns" : "..." }</span></div>
+                        <div><a href={"/block_detail/"+v.height}><span>{v.height}</span></a><span className="txns">{v.count != null ? v.count + "Txns" : "..." }</span></div>
                         <div><span>{v.size} bytes </span><span className="time">{s_time && moment(v.time * 1000) < moment(s_time) ? moment(v.time * 1000).from(s_time) : "..."}</span></div>
                     </li>
             }else{
@@ -289,7 +299,7 @@ class Home extends React.Component {
 
         const item_eapps = eapps.length ? eapps.map((v,k)=>{
             if(k<5){
-                return <li>
+                return <li  key= {k}>
                         <a href={'/eapp_detail/'+v.info_value+'/'+(v.property_key != null && v.property_key.indexOf("AppID") > -1 ? v.property_value : '...')}><span>{v.info_value}</span></a>
                         <span className="time">{s_time && moment(v.local_system_time) < moment(s_time) ? moment(v.local_system_time).from(s_time) : "..."}</span>
                 </li>
