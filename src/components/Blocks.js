@@ -1,5 +1,5 @@
 import React from 'react';
-import { getBlocks, getBlocksCount, getBlocksInfo, getTransactionsCountFromHeight} from '../request/request';
+import { getBlocks, getBlocksCount, getBlocksInfo, getTransactionsCountFromHeight,getLastBlocks,getFirstBlocks} from '../request/request';
 import {Link} from 'react-router-dom';
 import { Pagination } from 'antd';
 import './Blocks.css';
@@ -36,15 +36,29 @@ class Blocks extends React.Component {
     getInfo = async (current,size) => {
         try{
             const start = ( current - 1) * size;
-            const blocks = await getBlocks(start,size);
+            //const block_last = await getBlocks(0,1);
+            const block_last = await getLastBlocks();
+            const block_first = await getFirstBlocks();
+            const block_height = block_last[0].height - block_first[0].height + 1 ;
+            let blocks = []
+            for(var i=0;i<=size;i++){
+                let height = block_last[0].height - start - i
+                let block = {"height":height}
+                if(height >= block_first[0].height ){
+                   blocks.push(block); 
+                }
+                
+            }
+            //const blocks = await getBlocks(start,size);
             this.setState({blocks:blocks})
             let number = [];
             Object.keys(blocks).map((block,k) => {
                 return this.GetBlockInfo(k,number,blocks)                
             });
-            const count = await getBlocksCount();
+            //const count = await getBlocksCount();
             this.setState({
-                count:count[0].count
+                //count:count[0].count
+                count:block_height
             })
         }catch(err){
           console.log(err)
@@ -53,15 +67,17 @@ class Blocks extends React.Component {
     GetBlockInfo = async (k,number,blocks)=>{
         try{
             const blockInfo = await getBlocksInfo(blocks[k].height);
-            blocks[k].time = blockInfo[0].time;
-            blocks[k].miner_info = blockInfo[0].miner_info;
-            blocks[k].size = blockInfo[0].size;
+            blocks[k].time = blockInfo[0]?blockInfo[0].time :"";
+            blocks[k].miner_info = blockInfo[0]?blockInfo[0].miner_info:"";
+            blocks[k].size = blockInfo[0]?blockInfo[0].size:"";
             const count = await getTransactionsCountFromHeight(blocks[k].height);
-            blocks[k].count = count[0].count;
+            blocks[k].count = count[0].count || 0;
             number.push(k)
             if(number.length === blocks.length){
+                
                 this.setState({blocks:blocks, loading:false})
             }
+            
         }catch(err){
             console.log(err)
         }

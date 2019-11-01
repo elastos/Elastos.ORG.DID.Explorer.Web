@@ -177,6 +177,46 @@ router.get('/block/blocks_info',function(req, res, next){
 	}
 
 })
+router.get('/block/blocks_last',function(req, res, next){
+	setHeaders(res);
+	try{
+		var db =  DB.connection;
+		db.getConnection(function(err,conn){
+			conn.query('SELECT height  FROM `chain_block_header` ORDER BY height DESC LIMIT 1'
+			, function (error, results, fields) {
+				conn.release();
+				if(error){
+					console.log("mysql error")
+					console.log(error)
+				}else{
+					res.send(results);
+				}
+			})
+		})
+	}catch(err){
+		console.log(err)
+	}
+})
+router.get('/block/blocks_first',function(req, res, next){
+	setHeaders(res);
+	try{
+		var db =  DB.connection;
+		db.getConnection(function(err,conn){
+			conn.query('SELECT height  FROM `chain_block_header` ORDER BY height LIMIT 1'
+			, function (error, results, fields) {
+				conn.release();
+				if(error){
+					console.log("mysql error")
+					console.log(error)
+				}else{
+					res.send(results);
+				}
+			})
+		})
+	}catch(err){
+		console.log(err)
+	}
+})
 
 router.get('/block/transactions_count', function(req, res, next) {
 	setHeaders(res);
