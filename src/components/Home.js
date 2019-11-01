@@ -103,8 +103,8 @@ class Home extends React.Component {
     }
     getDid = async () => {
         try{
-           // const dids = await getDids(0,5);
-            const dids_index = await getDidsIndex(50);
+            const dids = await getDids(0,5);
+            /*const dids_index = await getDidsIndex(50);
 
             var dids = [];
             var did_obj = {};
@@ -116,7 +116,7 @@ class Home extends React.Component {
                 if(dids.length<5){
                     dids.push(obj)
                 }
-            }
+            }*/
             this.setState({dids:dids})
             var num = []
             Object.keys(dids).map((did,k) => {
