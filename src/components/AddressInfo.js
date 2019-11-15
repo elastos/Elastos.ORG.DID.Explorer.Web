@@ -81,8 +81,6 @@ class AddressInfo extends React.Component {
                         let value = await getValueFromAddressAndTxid(transactions[k].txid,v,"spend");
                         inputs_arr.push({"address":v,"value":value[0] ? value[0].value : "0"});
                         transactions[k].inputs_arr = inputs_arr;
-                        console.log("asdfadf")
-                        
                     })();
                 }
             })
@@ -93,8 +91,7 @@ class AddressInfo extends React.Component {
                         let value = await getValueFromAddressAndTxid(transactions[k].txid,v,"income");
                         outputs_arr.push({"address":v,"value":value[0] ? value[0].value : "0"});
                         transactions[k].outputs_arr = outputs_arr;
-                        console.log("asdf222adf")
-                        
+                       
                     })();
                 }
             })
