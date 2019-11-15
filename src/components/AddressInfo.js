@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { getAddressInfo, getCurrentHeight, getTransactionsCountFromAddress,getDidFromTxid } from '../request/request';
+import { getAddressInfo, getCurrentHeight, getTransactionsCountFromAddress, getDidFromTxid, getValueFromAddressAndTxid} from '../request/request';
 import './transactionDetail.css'
 import Search from './elements/Search'
 import { Pagination } from 'antd';
@@ -18,13 +18,14 @@ class AddressInfo extends React.Component {
 	constructor(props){
         super(props);
         this.state = {
-            count:0,
+          count:0,
           transactions:[],
           loading:true ,
           currentHeight:null,
           size: 10,
           current:1,
-          did:null
+          did:null,
+          test:[]
         }
         this.onChange = this.onChange.bind(this);
     }
@@ -50,14 +51,16 @@ class AddressInfo extends React.Component {
                 }
                
             }
-            
+            let number = [];
+            Object.keys(info).map((transaction,k) => {
+                return this.getValue(k,number,info) ;               
+            });
             const currentHeight = await getCurrentHeight();
             this.setState({
                 currentHeight:currentHeight[0].height
             })
-            const count = await getTransactionsCountFromAddress(address);
-            console.log(count)
-             this.setState({
+            let count = await getTransactionsCountFromAddress(address);
+            this.setState({
                 count:count[0].count,
                 loading:false
             })
@@ -65,7 +68,42 @@ class AddressInfo extends React.Component {
           console.log(err)
         }
     }
-     timestampToTime(timestamp) {
+    getValue = async (k,number,transactions)=>{
+        try{
+            let inputs_arr = [];
+            let outputs_arr = [];
+            let inputsArr = transactions[k].inputs.split(',');
+            let outputsArr = transactions[k].outputs.split(',');
+            inputsArr.map((v,k1)=>{
+                if(v){
+                    (async()=>{
+                        
+                        let value = await getValueFromAddressAndTxid(transactions[k].txid,v,"spend");
+                        inputs_arr.push({"address":v,"value":value[0] ? value[0].value : "0"});
+                        transactions[k].inputs_arr = inputs_arr;
+                        console.log("asdfadf")
+                        
+                    })();
+                }
+            })
+            outputsArr.map((v,k1)=>{
+                if(v){
+                    (async()=>{
+                        
+                        let value = await getValueFromAddressAndTxid(transactions[k].txid,v,"income");
+                        outputs_arr.push({"address":v,"value":value[0] ? value[0].value : "0"});
+                        transactions[k].outputs_arr = outputs_arr;
+                        console.log("asdf222adf")
+                        
+                    })();
+                }
+            })
+        }catch(e){
+            console.log(e)
+        }
+    } 
+
+    timestampToTime(timestamp) {
       let date = new Date(timestamp * 1000);
       let Y = date.getFullYear();
       let M = date.getMonth()+1;
@@ -100,7 +138,6 @@ class AddressInfo extends React.Component {
     	const address = this.props.match.params.address;
         const lang = this.props.lang;
         const { transactions, loading, currentHeight, count, size, current, did } = this.state;
-        console.log(currentHeight)
         var total_sent = 0;
         var total_received = 0;
         var balance = 0;
@@ -112,26 +149,35 @@ class AddressInfo extends React.Component {
                 total_received =  total_received + transaction.value;
                  balance = balance + transaction.value
             }
-            const outputs_arr = transaction.outputs.split(',');
-            const inputs_arr = transaction.inputs.split(',');
+            if(balance < 0) balance = 0;
+            const outputs_arr = transaction.outputs_arr || [];
+            const inputs_arr = transaction.inputs_arr || [];
             //console.log(inputs_arr)
+            console.log("refresh")
             const outputHtml = (outputs_arr.length > 0 ) ? (outputs_arr.map((output,k)=>{
-                if(output){
+                if(output.address){
                     return(
-                        <li style={{"display": "block","width":"100%","height":"45px","padding":"0","lineHeight":"45px","border":"1px #ccc solid","borderRadius":"5px","paddingLeft":"15px","marginBottom":"10px"}}>
-                            <a  key= {k} href={"/address_info/"+output}><span className="detail_value wordBreak" style={{"color":"#31B59D","display":"inline","fontSize":"14px"}}>{output}</span></a>
-                            <span></span>
+                        <li key= {k}  style={{"display": "block","width":"100%","height":"45px","padding":"0","lineHeight":"45px","border":"1px #ccc solid","borderRadius":"5px","paddingLeft":"15px","marginBottom":"10px"}}>
+                            <a   href={"/address_info/"+output.address}><span className="detail_value wordBreak" style={{"color":"#31B59D","display":"inline","fontSize":"14px"}}>{output.address}</span></a>
+                            <span style={{"float": "right",
+    "padding": "0",
+    "color": "#31B59D",
+    "marginRight":"10px"}}>{output.value / 100000000 } ELA</span>
                         </li>
                     )
                 }
             })) : <li style={{"textAlign":"center"}}>{loading ? <img src={loadingImg} alt="loading"/> : <span>{lang.not_found}</span>}</li>;
 
             const inputHtml = (inputs_arr.length > 0 ) ? (inputs_arr.map((input,k)=>{
-                if(input){
+                if(input.address){
                     return(
                             
-                            <li style={{"display": "block","width":"100%","height":"45px","padding":"0","lineHeight":"45px","border":"1px #ccc solid","borderRadius":"5px","paddingLeft":"15px","marginBottom":"10px"}}>
-                                 <a key= {k} href={"/address_info/"+input}><span className="detail_value wordBreak" style={{"color":"#31B59D","display":"inline","fontSize":"14px"}}>{input}</span></a>
+                            <li key= {k} style={{"display": "block","width":"100%","height":"45px","padding":"0","lineHeight":"45px","border":"1px #ccc solid","borderRadius":"5px","paddingLeft":"15px","marginBottom":"10px"}}>
+                                 <a  href={"/address_info/"+input.address}><span className="detail_value wordBreak" style={{"color":"#31B59D","display":"inline","fontSize":"14px"}}>{input.address}</span></a>
+                                <span style={{"float": "right",
+    "padding": "0",
+    "color": "#31B59D",
+    "marginRight":"10px"}}>{input.value / 100000000 } ELA</span>
                             </li>
                             
                         )
@@ -170,6 +216,7 @@ class AddressInfo extends React.Component {
         })) : <li style={{"textAlign":"center"}}>{loading ? <img src={loadingImg} alt="loading"/> : <span>{lang.not_found}</span>}</li> ;
         return (
             <div className="container">
+            
             	<div className = "list_top" >
                     <div className = "list_title"><span style={{"fontSize":"25px"}}>{lang.address}</span></div>
                     <div className = "list_search"><Search button="false" name="list" lang={lang}/></div>

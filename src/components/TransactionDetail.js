@@ -117,8 +117,8 @@ class TransactionDetail extends React.Component {
             const outputHtml = (outputs_arr.length > 0 ) ? (outputs_arr.map((output,k)=>{
                 if(output){
                     return(
-                        <li style={{"display": "block","width":"100%","height":"45px","padding":"0","lineHeight":"45px","border":"1px #ccc solid","borderRadius":"5px","paddingLeft":"15px","marginBottom":"10px"}}>
-                            <a  key= {k} href={"/address_info/"+output}><span className="detail_value wordBreak" style={{"color":"#31B59D","display":"inline","fontSize":"14px"}}>{output}</span></a>
+                        <li key= {k} style={{"display": "block","width":"100%","height":"45px","padding":"0","lineHeight":"45px","border":"1px #ccc solid","borderRadius":"5px","paddingLeft":"15px","marginBottom":"10px"}}>
+                            <a  href={"/address_info/"+output}><span className="detail_value wordBreak" style={{"color":"#31B59D","display":"inline","fontSize":"14px"}}>{output}</span></a>
                             <span></span>
                         </li>
                     )
@@ -129,8 +129,8 @@ class TransactionDetail extends React.Component {
                 if(input){
                     return(
                             
-                            <li style={{"display": "block","width":"100%","height":"45px","padding":"0","lineHeight":"45px","border":"1px #ccc solid","borderRadius":"5px","paddingLeft":"15px","marginBottom":"10px"}}>
-                                 <a key= {k} href={"/address_info/"+input}><span className="detail_value wordBreak" style={{"color":"#31B59D","display":"inline","fontSize":"14px"}}>{input}</span></a>
+                            <li key={k} style={{"display": "block","width":"100%","height":"45px","padding":"0","lineHeight":"45px","border":"1px #ccc solid","borderRadius":"5px","paddingLeft":"15px","marginBottom":"10px"}}>
+                                 <a href={"/address_info/"+input}><span className="detail_value wordBreak" style={{"color":"#31B59D","display":"inline","fontSize":"14px"}}>{input}</span></a>
                             </li>
                             
                         )
@@ -152,7 +152,7 @@ class TransactionDetail extends React.Component {
                     <ul>
                         <li style={{"width":"20%","borderBottom":"none","verticalAlign":"top"}}>
                             <span className="detail_key wordBreak">{lang.number}</span>
-                            <span className="detail_value wordBreak">{(transaction.value - transaction.fee ) / 100000000} ELA</span>
+                            <span className="detail_value wordBreak">{(transaction.values - transaction.fee ) / 100000000} ELA</span>
                         </li>
                     </ul>
                 </div> 
