@@ -723,6 +723,30 @@ router.get('/block/getTransactionsCountFromAddress', function(req, res, next) {
 		console.log(err)
 	}
 });
+
+router.get('/block/getValueFromAddressAndTxid', function(req, res, next) {
+	setHeaders(res);
+	try{
+		var db =  DB.connection;
+		var txid = req.query.txid;
+		var address = req.query.address;
+		var type = req.query.type;
+		db.getConnection(function(err,conn){
+			conn.query('SELECT value FROM `chain_block_transaction_history` WHERE `address` = "'+address+'" and `txid`="'+txid+'" and `type`="'+type+'"', function (error, results, fields) {
+				conn.release();
+				if(error){
+					console.log("mysql error")
+					console.log(error)
+				}else{
+					res.send(results);
+				}
+			})
+		})
+	}catch(err){
+		console.log(err)
+	}
+});
+
 router.get('/block/getReport', function(req, res, next) {
 	setHeaders(res);
 	try{
