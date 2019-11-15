@@ -24,8 +24,8 @@ class AddressInfo extends React.Component {
           currentHeight:null,
           size: 10,
           current:1,
-          did:null,
-          test:[]
+          did:null
+          
         }
         this.onChange = this.onChange.bind(this);
     }
@@ -75,24 +75,23 @@ class AddressInfo extends React.Component {
             let inputsArr = transactions[k].inputs.split(',');
             let outputsArr = transactions[k].outputs.split(',');
             inputsArr.map((v,k1)=>{
-                if(v){
-                    (async()=>{
-                        
-                        let value = await getValueFromAddressAndTxid(transactions[k].txid,v,"spend");
+                if(v ){
+                    //(async()=>{
+                       // let value = await getValueFromAddressAndTxid(transactions[k].txid,v,"spend");
+                       let value = [];
                         inputs_arr.push({"address":v,"value":value[0] ? value[0].value : "0"});
                         transactions[k].inputs_arr = inputs_arr;
-                    })();
+                    //})();
                 }
             })
             outputsArr.map((v,k1)=>{
                 if(v){
-                    (async()=>{
-                        
-                        let value = await getValueFromAddressAndTxid(transactions[k].txid,v,"income");
+                    //(async()=>{
+                       // let value = await getValueFromAddressAndTxid(transactions[k].txid,v,"income");
+                       let value = [];
                         outputs_arr.push({"address":v,"value":value[0] ? value[0].value : "0"});
                         transactions[k].outputs_arr = outputs_arr;
-                       
-                    })();
+                    //})();
                 }
             })
         }catch(e){
@@ -156,10 +155,10 @@ class AddressInfo extends React.Component {
                     return(
                         <li key= {k}  style={{"display": "block","width":"100%","height":"45px","padding":"0","lineHeight":"45px","border":"1px #ccc solid","borderRadius":"5px","paddingLeft":"15px","marginBottom":"10px"}}>
                             <a   href={"/address_info/"+output.address}><span className="detail_value wordBreak" style={{"color":"#31B59D","display":"inline","fontSize":"14px"}}>{output.address}</span></a>
-                            <span style={{"float": "right",
+                            {/*<span style={{"float": "right",
     "padding": "0",
     "color": "#31B59D",
-    "marginRight":"10px"}}>{output.value / 100000000 } ELA</span>
+    "marginRight":"10px"}}>{output.value / 100000000 } ELA</span>*/}
                         </li>
                     )
                 }
@@ -171,10 +170,10 @@ class AddressInfo extends React.Component {
                             
                             <li key= {k} style={{"display": "block","width":"100%","height":"45px","padding":"0","lineHeight":"45px","border":"1px #ccc solid","borderRadius":"5px","paddingLeft":"15px","marginBottom":"10px"}}>
                                  <a  href={"/address_info/"+input.address}><span className="detail_value wordBreak" style={{"color":"#31B59D","display":"inline","fontSize":"14px"}}>{input.address}</span></a>
-                                <span style={{"float": "right",
+                                {/*<span style={{"float": "right",
     "padding": "0",
     "color": "#31B59D",
-    "marginRight":"10px"}}>{input.value / 100000000 } ELA</span>
+    "marginRight":"10px"}}>{input.value / 100000000 } ELA</span>*/}
                             </li>
                             
                         )
