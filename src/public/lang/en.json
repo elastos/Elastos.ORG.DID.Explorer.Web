@@ -101,5 +101,7 @@
 	"total_transactions":"Total Transactions",
 	"new_transactions":"New Transactions",
 	"total_apps":"Total EApps",
-	"new_apps":"New EApps"
+	"new_apps":"New EApps",
+	"show_more":"Show More",
+	"show_less":"Show Less"
 }

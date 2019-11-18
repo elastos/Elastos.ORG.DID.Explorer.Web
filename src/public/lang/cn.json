@@ -101,6 +101,8 @@
 	"total_transactions":"总交易数",
 	"new_transactions":"新交易数",
 	"total_apps":"总EApp数",
-	"new_apps":"新EApp数"
+	"new_apps":"新EApp数",
+	"show_more":"展开",
+	"show_less":"收起"
 
 }

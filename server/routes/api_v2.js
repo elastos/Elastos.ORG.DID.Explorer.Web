@@ -310,7 +310,7 @@ router.get('/block/transactions/txid', function(req, res, next) {
 		var db =  DB.connection;
 		var txid = req.query.txid;
 		db.getConnection(function(err,conn){
-			conn.query('SELECT * FROM `chain_block_transaction_history`  WHERE `txid` = "' + txid + '"  GROUP BY `txid` ORDER BY `id` DESC', function (error, results, fields) {
+			conn.query('SELECT * FROM `chain_block_transaction_history`  WHERE `txid` = "' + txid + '" AND `type` = "spend"   ORDER BY `id` DESC', function (error, results, fields) {
 				conn.release();
 				if(error){
 					console.log("mysql error")
@@ -688,13 +688,45 @@ router.get('/block/getAddressInfo', function(req, res, next) {
 		var start = req.query.start;
 		var pageSize = req.query.pageSize;
 		db.getConnection(function(err,conn){
-			conn.query('SELECT * FROM `chain_block_transaction_history` WHERE `address` = "'+address+'" ORDER BY `local_system_time` DESC LIMIT ' + start + ',' + pageSize, function (error, results, fields) {
-				conn.release();
+			conn.query('SELECT * FROM `chain_block_transaction_history` WHERE `address` = "'+address+'"  ORDER BY `local_system_time` DESC LIMIT ' + start + ',' + pageSize, function (error, results, fields) {
+				
 				if(error){
 					console.log("mysql error")
 					console.log(error)
 				}else{
-					res.send(results);
+					var n = 0;
+					
+					results.map((v,k)=>{
+						let query= 'SELECT `address`,`value`,`type` FROM `chain_block_transaction_history` WHERE `txid` = "'+v.txid+'"';
+						conn.query(query,function (error, results1, fields) {
+							if(error){
+								console.log("mysql error")
+								console.log(error)
+							}else{
+								n++
+								var num = 0;
+								var outputs_arr = [];
+								var inputs_arr = [];
+								results1.map((v1,k1)=>{
+									if(v1.type == "income"){
+										outputs_arr.push({"address":v1.address,"value":v1.value})	
+									}else if(v1.type == "spend"){
+										inputs_arr.push({"address":v1.address,"value":v1.value})	
+									}
+									num++
+									if(num === results1.length){
+										results[k].outputs_arr = outputs_arr;
+										results[k].inputs_arr = inputs_arr;
+									}
+									if(n===results.length && num === results1.length){
+										conn.release();
+										res.send(results);
+									}
+								})
+							}
+						})
+
+					})
 				}
 			})
 		})
