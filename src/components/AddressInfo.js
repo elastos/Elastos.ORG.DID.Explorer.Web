@@ -44,17 +44,17 @@ class AddressInfo extends React.Component {
             })
             if(info.length > 0){
                 const getDid = await getDidFromTxid(info[0].txid)
-                if(getDid.length>0){
+                if(getDid.length > 0){
                      this.setState({
                         did:getDid[0].did,
                     })
                 }
                
             }
-            let number = [];
-            Object.keys(info).map((transaction,k) => {
-                return this.getValue(k,number,info) ;               
-            });
+            
+           /* Object.keys(info).map((transaction,k) => {
+                return this.getValue(k,info,"all");               
+            });*/
             const currentHeight = await getCurrentHeight();
             this.setState({
                 currentHeight:currentHeight[0].height
@@ -68,7 +68,7 @@ class AddressInfo extends React.Component {
           console.log(err)
         }
     }
-    getValue = async (k,number,transactions)=>{
+    /*getValue = async (k,transactions,type)=>{
         try{
             let inputs_arr = [];
             let outputs_arr = [];
@@ -76,29 +76,32 @@ class AddressInfo extends React.Component {
             let outputsArr = transactions[k].outputs.split(',');
             inputsArr.map((v,k1)=>{
                 if(v ){
-                    //(async()=>{
-                       // let value = await getValueFromAddressAndTxid(transactions[k].txid,v,"spend");
-                       let value = [];
+                    (async()=>{
+                        let value = await getValueFromAddressAndTxid(transactions[k].txid,v,"spend");
                         inputs_arr.push({"address":v,"value":value[0] ? value[0].value : "0"});
                         transactions[k].inputs_arr = inputs_arr;
-                    //})();
+                    })();
                 }
             })
             outputsArr.map((v,k1)=>{
                 if(v){
-                    //(async()=>{
-                       // let value = await getValueFromAddressAndTxid(transactions[k].txid,v,"income");
-                       let value = [];
+                    (async()=>{
+                        let value = await getValueFromAddressAndTxid(transactions[k].txid,v,"income");
                         outputs_arr.push({"address":v,"value":value[0] ? value[0].value : "0"});
                         transactions[k].outputs_arr = outputs_arr;
-                    //})();
+                    })();
                 }
             })
         }catch(e){
             console.log(e)
         }
-    } 
-
+    } */
+    loadMoreAddressInfo(txid,type){
+        console.log(txid)
+        console.log(type)
+        const transactions = this.state.transactions;
+       
+    }
     timestampToTime(timestamp) {
       let date = new Date(timestamp * 1000);
       let Y = date.getFullYear();
@@ -149,34 +152,49 @@ class AddressInfo extends React.Component {
             const outputs_arr = transaction.outputs_arr || [];
             const inputs_arr = transaction.inputs_arr || [];
             //console.log(inputs_arr)
-            console.log("refresh")
+            if(outputs_arr.length === 0){
+                outputs_arr.push({
+                    "address":address,
+                    "value":0
+                })
+            }
+
+            transaction.show_more_output = transaction.show_more_output ? transaction.show_more_output : false;
+            transaction.show_more_text_output = transaction.show_more_output ? "show_less" : "show_more"
+
+            transaction.show_more_input = transaction.show_more_input ? transaction.show_more_input : false;
+            transaction.show_more_text_input = transaction.show_more_input ? "show_less" : "show_more"
+
             const outputHtml = (outputs_arr.length > 0 ) ? (outputs_arr.map((output,k)=>{
                 if(output.address){
-                    return(
-                        <li key= {k}  style={{"display": "block","width":"100%","height":"45px","padding":"0","lineHeight":"45px","border":"1px #ccc solid","borderRadius":"5px","paddingLeft":"15px","marginBottom":"10px"}}>
-                            <a   href={"/address_info/"+output.address}><span className="detail_value wordBreak" style={{"color":"#31B59D","display":"inline","fontSize":"14px"}}>{output.address}</span></a>
-                            {/*<span style={{"float": "right",
-    "padding": "0",
-    "color": "#31B59D",
-    "marginRight":"10px"}}>{output.value / 100000000 } ELA</span>*/}
-                        </li>
-                    )
+                    if(transaction.show_more_output || k < 5){
+                        return(
+                            <li key= {k}  style={{"display": "block","width":"100%","height":"45px","padding":"0","lineHeight":"45px","border":"1px #ccc solid","borderRadius":"5px","paddingLeft":"15px","marginBottom":"10px"}}>
+                                <a   href={"/address_info/"+output.address}><span className="detail_value wordBreak" style={{"color":"#31B59D","display":"inline","fontSize":"14px"}}>{output.address}</span></a>
+                                <span style={{"float": "right",
+        "padding": "0",
+        "color": "#31B59D",
+        "marginRight":"10px"}}>{output.value / 100000000 } ELA</span>
+                            </li>
+                        )
+                    }
                 }
             })) : <li style={{"textAlign":"center"}}>{loading ? <img src={loadingImg} alt="loading"/> : <span>{lang.not_found}</span>}</li>;
 
             const inputHtml = (inputs_arr.length > 0 ) ? (inputs_arr.map((input,k)=>{
                 if(input.address){
-                    return(
-                            
-                            <li key= {k} style={{"display": "block","width":"100%","height":"45px","padding":"0","lineHeight":"45px","border":"1px #ccc solid","borderRadius":"5px","paddingLeft":"15px","marginBottom":"10px"}}>
-                                 <a  href={"/address_info/"+input.address}><span className="detail_value wordBreak" style={{"color":"#31B59D","display":"inline","fontSize":"14px"}}>{input.address}</span></a>
-                                {/*<span style={{"float": "right",
-    "padding": "0",
-    "color": "#31B59D",
-    "marginRight":"10px"}}>{input.value / 100000000 } ELA</span>*/}
+                    if(transaction.show_more_input || k < 5){
+                        return(
+                                
+                                <li key= {k} style={{"display": "block","width":"100%","height":"45px","padding":"0","lineHeight":"45px","border":"1px #ccc solid","borderRadius":"5px","paddingLeft":"15px","marginBottom":"10px"}}>
+                                     <a  href={"/address_info/"+input.address}><span className="detail_value wordBreak" style={{"color":"#31B59D","display":"inline","fontSize":"14px"}}>{input.address}</span></a>
+                                    <span style={{"float": "right",
+        "padding": "0",
+        "color": "#31B59D",
+    "marginRight":"10px"}}>{input.value / 100000000 } ELA</span>
                             </li>
-                            
                         )
+                    }
                 }
             })) : <li style={{"textAlign":"center"}}>{loading ? <img src={loadingImg} alt="loading"/> : <span>{lang.not_found}</span>}</li>;
            return(
@@ -192,9 +210,63 @@ class AddressInfo extends React.Component {
                     </ul>
                     
                     <ul>
-                        <div style={{"width":"45%","display": "inline-block","verticalAlign":"top"}}>{inputHtml}</div>
+                        <div style={{"width":"45%","display": "inline-block","verticalAlign":"top"}}>
+                                {inputHtml}
+                                {inputs_arr.length > 5 && <li style={{
+                                        
+    "width": "100%",
+    "height": "45px",
+    "padding": "0px 0px 0px 15px",
+    "lineHeight": "45px",
+    "borderRadius": "5px",
+    "marginBottom": "10px",
+    "textAlign": "center"
+    
+                                }}><span style={{
+                                    "padding": "0",
+    "margin": "0",
+    "width": "90px",
+    "height": "35px",
+    "lineHeight":"35px",
+    "margin": "0 auto",
+    "textAlign": "center",
+    "color":"#31B59D",
+    "cursor":"pointer",
+    "border":"1px solid rgb(204, 204, 204)",
+    "fontWeight":"800",
+    "borderRadius":"5px",
+    
+                                 }} onClick={()=>{transaction.show_more_input = transaction.show_more_input === true ? false : true; this.setState({})}}>{lang[transaction.show_more_text_input]}</span></li>}
+                        </div>
                         <div style={{"width":"10%","display": "inline-block","verticalAlign":"top","textAlign":"center","height":"45px","lineHeight":"45px"}}><img src={to} alt = "to"/></div>
-                        <div style={{"width":"45%","display": "inline-block","verticalAlign":"top"}}>{outputHtml}</div>
+                        <div style={{"width":"45%","display": "inline-block","verticalAlign":"top"}}>
+                                {outputHtml}
+                                {outputs_arr.length > 5 &&<li style={{
+                                        
+    "width": "100%",
+    "height": "45px",
+    "padding": "0px 0px 0px 15px",
+    "lineHeight": "45px",
+    "borderRadius": "5px",
+    "marginBottom": "10px",
+    "textAlign": "center"
+    
+                                }}><span style={{
+                                    "padding": "0",
+    "margin": "0",
+    "width": "90px",
+    "height": "35px",
+    "lineHeight":"35px",
+    "margin": "0 auto",
+    "textAlign": "center",
+    "color":"#31B59D",
+    "cursor":"pointer",
+    "border":"1px solid rgb(204, 204, 204)",
+    "fontWeight":"800",
+    "borderRadius":"5px",
+    
+                                }} onClick={()=>{transaction.show_more_output = transaction.show_more_output === true ? false : true; this.setState({})}}>{lang[transaction.show_more_text_output]}</span></li>}
+                        </div>
                         
                     </ul>
                     <ul>
@@ -212,7 +284,7 @@ class AddressInfo extends React.Component {
         })) : <li style={{"textAlign":"center"}}>{loading ? <img src={loadingImg} alt="loading"/> : <span>{lang.not_found}</span>}</li> ;
         return (
             <div className="container">
-            
+            {console.log("refresh")}
             	<div className = "list_top" >
                     <div className = "list_title"><span style={{"fontSize":"25px"}}>{lang.address}</span></div>
                     <div className = "list_search"><Search button="false" name="list" lang={lang}/></div>
