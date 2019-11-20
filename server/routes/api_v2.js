@@ -1,8 +1,10 @@
 var express = require('express');
 var router = express.Router();
 var DB = new (require('../db'));
-var fn = require('../source/function')
-var md5 = require('md5')
+var fn = require('../source/function');
+var md5 = require('md5');
+var api_host_node = "https://api-wallet-did.elastos.org" ;
+var request = require('request');
 DB.connect();
 function setHeaders(res){
 	res.header("Access-Control-Allow-Origin", "*");
@@ -680,6 +682,73 @@ router.get('/block/didsWidthProperty', function(req, res, next) {
 		console.log(err)
 	}
 });
+router.get('/block/getBalanceFromNodeApi', function(req, res, next) {
+	setHeaders(res);
+	try{
+		var address = req.query.address;
+		var path = api_host_node + "/api/1/balance/" + address
+		request(path, function (error, response, body) {
+		  if (!error && response.statusCode == 200) {
+		    res.send(body);
+		  }else{
+		  	console.log(error)
+		  }
+		});
+	}catch(err){
+		console.log(err)
+	}
+});
+router.get('/block/getAddressInfoFromNodeApi', function(req, res, next) {
+	setHeaders(res);
+	try{
+		var db =  DB.connection;
+		var address = req.query.address;
+		var start = req.query.start;
+		var pageSize = req.query.pageSize;
+		var num = (start / pageSize) + 1
+		var path = api_host_node + "/api/1/history/" + address+ "?pageSize="+pageSize+"&pageNum="+num
+		request(path, function (error, response, body) {
+		  if (!error && response.statusCode == 200) {
+		  	if(typeof body == "string"){
+		  		body = JSON.parse(body)
+		  	}
+		    if(body.status == 200){
+		    	res.send(body);
+		    }
+		  }else{
+		  	console.log(error)
+		  }
+		});
+	}catch(err){
+		console.log(err)	
+	}
+})
+router.get('/block/getTransactionInfoFromNodeApi', function(req, res, next) {
+	setHeaders(res);
+	try{
+		var db =  DB.connection;
+		var txid = req.query.txid;
+		var path = api_host_node + "/api/1/tx/" + txid;
+		
+		request(path, function (error, response, body) {
+		  if (!error && response.statusCode == 200) {
+		  	
+		  	if(typeof body == "string"){
+		  		body = JSON.parse(body)
+		  	}
+		    if(body.status == 200){
+		    	
+		    	res.send(body);
+		    }
+		  }else{
+		  	console.log(error)
+		  }
+		});
+	}catch(err){
+		console.log(err)	
+	}
+})
+
 router.get('/block/getAddressInfo', function(req, res, next) {
 	setHeaders(res);
 	try{
@@ -687,6 +756,7 @@ router.get('/block/getAddressInfo', function(req, res, next) {
 		var address = req.query.address;
 		var start = req.query.start;
 		var pageSize = req.query.pageSize;
+
 		db.getConnection(function(err,conn){
 			conn.query('SELECT * FROM `chain_block_transaction_history` WHERE `address` = "'+address+'"  ORDER BY `local_system_time` DESC LIMIT ' + start + ',' + pageSize, function (error, results, fields) {
 				
@@ -694,8 +764,8 @@ router.get('/block/getAddressInfo', function(req, res, next) {
 					console.log("mysql error")
 					console.log(error)
 				}else{
+					res.send(results);
 					var n = 0;
-					
 					results.map((v,k)=>{
 						let query= 'SELECT `address`,`value`,`type` FROM `chain_block_transaction_history` WHERE `txid` = "'+v.txid+'"';
 						conn.query(query,function (error, results1, fields) {
@@ -725,7 +795,6 @@ router.get('/block/getAddressInfo', function(req, res, next) {
 								})
 							}
 						})
-
 					})
 				}
 			})
@@ -734,7 +803,7 @@ router.get('/block/getAddressInfo', function(req, res, next) {
 		console.log(err)
 	}
 });
-router.get('/block/getTransactionsCountFromAddress', function(req, res, next) {
+/*router.get('/block/getTransactionsCountFromAddress', function(req, res, next) {
 	setHeaders(res);
 	try{
 		var db =  DB.connection;
@@ -755,6 +824,34 @@ router.get('/block/getTransactionsCountFromAddress', function(req, res, next) {
 		console.log(err)
 	}
 });
+*/
+router.get('/block/getTransactionsCountFromAddress', function(req, res, next) {
+	setHeaders(res);
+	try{
+		var db =  DB.connection;
+		var address = req.query.address;
+		var path = api_host_node + "/api/1/history/" + address+ "?pageSize=1&pageNum=1"
+		
+		request(path, function (error, response, body) {
+		  if (!error && response.statusCode == 200) {
+		  	if(typeof body == "string"){
+		  		body = JSON.parse(body)
+		  	}
+		    if(body.status == 200){
+		    	res.send([{"count":body.result.TotalNum}]);
+		    }else{
+		    	
+		    	res.send([{"count":""}]);
+		    }
+		  }else{
+		  	console.log(error)
+		  }
+		});
+	}catch(err){
+		console.log(err)
+	}
+});
+
 
 router.get('/block/getValueFromAddressAndTxid', function(req, res, next) {
 	setHeaders(res);
