@@ -584,6 +584,58 @@ export function getReportTotal(type,range){
 export function getAddressInfo(address,start,pageSize){
 	return new Promise(function(resolve, reject) {
 		let path = addr + '/api/'+current_version+'/block/getAddressInfo?address='+address+'&start='+start+'&pageSize='+pageSize;
+		let xhr = new XMLHttpRequest();
+	    xhr.open('GET',path );
+	    xhr.onload = function() {
+	      if (xhr.status === 200) {
+	        resolve(JSON.parse(xhr.responseText));
+	      } 
+	    };
+	    xhr.onerror = function() {
+	      reject(new Error(xhr.statusText));
+	    };
+	    xhr.send();
+	});
+
+}
+export function getAddressInfoFromNodeApi(address,start,pageSize){
+	return new Promise(function(resolve, reject) {
+		let path = addr + '/api/'+current_version+'/block/getAddressInfoFromNodeApi?address='+address+'&start='+start+'&pageSize='+pageSize;
+	    let xhr = new XMLHttpRequest();
+	    xhr.open('GET',path );
+	    xhr.onload = function() {
+	      if (xhr.status === 200) {
+	        resolve(JSON.parse(xhr.responseText));
+	      } 
+	    };
+	    xhr.onerror = function() {
+	      reject(new Error(xhr.statusText));
+	    };
+	    xhr.send();
+	});
+
+}
+export function getTransactionInfoFromNodeApi(txid){
+	return new Promise(function(resolve, reject) {
+		let path = addr + '/api/'+current_version+'/block/getTransactionInfoFromNodeApi?txid='+txid;
+	    let xhr = new XMLHttpRequest();
+	    xhr.open('GET',path );
+	    xhr.onload = function() {
+	      if (xhr.status === 200) {
+	        resolve(JSON.parse(xhr.responseText));
+	      } 
+	    };
+	    xhr.onerror = function() {
+	      reject(new Error(xhr.statusText));
+	    };
+	    xhr.send();
+	});
+
+}
+
+export function getAddressBalance(address,start,pageSize){
+	return new Promise(function(resolve, reject) {
+		let path = addr + '/api/'+current_version+'/block/getBalanceFromNodeApi?address='+address
 	    let xhr = new XMLHttpRequest();
 	    xhr.open('GET',path );
 	    xhr.onload = function() {

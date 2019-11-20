@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { getAddressInfo, getCurrentHeight, getTransactionsCountFromAddress, getDidFromTxid, getValueFromAddressAndTxid} from '../request/request';
+import { getAddressInfo, getCurrentHeight, getTransactionsCountFromAddress, getDidFromTxid, getValueFromAddressAndTxid, getAddressBalance, getAddressInfoFromNodeApi, getTransactionInfoFromNodeApi} from '../request/request';
 import './transactionDetail.css'
 import Search from './elements/Search'
 import { Pagination } from 'antd';
@@ -24,7 +24,8 @@ class AddressInfo extends React.Component {
           currentHeight:null,
           size: 10,
           current:1,
-          did:null
+          did:null,
+          balance:null
           
         }
         this.onChange = this.onChange.bind(this);
@@ -37,13 +38,15 @@ class AddressInfo extends React.Component {
          try{
             const start = ( current - 1) * size;
             const address = this.props.match.params.address;
-            const info = await getAddressInfo(address,start,size)
-            console.log(info)
+            //const addressInfo = await getAddressInfo(address,start,size)
+            const addressInfo = await getAddressInfoFromNodeApi(address,start,size)
+            console.log(addressInfo)
+            const transactions = addressInfo.result.History;
             this.setState({
-                transactions:info,
+                transactions:transactions,
             })
-            if(info.length > 0){
-                const getDid = await getDidFromTxid(info[0].txid)
+            if(transactions.length > 0){
+                const getDid = await getDidFromTxid(transactions[0].Txid)
                 if(getDid.length > 0){
                      this.setState({
                         did:getDid[0].did,
@@ -51,15 +54,29 @@ class AddressInfo extends React.Component {
                 }
                
             }
-            
-           /* Object.keys(info).map((transaction,k) => {
-                return this.getValue(k,info,"all");               
-            });*/
+            Object.keys(transactions).map((transaction,k) => {
+                return this.getTxInfo(k,transactions);               
+            })
+           
+            const rs = await getAddressBalance(address);
+            console.log(typeof rs)
+            console.log(rs.result)
+            if(rs.status === 200){
+                this.setState({
+                    balance :rs.result
+                })
+            }else{
+                this.setState({
+                    balance :"..."
+                })
+            }
+           
             const currentHeight = await getCurrentHeight();
             this.setState({
                 currentHeight:currentHeight[0].height
             })
             let count = await getTransactionsCountFromAddress(address);
+            console.log(count)
             this.setState({
                 count:count[0].count,
                 loading:false
@@ -68,39 +85,45 @@ class AddressInfo extends React.Component {
           console.log(err)
         }
     }
-    /*getValue = async (k,transactions,type)=>{
+    getTxInfo = async (k,transactions)=>{
         try{
-            let inputs_arr = [];
-            let outputs_arr = [];
-            let inputsArr = transactions[k].inputs.split(',');
-            let outputsArr = transactions[k].outputs.split(',');
-            inputsArr.map((v,k1)=>{
-                if(v ){
-                    (async()=>{
-                        let value = await getValueFromAddressAndTxid(transactions[k].txid,v,"spend");
-                        inputs_arr.push({"address":v,"value":value[0] ? value[0].value : "0"});
-                        transactions[k].inputs_arr = inputs_arr;
-                    })();
-                }
+
+            const txInfo = await getTransactionInfoFromNodeApi(transactions[k].Txid);
+            transactions[k].vout = txInfo.result.vout;
+            transactions[k].vin = txInfo.result.vin;
+            transactions[k].outputs_arr = txInfo.result.vout;
+            transactions[k].confirmations = txInfo.result.confirmations;
+            var inputs_arr = []
+            var address = transactions[k].Inputs[0];
+            var value_input = 0;
+            var value_fee = parseFloat(transactions[k].Fee);
+            var value_output = 0;
+            transactions[k].vout.map((v1,k1)=>{
+                value_output = (value_output + parseFloat(v1.value));
             })
-            outputsArr.map((v,k1)=>{
-                if(v){
-                    (async()=>{
-                        let value = await getValueFromAddressAndTxid(transactions[k].txid,v,"income");
-                        outputs_arr.push({"address":v,"value":value[0] ? value[0].value : "0"});
-                        transactions[k].outputs_arr = outputs_arr;
-                    })();
-                }
-            })
+            transactions[k].value_output = value_output.toFixed(8);
+            value_input = value_fee + value_output;
+            if(transactions[k].Type ==="income"){
+                const inputInfo = await getTransactionInfoFromNodeApi(transactions[k].vin[0].txid);
+                inputInfo.result.vout.map((v2,k2)=>{
+                    if(v2.address === address ){
+                        console.log(v2.value)
+                        value_input = parseFloat(v2.value)
+                        transactions[k].Fee = (value_input - value_output).toFixed(8);
+                    }
+                })
+            }
+            inputs_arr.push({"address":address,"value":value_input.toFixed(8)})
+            transactions[k].inputs_arr = inputs_arr
+             
         }catch(e){
             console.log(e)
         }
-    } */
+    } 
     loadMoreAddressInfo(txid,type){
         console.log(txid)
         console.log(type)
         const transactions = this.state.transactions;
-       
     }
     timestampToTime(timestamp) {
       let date = new Date(timestamp * 1000);
@@ -136,28 +159,20 @@ class AddressInfo extends React.Component {
     render() {
     	const address = this.props.match.params.address;
         const lang = this.props.lang;
-        const { transactions, loading, currentHeight, count, size, current, did } = this.state;
+        const { transactions, loading, currentHeight, count, size, current, did, balance } = this.state;
         var total_sent = 0;
         var total_received = 0;
-        var balance = 0;
+       
         const txHtml = (transactions.length > 0 ) ? (transactions.map((transaction,k) => {
-            if(transaction.type === "spend"){
-                total_sent =  total_sent + transaction.value;
-                balance = balance - transaction.value
-            }else if(transaction.type === "income"){
-                total_received =  total_received + transaction.value;
-                 balance = balance + transaction.value
+            if(transaction.Type === "spend"){
+                total_sent =  total_sent + transaction.Value;
+            }else if(transaction.Type === "income"){
+                total_received =  total_received + transaction.Value;
             }
-            if(balance < 0) balance = 0;
             const outputs_arr = transaction.outputs_arr || [];
             const inputs_arr = transaction.inputs_arr || [];
-            //console.log(inputs_arr)
-            if(outputs_arr.length === 0){
-                outputs_arr.push({
-                    "address":address,
-                    "value":0
-                })
-            }
+            console.log(inputs_arr)
+            
 
             transaction.show_more_output = transaction.show_more_output ? transaction.show_more_output : false;
             transaction.show_more_text_output = transaction.show_more_output ? "show_less" : "show_more"
@@ -174,7 +189,7 @@ class AddressInfo extends React.Component {
                                 <span style={{"float": "right",
         "padding": "0",
         "color": "#31B59D",
-        "marginRight":"10px"}}>{output.value / 100000000 } ELA</span>
+        "marginRight":"10px"}}>{output.value } ELA</span>
                             </li>
                         )
                     }
@@ -191,7 +206,7 @@ class AddressInfo extends React.Component {
                                     <span style={{"float": "right",
         "padding": "0",
         "color": "#31B59D",
-    "marginRight":"10px"}}>{input.value / 100000000 } ELA</span>
+    "marginRight":"10px"}}>{input.value  } ELA</span>
                             </li>
                         )
                     }
@@ -201,11 +216,11 @@ class AddressInfo extends React.Component {
                 <div className="transaction_summery" key = {k}>
                     <ul>
                         <li style={{"width":"100%","border":"none"}}>
-                            <span style={{"display":"inline"}}>TxID:</span><a href={"/transaction_detail/"+ transaction.txid}><span style={{"display":"inline","color":"rgb(49, 181, 157)"}} className="detail_key wordBreak">{transaction.txid}</span></a>
+                            <span style={{"display":"inline"}}>TxID:</span><a href={"/transaction_detail/"+ transaction.txid}><span style={{"display":"inline","color":"rgb(49, 181, 157)"}} className="detail_key wordBreak">{transaction.Txid}</span></a>
                         </li>
                         <li style={{"padding":"0px 0px 20px 0px"}}>
-                            <span style={{"color":"#364458","display":"inline","background":"#E7F1FF","borderRadius":"4px","padding":"4px 10px","marginRight":"20px"}}>{lang.block_height}: {transaction.height}</span>
-                            <span style={{"color":"#364458","display":"inline","background":"#E7F1FF","borderRadius":"4px","padding":"4px 10px"}}>{lang.timestamp}: {moment.unix(transaction.createTime).format('YYYY-MM-DD hh:mm:ss')}</span>
+                            <span style={{"color":"#364458","display":"inline","background":"#E7F1FF","borderRadius":"4px","padding":"4px 10px","marginRight":"20px"}}>{lang.block_height}: {transaction.Height}</span>
+                            <span style={{"color":"#364458","display":"inline","background":"#E7F1FF","borderRadius":"4px","padding":"4px 10px"}}>{lang.timestamp}: {moment.unix(transaction.CreateTime).format('YYYY-MM-DD hh:mm:ss')}</span>
                         </li>
                     </ul>
                     
@@ -271,12 +286,12 @@ class AddressInfo extends React.Component {
                     </ul>
                     <ul>
                         <li style={{"width":"20%","borderBottom":"none","verticalAlign":"top"}}>
-                            <span className="trx_bottom" style={{"float":"left","background":"#EAEEF4","color":"#364458"}}>{lang.fee} : { transaction.fee / 100000000} ELA</span>
+                            <span className="trx_bottom" style={{"float":"left","background":"#EAEEF4","color":"#364458"}}>{lang.fee} : { transaction.Fee } ELA</span>
                             
                         </li>
                         <li style={{"width":"40%","borderBottom":"none","verticalAlign":"top","float":"right"}}>
-                            <span className="trx_bottom">{lang.number} : {(transaction.value - transaction.fee ) / 100000000} ELA</span>
-                            <span style={{"marginRight":"20px"}}className="trx_bottom">{lang.confirmations} : {currentHeight ? (currentHeight - transaction.height + 1) : '...' }</span>
+                            <span className="trx_bottom">{lang.number} : {transaction.value_output  ? transaction.value_output: "..." } ELA</span>
+                            <span style={{"marginRight":"20px"}}className="trx_bottom">{lang.confirmations} : {transaction.confirmations ? transaction.confirmations  : '...' }</span>
                         </li>
                     </ul>
                 </div> 
@@ -302,7 +317,7 @@ class AddressInfo extends React.Component {
                 		</li>
                 		<li>
                 			<span className="detail_key wordBreak">{lang.balance}</span>
-                			<span className="detail_value wordBreak">{loading ? '...' : (balance / 100000000)} ELA</span>
+                			<span className="detail_value wordBreak">{loading ? '...' : balance} ELA</span>
                 		</li>
                 		<li>
                 			<span className="detail_key wordBreak">{lang.total_sent}</span>
