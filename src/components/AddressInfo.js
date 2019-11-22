@@ -25,7 +25,8 @@ class AddressInfo extends React.Component {
           size: 10,
           current:1,
           did:null,
-          balance:null
+          balance:null,
+          isNodeApi:false
           
         }
         this.onChange = this.onChange.bind(this);
@@ -38,10 +39,20 @@ class AddressInfo extends React.Component {
          try{
             const start = ( current - 1) * size;
             const address = this.props.match.params.address;
-            //const addressInfo = await getAddressInfo(address,start,size)
-            const addressInfo = await getAddressInfoFromNodeApi(address,start,size)
+            
+            if(this.state.isNodeApi){
+                var addressInfo = await getAddressInfoFromNodeApi(address,start,size)
+                var transactions = addressInfo.result.History;
+            }else{
+                var addressInfo = await getAddressInfo(address,start,size) 
+                var transactions = addressInfo  
+            }
+
+
+
+            //
             console.log(addressInfo)
-            const transactions = addressInfo.result.History;
+            
             this.setState({
                 transactions:transactions,
             })
@@ -87,33 +98,52 @@ class AddressInfo extends React.Component {
     }
     getTxInfo = async (k,transactions)=>{
         try{
-
-            const txInfo = await getTransactionInfoFromNodeApi(transactions[k].Txid);
+            
+            if(this.state.isNodeApi){
+                var txInfo = await getTransactionInfoFromNodeApi(transactions[k].Txid);
+                console.log("nodeapi")
+                var address = transactions[k].Inputs[0];
+                
+            }else{
+                var txInfo = await getTransactionInfoFromNodeApi(transactions[k].txid);
+console.log("notenodeapi")
+console.log(transactions[k].inputs)
+                
+                transactions[k].Txid = transactions[k].txid;
+                transactions[k].Height = transactions[k].height
+                transactions[k].CreateTime = transactions[k].createTime;
+                transactions[k].Fee = transactions[k].fee;
+                transactions[k].Type =transactions[k].type
+                transactions[k].Value =transactions[k].value
+                var address = transactions[k].inputs.split(',')[0];
+            }
+            console.log(address)
             transactions[k].vout = txInfo.result.vout;
             transactions[k].vin = txInfo.result.vin;
             transactions[k].outputs_arr = txInfo.result.vout;
             transactions[k].confirmations = txInfo.result.confirmations;
             var inputs_arr = []
-            var address = transactions[k].Inputs[0];
             var value_input = 0;
-            var value_fee = parseFloat(transactions[k].Fee);
             var value_output = 0;
+            var value_fee = parseFloat(transactions[k].Fee)
             transactions[k].vout.map((v1,k1)=>{
-                value_output = (value_output + parseFloat(v1.value));
+                value_output = (value_output + parseFloat(v1.value) * 100000000);
             })
-            transactions[k].value_output = value_output.toFixed(8);
+            transactions[k].value_output = value_output;
+
             value_input = value_fee + value_output;
-            if(transactions[k].Type ==="income"){
+            if(transactions[k].Type === "income" ){
+                console.log(transactions[k].vin[0].txid)
                 const inputInfo = await getTransactionInfoFromNodeApi(transactions[k].vin[0].txid);
+                console.log(inputInfo)
                 inputInfo.result.vout.map((v2,k2)=>{
                     if(v2.address === address ){
-                        console.log(v2.value)
-                        value_input = parseFloat(v2.value)
-                        transactions[k].Fee = (value_input - value_output).toFixed(8);
+                        value_input = parseFloat(v2.value) * 100000000
+                        transactions[k].Fee = parseFloat((value_input - value_output).toFixed(8));
                     }
                 })
             }
-            inputs_arr.push({"address":address,"value":value_input.toFixed(8)})
+            inputs_arr.push({"address":address,"value":value_input / 100000000})
             transactions[k].inputs_arr = inputs_arr
              
         }catch(e){
@@ -189,7 +219,7 @@ class AddressInfo extends React.Component {
                                 <span style={{"float": "right",
         "padding": "0",
         "color": "#31B59D",
-        "marginRight":"10px"}}>{output.value } ELA</span>
+        "marginRight":"10px"}}>{parseFloat(output.value) } ELA</span>
                             </li>
                         )
                     }
@@ -206,7 +236,7 @@ class AddressInfo extends React.Component {
                                     <span style={{"float": "right",
         "padding": "0",
         "color": "#31B59D",
-    "marginRight":"10px"}}>{input.value  } ELA</span>
+    "marginRight":"10px"}}>{parseFloat(input.value)  } ELA</span>
                             </li>
                         )
                     }
@@ -216,11 +246,11 @@ class AddressInfo extends React.Component {
                 <div className="transaction_summery" key = {k}>
                     <ul>
                         <li style={{"width":"100%","border":"none"}}>
-                            <span style={{"display":"inline"}}>TxID:</span><a href={"/transaction_detail/"+ transaction.txid}><span style={{"display":"inline","color":"rgb(49, 181, 157)"}} className="detail_key wordBreak">{transaction.Txid}</span></a>
+                            <span style={{"display":"inline"}}>TxID:</span><a href={"/transaction_detail/"+ transaction.txid}><span style={{"display":"inline","color":"rgb(49, 181, 157)"}} className="detail_key wordBreak">{transaction.Txid ? transaction.Txid : "..."}</span></a>
                         </li>
                         <li style={{"padding":"0px 0px 20px 0px"}}>
-                            <span style={{"color":"#364458","display":"inline","background":"#E7F1FF","borderRadius":"4px","padding":"4px 10px","marginRight":"20px"}}>{lang.block_height}: {transaction.Height}</span>
-                            <span style={{"color":"#364458","display":"inline","background":"#E7F1FF","borderRadius":"4px","padding":"4px 10px"}}>{lang.timestamp}: {moment.unix(transaction.CreateTime).format('YYYY-MM-DD hh:mm:ss')}</span>
+                            <span style={{"color":"#364458","display":"inline","background":"#E7F1FF","borderRadius":"4px","padding":"4px 10px","marginRight":"20px"}}>{lang.block_height}: {transaction.Height ? transaction.Height : "..."}</span>
+                            <span style={{"color":"#364458","display":"inline","background":"#E7F1FF","borderRadius":"4px","padding":"4px 10px"}}>{lang.timestamp}: {transaction.CreateTime ? moment.unix(transaction.CreateTime).format('YYYY-MM-DD hh:mm:ss') : "..."}</span>
                         </li>
                     </ul>
                     
@@ -286,11 +316,11 @@ class AddressInfo extends React.Component {
                     </ul>
                     <ul>
                         <li style={{"width":"20%","borderBottom":"none","verticalAlign":"top"}}>
-                            <span className="trx_bottom" style={{"float":"left","background":"#EAEEF4","color":"#364458"}}>{lang.fee} : { transaction.Fee } ELA</span>
+                            <span className="trx_bottom" style={{"float":"left","background":"#EAEEF4","color":"#364458"}}>{lang.fee} : { transaction.Fee ? transaction.Fee / 100000000 : "..."} ELA</span>
                             
                         </li>
                         <li style={{"width":"40%","borderBottom":"none","verticalAlign":"top","float":"right"}}>
-                            <span className="trx_bottom">{lang.number} : {transaction.value_output  ? transaction.value_output: "..." } ELA</span>
+                            <span className="trx_bottom">{lang.number} : {transaction.value_output  ? transaction.value_output / 100000000: "..." } ELA</span>
                             <span style={{"marginRight":"20px"}}className="trx_bottom">{lang.confirmations} : {transaction.confirmations ? transaction.confirmations  : '...' }</span>
                         </li>
                     </ul>
