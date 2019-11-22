@@ -706,7 +706,7 @@ router.get('/block/getAddressInfoFromNodeApi', function(req, res, next) {
 		var start = req.query.start;
 		var pageSize = req.query.pageSize;
 		var num = (start / pageSize) + 1
-		var path = api_host_node + "/api/1/history/" + address+ "?pageSize="+pageSize+"&pageNum="+num
+		var path = api_host_node + "/api/1/history/" + address+ "?pageSize="+pageSize+"&pageNum="+num+"&order=desc"
 		request(path, function (error, response, body) {
 		  if (!error && response.statusCode == 200) {
 		  	if(typeof body == "string"){
@@ -759,13 +759,13 @@ router.get('/block/getAddressInfo', function(req, res, next) {
 
 		db.getConnection(function(err,conn){
 			conn.query('SELECT * FROM `chain_block_transaction_history` WHERE `address` = "'+address+'"  ORDER BY `local_system_time` DESC LIMIT ' + start + ',' + pageSize, function (error, results, fields) {
-				
+				conn.release();
 				if(error){
 					console.log("mysql error")
 					console.log(error)
 				}else{
 					res.send(results);
-					var n = 0;
+					/*var n = 0;
 					results.map((v,k)=>{
 						let query= 'SELECT `address`,`value`,`type` FROM `chain_block_transaction_history` WHERE `txid` = "'+v.txid+'"';
 						conn.query(query,function (error, results1, fields) {
@@ -795,7 +795,7 @@ router.get('/block/getAddressInfo', function(req, res, next) {
 								})
 							}
 						})
-					})
+					})*/
 				}
 			})
 		})
