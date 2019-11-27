@@ -626,6 +626,9 @@ router.get('/block/dids_test', function(req, res, next) {
 			}else if(type == 5){
 				var query = 'SELECT  distinct did FROM `chain_did_property` WHERE `property_key` = "'+property+'" ORDER BY `id` DESC LIMIT ' + start + ',' + pageSize;
 			
+			}else if(type ==6){
+				var query = 'SELECT * FROM `chain_did_property` WHERE `property_key` = "'+property+'" GROUP BY `did` ORDER BY `id` DESC LIMIT ' + start + ',' + pageSize;
+			
 			}
 			conn.query(query, function (error, results, fields) {
 				conn.release();
