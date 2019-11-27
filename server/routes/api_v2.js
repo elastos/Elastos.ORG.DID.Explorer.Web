@@ -583,9 +583,53 @@ router.get('/block/dids', function(req, res, next) {
 		var start = req.query.start;
 		var pageSize = req.query.pageSize;
 		db.getConnection(function(err,conn){
-
 			var query = 'SELECT  distinct did FROM `chain_did_property` ORDER BY `id` DESC LIMIT ' + start + ',' + pageSize
-			//var query = 'SELECT `did` FROM `chain_did_property` GROUP BY `did` ORDER BY `block_time` DESC LIMIT ' + start + ',' + pageSize
+			
+			conn.query(query, function (error, results, fields) {
+				conn.release();
+				if(error){
+					console.log("mysql error")
+					console.log(error)
+				}else{
+					
+					res.send(results);
+				}
+			})
+		})
+	}catch(err){
+		console.log(err)
+	}
+});
+router.get('/block/dids_test', function(req, res, next) {
+	setHeaders(res);
+	try{
+		var db =  DB.connection;
+		var start = req.query.start;
+		var pageSize = req.query.pageSize;
+		var type = req.query.type;
+		var property = req.query.property;
+		db.getConnection(function(err,conn){
+			//var query = 'SELECT  distinct did FROM `chain_did_property` ORDER BY `id` DESC LIMIT ' + start + ',' + pageSize
+			
+			//var query = 'SELECT  distinct did FROM `chain_did_property` ORDER BY `block_time` DESC LIMIT ' + start + ',' + pageSize
+			//var query = 'SELECT `did` FROM `chain_did_property` GROUP BY `txid` ORDER BY `id` DESC LIMIT ' + start + ',' + pageSize
+			if(type == 1){
+				var query = 'SELECT  distinct did FROM `chain_did_property` ORDER BY `id` DESC LIMIT ' + start + ',' + pageSize;
+						
+			}else if(type ==2)
+				var query = 'SELECT  distinct did FROM `chain_did_property` ORDER BY `block_time` DESC LIMIT ' + start + ',' + pageSize;
+			else if(type ==3){
+				var query = 'SELECT *,GROUP_CONCAT(distinct did) as did_distinct FROM `chain_did_property` GROUP BY did ORDER BY `block_time` DESC LIMIT ' + start + ',' + pageSize;
+			}else if(type == 4){
+				var query = 'SELECT  distinct did FROM (SELECT `id`,`did`,`property_key` FROM `chain_did_property` WHERE `property_key` = "'+property+'" ) AS a ORDER BY `id` DESC LIMIT ' + start + ',' + pageSize;
+			
+			}else if(type == 5){
+				var query = 'SELECT  distinct did FROM `chain_did_property` WHERE `property_key` = "'+property+'" ORDER BY `id` DESC LIMIT ' + start + ',' + pageSize;
+			
+			}else if(type ==6){
+				var query = 'SELECT * FROM `chain_did_property` WHERE `property_key` = "'+property+'" GROUP BY `did` ORDER BY `id` DESC LIMIT ' + start + ',' + pageSize;
+			
+			}
 			conn.query(query, function (error, results, fields) {
 				conn.release();
 				if(error){
@@ -668,7 +712,10 @@ router.get('/block/didsWidthProperty', function(req, res, next) {
 		var start = req.query.start;
 		var pageSize = req.query.pageSize;
 		db.getConnection(function(err,conn){
-			conn.query('SELECT  distinct did FROM `chain_did_property` WHERE `property_key` = "'+property+'" ORDER BY `block_time` DESC LIMIT ' + start + ',' + pageSize, function (error, results, fields) {
+			var query = 'SELECT  distinct did FROM (SELECT `id`,`did`,`property_key` FROM `chain_did_property` WHERE `property_key` = "'+property+'" ) AS a ORDER BY `id` DESC LIMIT ' + start + ',' + pageSize;
+			//var query = 'SELECT  distinct did FROM `chain_did_property` WHERE `property_key` = "'+property+'" ORDER BY `id` DESC LIMIT ' + start + ',' + pageSize;
+			
+			conn.query(query, function (error, results, fields) {
 				conn.release();
 				if(error){
 					console.log("mysql error")
