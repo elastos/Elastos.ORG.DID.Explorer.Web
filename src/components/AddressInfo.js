@@ -26,7 +26,7 @@ class AddressInfo extends React.Component {
           current:1,
           did:null,
           balance:null,
-          isNodeApi:false
+          isNodeApi:true
           
         }
         this.onChange = this.onChange.bind(this);
@@ -48,8 +48,6 @@ class AddressInfo extends React.Component {
                 var transactions = addressInfo  
             }
 
-
-
             //
             console.log(addressInfo)
             
@@ -70,8 +68,7 @@ class AddressInfo extends React.Component {
             })
            
             const rs = await getAddressBalance(address);
-            console.log(typeof rs)
-            console.log(rs.result)
+
             if(rs.status === 200){
                 this.setState({
                     balance :rs.result
@@ -87,7 +84,7 @@ class AddressInfo extends React.Component {
                 currentHeight:currentHeight[0].height
             })
             let count = await getTransactionsCountFromAddress(address);
-            console.log(count)
+
             this.setState({
                 count:count[0].count,
                 loading:false
@@ -103,12 +100,10 @@ class AddressInfo extends React.Component {
                 var txInfo = await getTransactionInfoFromNodeApi(transactions[k].Txid);
                 console.log("nodeapi")
                 var address = transactions[k].Inputs[0];
+                var address_arr =transactions[k].Inputs;
                 
             }else{
                 var txInfo = await getTransactionInfoFromNodeApi(transactions[k].txid);
-console.log("notenodeapi")
-console.log(transactions[k].inputs)
-                
                 transactions[k].Txid = transactions[k].txid;
                 transactions[k].Height = transactions[k].height
                 transactions[k].CreateTime = transactions[k].createTime;
@@ -116,45 +111,76 @@ console.log(transactions[k].inputs)
                 transactions[k].Type =transactions[k].type
                 transactions[k].Value =transactions[k].value
                 var address = transactions[k].inputs.split(',')[0];
+                var address_arr = transactions[k].Inputs;
             }
-            console.log(address)
             transactions[k].vout = txInfo.result.vout;
             transactions[k].vin = txInfo.result.vin;
-            transactions[k].outputs_arr = txInfo.result.vout;
+            
             transactions[k].confirmations = txInfo.result.confirmations;
+            var outputs_arr = txInfo.result.vout;
+            /////////////////
+            outputs_arr.map((v,k)=>{
+                if(outputs_arr[k-1] && outputs_arr[k-1].address === outputs_arr[k].address){
+                    outputs_arr[k].value = (parseFloat(outputs_arr[k].value) + parseFloat(outputs_arr[k-1].value)).toFixed(8)
+                    delete outputs_arr[k-1]
+                }
+
+            })
+            ///////////////////////
+            transactions[k].outputs_arr = outputs_arr;
+
+
             var inputs_arr = []
-            var value_input = 0;
-            var value_output = 0;
+            transactions[k].value_output = 0;
+            transactions[k].value_input = 0;
             var value_fee = parseFloat(transactions[k].Fee)
             transactions[k].vout.map((v1,k1)=>{
-                value_output = (value_output + parseFloat(v1.value) * 100000000);
+                
+                transactions[k].value_output = (transactions[k].value_output + parseFloat(v1.value) * 100000000);
             })
-            transactions[k].value_output = value_output;
-
-            value_input = value_fee + value_output;
+            
+           
             if(transactions[k].Type === "income" ){
-                console.log(transactions[k].vin[0].txid)
-                const inputInfo = await getTransactionInfoFromNodeApi(transactions[k].vin[0].txid);
-                console.log(inputInfo)
-                inputInfo.result.vout.map((v2,k2)=>{
-                    if(v2.address === address ){
-                        value_input = parseFloat(v2.value) * 100000000
-                        transactions[k].Fee = parseFloat((value_input - value_output).toFixed(8));
-                    }
+                transactions[k].inputs_arr = []
+                transactions[k].vin.map((v3,k3)=>{
+                    
+                    (async()=>{ const inputInfo = await getTransactionInfoFromNodeApi(transactions[k].vin[k3].txid)
+                        var address =  address_arr[k3] ? address_arr[k3] : address_arr[0];
+                        inputInfo.result.vout.map((v2,k2)=>{
+                            if(v2.address === address ){
+                                
+                                var value_input = parseFloat(v2.value) * 100000000
+                                transactions[k].value_input += parseFloat(v2.value) * 100000000
+                                transactions[k].inputs_arr.push({"address":address,"value":(value_input).toFixed(8) / 100000000})
+                                transactions[k].Fee = parseFloat((transactions[k].value_input - transactions[k].value_output).toFixed(8));
+                                /////////////////////
+                                transactions[k].inputs_arr.map((v4,k4)=>{
+                                    if(transactions[k].inputs_arr[k4] && transactions[k].inputs_arr[k4-1] && transactions[k].inputs_arr[k4-1].address === transactions[k].inputs_arr[k4].address){
+                                        transactions[k].inputs_arr[k4].value = parseFloat(transactions[k].inputs_arr[k4].value) + parseFloat(transactions[k].inputs_arr[k4-1].value)
+                                        delete transactions[k].inputs_arr[k4-1]
+                                    }
+                                })
+                                /////////////////
+                                this.setState({});
+                            }
+                        })
+                    })()
                 })
+                
+            }else{
+                transactions[k].value_input = value_fee + transactions[k].value_output;
+                inputs_arr.push({"address":address,"value":(transactions[k].value_input).toFixed(8) / 100000000})
+                transactions[k].inputs_arr = inputs_arr
+                this.setState({});  
             }
-            inputs_arr.push({"address":address,"value":value_input / 100000000})
-            transactions[k].inputs_arr = inputs_arr
-             
+            
+
+            
         }catch(e){
             console.log(e)
         }
     } 
-    loadMoreAddressInfo(txid,type){
-        console.log(txid)
-        console.log(type)
-        const transactions = this.state.transactions;
-    }
+    
     timestampToTime(timestamp) {
       let date = new Date(timestamp * 1000);
       let Y = date.getFullYear();
@@ -201,7 +227,7 @@ console.log(transactions[k].inputs)
             }
             const outputs_arr = transaction.outputs_arr || [];
             const inputs_arr = transaction.inputs_arr || [];
-            console.log(inputs_arr)
+
             
 
             transaction.show_more_output = transaction.show_more_output ? transaction.show_more_output : false;
@@ -210,11 +236,11 @@ console.log(transactions[k].inputs)
             transaction.show_more_input = transaction.show_more_input ? transaction.show_more_input : false;
             transaction.show_more_text_input = transaction.show_more_input ? "show_less" : "show_more"
 
-            const outputHtml = (outputs_arr.length > 0 ) ? (outputs_arr.map((output,k)=>{
+            const outputHtml = (outputs_arr.length > 0 ) ? (outputs_arr.map((output,k1)=>{
                 if(output.address){
-                    if(transaction.show_more_output || k < 5){
+                    if(transaction.show_more_output || k1 < 5){
                         return(
-                            <li key= {k}  style={{"display": "block","width":"100%","height":"45px","padding":"0","lineHeight":"45px","border":"1px #ccc solid","borderRadius":"5px","paddingLeft":"15px","marginBottom":"10px"}}>
+                            <li key= {k1}  style={{"display": "block","width":"100%","height":"45px","padding":"0","lineHeight":"45px","border":"1px #ccc solid","borderRadius":"5px","paddingLeft":"15px","marginBottom":"10px"}}>
                                 <a   href={"/address_info/"+output.address}><span className="detail_value wordBreak" style={{"color":"#31B59D","display":"inline","fontSize":"14px"}}>{output.address}</span></a>
                                 <span style={{"float": "right",
         "padding": "0",
@@ -223,15 +249,17 @@ console.log(transactions[k].inputs)
                             </li>
                         )
                     }
+ 
                 }
             })) : <li style={{"textAlign":"center"}}>{loading ? <img src={loadingImg} alt="loading"/> : <span>{lang.not_found}</span>}</li>;
 
-            const inputHtml = (inputs_arr.length > 0 ) ? (inputs_arr.map((input,k)=>{
+            const inputHtml = (inputs_arr.length > 0 ) ? (inputs_arr.map((input,k2)=>{
+                
                 if(input.address){
-                    if(transaction.show_more_input || k < 5){
+                    if(transaction.show_more_input || k2 < 5){
                         return(
                                 
-                                <li key= {k} style={{"display": "block","width":"100%","height":"45px","padding":"0","lineHeight":"45px","border":"1px #ccc solid","borderRadius":"5px","paddingLeft":"15px","marginBottom":"10px"}}>
+                                <li key= {k2} style={{"display": "block","width":"100%","height":"45px","padding":"0","lineHeight":"45px","border":"1px #ccc solid","borderRadius":"5px","paddingLeft":"15px","marginBottom":"10px"}}>
                                      <a  href={"/address_info/"+input.address}><span className="detail_value wordBreak" style={{"color":"#31B59D","display":"inline","fontSize":"14px"}}>{input.address}</span></a>
                                     <span style={{"float": "right",
         "padding": "0",
@@ -329,7 +357,7 @@ console.log(transactions[k].inputs)
         })) : <li style={{"textAlign":"center"}}>{loading ? <img src={loadingImg} alt="loading"/> : <span>{lang.not_found}</span>}</li> ;
         return (
             <div className="container">
-            {console.log("refresh")}
+           
             	<div className = "list_top" >
                     <div className = "list_title"><span style={{"fontSize":"25px"}}>{lang.address}</span></div>
                     <div className = "list_search"><Search button="false" name="list" lang={lang}/></div>
