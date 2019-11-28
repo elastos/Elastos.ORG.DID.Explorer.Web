@@ -584,6 +584,7 @@ router.get('/block/dids', function(req, res, next) {
 		var pageSize = req.query.pageSize;
 		db.getConnection(function(err,conn){
 			var query = 'SELECT  distinct did FROM `chain_did_property` ORDER BY `id` DESC LIMIT ' + start + ',' + pageSize
+			//var query = 'SELECT  distinct did, height, txid, block_time FROM `chain_did_property` ORDER BY `id` DESC LIMIT ' + start + ',' + pageSize
 			
 			conn.query(query, function (error, results, fields) {
 				conn.release();
@@ -600,6 +601,7 @@ router.get('/block/dids', function(req, res, next) {
 		console.log(err)
 	}
 });
+/*
 router.get('/block/dids_test', function(req, res, next) {
 	setHeaders(res);
 	try{
@@ -643,7 +645,7 @@ router.get('/block/dids_test', function(req, res, next) {
 	}catch(err){
 		console.log(err)
 	}
-});
+});*/
 router.get('/block/dids/count', function(req, res, next) {
 	setHeaders(res);
 	try{
@@ -712,8 +714,9 @@ router.get('/block/didsWidthProperty', function(req, res, next) {
 		var start = req.query.start;
 		var pageSize = req.query.pageSize;
 		db.getConnection(function(err,conn){
-			var query = 'SELECT  distinct did FROM (SELECT `id`,`did`,`property_key` FROM `chain_did_property` WHERE `property_key` = "'+property+'" ) AS a ORDER BY `id` DESC LIMIT ' + start + ',' + pageSize;
+			//var query = 'SELECT  distinct did FROM (SELECT `id`,`did`,`property_key` FROM `chain_did_property` WHERE `property_key` = "'+property+'" ) AS a ORDER BY `id` DESC LIMIT ' + start + ',' + pageSize;
 			//var query = 'SELECT  distinct did FROM `chain_did_property` WHERE `property_key` = "'+property+'" ORDER BY `id` DESC LIMIT ' + start + ',' + pageSize;
+			var query = 'SELECT  * FROM `chain_did_property` WHERE `property_key` = "'+property+'" ORDER BY `id` DESC LIMIT ' + start + ',' + pageSize;
 			
 			conn.query(query, function (error, results, fields) {
 				conn.release();

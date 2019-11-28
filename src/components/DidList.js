@@ -38,9 +38,11 @@ class DidList extends React.Component {
             this.setState({dids:dids})
             console.log(dids)
             var number = []
-            Object.keys(dids).map((did,k) => {
-                return this.getDidsInfo(k,number,dids)                
-            });
+            if(property == null){
+                Object.keys(dids).map((did,k) => {
+                    return this.getDidsInfo(k,number,dids)                
+                });
+            }
             const count = property ? await getDidCountWidthProperty(property) : await getDidCount();
             this.setState({
                 count:count[0].count

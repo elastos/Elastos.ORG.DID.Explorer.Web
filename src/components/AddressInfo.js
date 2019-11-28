@@ -152,7 +152,7 @@ class AddressInfo extends React.Component {
                                 var value_input = parseFloat(v2.value) * 100000000
                                 transactions[k].value_input += parseFloat(v2.value) * 100000000
                                 transactions[k].inputs_arr.push({"address":address,"value":(value_input).toFixed(8) / 100000000})
-                                transactions[k].Fee = parseFloat((transactions[k].value_input - transactions[k].value_output).toFixed(8));
+                                transactions[k].Fee = parseFloat((transactions[k].value_input).toFixed(8) - (transactions[k].value_output).toFixed(8));
                                 /////////////////////
                                 transactions[k].inputs_arr.map((v4,k4)=>{
                                     if(transactions[k].inputs_arr[k4] && transactions[k].inputs_arr[k4-1] && transactions[k].inputs_arr[k4-1].address === transactions[k].inputs_arr[k4].address){
