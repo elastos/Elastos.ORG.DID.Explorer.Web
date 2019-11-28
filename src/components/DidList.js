@@ -45,7 +45,8 @@ class DidList extends React.Component {
             }
             const count = property ? await getDidCountWidthProperty(property) : await getDidCount();
             this.setState({
-                count:count[0].count
+                count:count[0].count,
+                loading:false
             })
         }catch(err){
           console.log(err)
