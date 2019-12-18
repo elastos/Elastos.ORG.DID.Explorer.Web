@@ -99,7 +99,7 @@ class History extends React.Component {
             	<div className = "list_top" >
                     <div className = "list_title" style={{"float":"unset"}}><a href="#" onClick = {this.back}><img src={iconLeft} alt="back" style={{"marginBottom":"2px","marginRight":"10px"}}/><span style={{"fontSize":"14px"}}>{lang.back}</span></a></div>
                 </div>
-                <div><span style={{"fontSize":"25px","color":"#364458","fontFamily":"Bio Sans Bold"}}>{U.decode(key)}</span></div>
+                <div><span style={{"fontSize":"25px","color":"#364458","fontFamily":"Bio Sans Bold","whiteSpace": "normal","wordBreak":"break-all"}}>{U.decode(key)}</span></div>
                 <div className="ant-table ant-table-default ant-table-scroll-position-left" >
                     <div className="ant-table-content">
                         <div className="ant-table-body">

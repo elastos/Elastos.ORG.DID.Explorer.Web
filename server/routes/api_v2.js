@@ -26,7 +26,7 @@ router.get('/serverInfo', function(req, res, next) {
 	}
 });
 
-
+////
 router.get('/block/current', function(req, res, next) {
 	setHeaders(res);
 	try{
@@ -67,25 +67,8 @@ router.get('/block/current/height', function(req, res, next) {
 		console.log(err)
 	}
 });
-router.get('/block/height', function(req, res, next) {
-	setHeaders(res);
-	try{
-		var db =  DB.connection;
-		db.getConnection(function(err,conn){
-			conn.query('SELECT `height` FROM `chain_did_property`  ORDER BY `height` desc LIMIT 1', function (error, results, fields) {
-				conn.release();
-				if(error){
-					console.log("mysql error")
-					console.log(error);
-				}else{
-					res.send(results);
-				}
-			})
-		})
-	}catch(err){
-		console.log(err)
-	}
-});
+
+
 router.get('/block/info', function(req, res, next) {
 	setHeaders(res);
 	try{
@@ -156,7 +139,7 @@ router.get('/block/blocks', function(req, res, next) {
 		console.log(err)
 	}
 });
-
+///重复
 router.get('/block/blocks_info',function(req, res, next){
 	setHeaders(res);
 	try{
@@ -220,7 +203,7 @@ router.get('/block/blocks_first',function(req, res, next){
 	}
 })
 
-router.get('/block/transactions_count', function(req, res, next) {
+router.get('/transactions_count', function(req, res, next) {
 	setHeaders(res);
 	try{
 		var db =  DB.connection;
@@ -241,28 +224,8 @@ router.get('/block/transactions_count', function(req, res, next) {
 		console.log(err)
 	}
 });
-router.get('/block/transactions/txids_height', function(req, res, next) {
-	setHeaders(res);
-	try{
-		var db =  DB.connection;
-		var height = req.query.height;
-		db.getConnection(function(err,conn){
-			conn.query('SELECT `txid` FROM `chain_block_transaction_history`  WHERE `height` = ' + height + ' AND `txType` = "TransferAsset" GROUP BY `txid` ORDER BY `id` DESC', function (error, results, fields) {
-				conn.release();
-				if(error){
-					console.log("mysql error")
-					console.log(error)
-				}else{
-					res.send(results);
-				}
-			})
-		})
-	}catch(err){
-		console.log(err)
-	}
-});
 
-router.get('/block/transactions/height', function(req, res, next) {
+router.get('/transactions/height', function(req, res, next) {
 	setHeaders(res);
 	try{
 		var db =  DB.connection;
@@ -306,7 +269,7 @@ router.get('/block/values', function(req, res, next) {
 	}
 });
 
-router.get('/block/transactions/txid', function(req, res, next) {
+router.get('/transactions/txid', function(req, res, next) {
 	setHeaders(res);
 	try{
 		var db =  DB.connection;
@@ -327,7 +290,7 @@ router.get('/block/transactions/txid', function(req, res, next) {
 	}
 });
 
-router.get('/block/transactions', function(req, res, next) {
+router.get('/transactions', function(req, res, next) {
 	setHeaders(res);
 	try{
 		var db =  DB.connection;
@@ -360,7 +323,7 @@ router.get('/block/transactions', function(req, res, next) {
 		console.log(err)
 	}
 });
-router.get('/block/transactions_info', function(req, res, next) {
+router.get('/transactions_info', function(req, res, next) {
 	setHeaders(res);
 	try{
 		var db =  DB.connection;
@@ -384,7 +347,7 @@ router.get('/block/transactions_info', function(req, res, next) {
 
 
 
-router.get('/block/transactions/count', function(req, res, next) {
+router.get('/transactions/count', function(req, res, next) {
 	setHeaders(res);
 	try{
 		var db =  DB.connection;
@@ -404,7 +367,7 @@ router.get('/block/transactions/count', function(req, res, next) {
 	}
 });
 
-router.get('/block/transactions/info', function(req, res, next) {
+router.get('/transactions/info', function(req, res, next) {
 	setHeaders(res);
 	try{
 		var db =  DB.connection;
@@ -425,27 +388,7 @@ router.get('/block/transactions/info', function(req, res, next) {
 	}
 });
 
-router.get('/block/transactions/did', function(req, res, next) {
-	setHeaders(res);
-	try{
-		var db =  DB.connection;
-		var did = req.query.did;
-		db.getConnection(function(err,conn){
-			conn.query('SELECT * FROM `chain_did_property`  WHERE `did` = "' + did + '" ORDER BY `id` DESC LIMIT 5', function (error, results, fields) {
-				conn.release();
-				if(error){
-					console.log("mysql error")
-					console.log(error)
-				}else{
-					res.send(results);
-				}
-			})
-		})
-	}catch(err){
-		console.log(err)
-	}
-});
-router.get('/block/properteis/did', function(req, res, next) {
+router.get('/properteis/did', function(req, res, next) {
 	setHeaders(res);
 	try{
 		var db =  DB.connection;
@@ -467,7 +410,7 @@ router.get('/block/properteis/did', function(req, res, next) {
 });
 
 
-router.get('/block/address/txid', function(req, res, next) {
+router.get('/address/txid', function(req, res, next) {
 	setHeaders(res);
 	try{
 		var db =  DB.connection;
@@ -487,7 +430,8 @@ router.get('/block/address/txid', function(req, res, next) {
 		console.log(err)
 	}
 });
-router.get('/block/did/txid', function(req, res, next) {
+///////
+router.get('/did/txid', function(req, res, next) {
 	setHeaders(res);
 	try{
 		var db =  DB.connection;
@@ -507,7 +451,7 @@ router.get('/block/did/txid', function(req, res, next) {
 		console.log(err)
 	}
 });
-router.get('/block/properteis/history', function(req, res, next) {
+router.get('/properties/history', function(req, res, next) {
 	setHeaders(res);
 	try{
 		var db =  DB.connection;
@@ -530,7 +474,8 @@ router.get('/block/properteis/history', function(req, res, next) {
 		console.log(err)
 	}
 });
-router.get('/block/properteis/history/count', function(req, res, next) {
+
+router.get('/properties/history/count', function(req, res, next) {
 	setHeaders(res);
 	try{
 		var db =  DB.connection;
@@ -553,30 +498,8 @@ router.get('/block/properteis/history/count', function(req, res, next) {
 	}
 });
 
-router.get('/block/dids_index', function(req, res, next) {
-	setHeaders(res);
-	try{
-		var db =  DB.connection;
-		var limit = req.query.limit; 
-		db.getConnection(function(err,conn){
-			var query = 'SELECT did FROM `chain_did_property` ORDER BY `id` DESC LIMIT '+limit
-			//var query = 'SELECT `did` FROM `chain_did_property` GROUP BY `did` ORDER BY `block_time` DESC LIMIT ' + start + ',' + pageSize
-			conn.query(query, function (error, results, fields) {
-				conn.release();
-				if(error){
-					console.log("mysql error")
-					console.log(error)
-				}else{
-					res.send(results);
-				}
-			})
-		})
-	}catch(err){
-		console.log(err)
-	}
-});
 
-router.get('/block/dids', function(req, res, next) {
+router.get('/dids', function(req, res, next) {
 	setHeaders(res);
 	try{
 		var db =  DB.connection;
@@ -601,52 +524,8 @@ router.get('/block/dids', function(req, res, next) {
 		console.log(err)
 	}
 });
-/*
-router.get('/block/dids_test', function(req, res, next) {
-	setHeaders(res);
-	try{
-		var db =  DB.connection;
-		var start = req.query.start;
-		var pageSize = req.query.pageSize;
-		var type = req.query.type;
-		var property = req.query.property;
-		db.getConnection(function(err,conn){
-			//var query = 'SELECT  distinct did FROM `chain_did_property` ORDER BY `id` DESC LIMIT ' + start + ',' + pageSize
-			
-			//var query = 'SELECT  distinct did FROM `chain_did_property` ORDER BY `block_time` DESC LIMIT ' + start + ',' + pageSize
-			//var query = 'SELECT `did` FROM `chain_did_property` GROUP BY `txid` ORDER BY `id` DESC LIMIT ' + start + ',' + pageSize
-			if(type == 1){
-				var query = 'SELECT  distinct did FROM `chain_did_property` ORDER BY `id` DESC LIMIT ' + start + ',' + pageSize;
-						
-			}else if(type ==2)
-				var query = 'SELECT  distinct did FROM `chain_did_property` ORDER BY `block_time` DESC LIMIT ' + start + ',' + pageSize;
-			else if(type ==3){
-				var query = 'SELECT *,GROUP_CONCAT(distinct did) as did_distinct FROM `chain_did_property` GROUP BY did ORDER BY `block_time` DESC LIMIT ' + start + ',' + pageSize;
-			}else if(type == 4){
-				var query = 'SELECT  distinct did FROM (SELECT `id`,`did`,`property_key` FROM `chain_did_property` WHERE `property_key` = "'+property+'" ) AS a ORDER BY `id` DESC LIMIT ' + start + ',' + pageSize;
-			
-			}else if(type == 5){
-				var query = 'SELECT  distinct did FROM `chain_did_property` WHERE `property_key` = "'+property+'" ORDER BY `id` DESC LIMIT ' + start + ',' + pageSize;
-			
-			}else if(type ==6){
-				var query = 'SELECT * FROM `chain_did_property` WHERE `property_key` = "'+property+'" GROUP BY `did` ORDER BY `id` DESC LIMIT ' + start + ',' + pageSize;
-			
-			}
-			conn.query(query, function (error, results, fields) {
-				conn.release();
-				if(error){
-					console.log("mysql error")
-					console.log(error)
-				}else{
-					res.send(results);
-				}
-			})
-		})
-	}catch(err){
-		console.log(err)
-	}
-});*/
-router.get('/block/dids/count', function(req, res, next) {
+
+router.get('/dids/count', function(req, res, next) {
 	setHeaders(res);
 	try{
 		var db =  DB.connection;
@@ -665,7 +544,7 @@ router.get('/block/dids/count', function(req, res, next) {
 		console.log(err)
 	}
 });
-router.get('/block/dids/countWithProperty', function(req, res, next) {
+router.get('/dids/countWithProperty', function(req, res, next) {
 	setHeaders(res);
 	try{
 		var db =  DB.connection;
@@ -686,7 +565,7 @@ router.get('/block/dids/countWithProperty', function(req, res, next) {
 	}
 });
 
-router.get('/block/did/info', function(req, res, next) {
+router.get('/did/info', function(req, res, next) {
 	setHeaders(res);
 	try{
 		var db =  DB.connection;
@@ -706,7 +585,7 @@ router.get('/block/did/info', function(req, res, next) {
 		console.log(err)
 	}
 });
-router.get('/block/didsWidthProperty', function(req, res, next) {
+router.get('/didsWidthProperty', function(req, res, next) {
 	setHeaders(res);
 	try{
 		var db =  DB.connection;
@@ -732,7 +611,7 @@ router.get('/block/didsWidthProperty', function(req, res, next) {
 		console.log(err)
 	}
 });
-router.get('/block/getBalanceFromNodeApi', function(req, res, next) {
+router.get('/getBalanceFromNodeApi', function(req, res, next) {
 	setHeaders(res);
 	try{
 		var address = req.query.address;
@@ -748,7 +627,7 @@ router.get('/block/getBalanceFromNodeApi', function(req, res, next) {
 		console.log(err)
 	}
 });
-router.get('/block/getAddressInfoFromNodeApi', function(req, res, next) {
+router.get('/getAddressInfoFromNodeApi', function(req, res, next) {
 	setHeaders(res);
 	try{
 		var db =  DB.connection;
@@ -773,7 +652,7 @@ router.get('/block/getAddressInfoFromNodeApi', function(req, res, next) {
 		console.log(err)	
 	}
 })
-router.get('/block/getTransactionInfoFromNodeApi', function(req, res, next) {
+router.get('/getTransactionInfoFromNodeApi', function(req, res, next) {
 	setHeaders(res);
 	try{
 		var db =  DB.connection;
@@ -799,7 +678,7 @@ router.get('/block/getTransactionInfoFromNodeApi', function(req, res, next) {
 	}
 })
 
-router.get('/block/getAddressInfo', function(req, res, next) {
+router.get('/getAddressInfo', function(req, res, next) {
 	setHeaders(res);
 	try{
 		var db =  DB.connection;
@@ -875,7 +754,7 @@ router.get('/block/getAddressInfo', function(req, res, next) {
 	}
 });
 */
-router.get('/block/getTransactionsCountFromAddress', function(req, res, next) {
+router.get('/getTransactionsCountFromAddress', function(req, res, next) {
 	setHeaders(res);
 	try{
 		var db =  DB.connection;
@@ -903,30 +782,8 @@ router.get('/block/getTransactionsCountFromAddress', function(req, res, next) {
 });
 
 
-router.get('/block/getValueFromAddressAndTxid', function(req, res, next) {
-	setHeaders(res);
-	try{
-		var db =  DB.connection;
-		var txid = req.query.txid;
-		var address = req.query.address;
-		var type = req.query.type;
-		db.getConnection(function(err,conn){
-			conn.query('SELECT value FROM `chain_block_transaction_history` WHERE `address` = "'+address+'" and `txid`="'+txid+'" and `type`="'+type+'"', function (error, results, fields) {
-				conn.release();
-				if(error){
-					console.log("mysql error")
-					console.log(error)
-				}else{
-					res.send(results);
-				}
-			})
-		})
-	}catch(err){
-		console.log(err)
-	}
-});
 
-router.get('/block/getReport', function(req, res, next) {
+router.get('/getReport', function(req, res, next) {
 	setHeaders(res);
 	try{
 		var db =  DB.connection;
@@ -1011,7 +868,7 @@ router.get('/block/getReport', function(req, res, next) {
 });
 
 
-router.get('/block/getReportTotal', function(req, res, next) {
+router.get('/getReportTotal', function(req, res, next) {
 	setHeaders(res);
 	try{
 		var db =  DB.connection;
@@ -1076,7 +933,7 @@ router.get('/block/getReportTotal', function(req, res, next) {
 });
 
 
-router.get('/block/eapps', function(req, res, next) {
+router.get('/eapps', function(req, res, next) {
 	setHeaders(res);
 	try{
 		var db =  DB.connection;
@@ -1098,7 +955,7 @@ router.get('/block/eapps', function(req, res, next) {
 	}
 });
 
-router.get('/block/eapps/count', function(req, res, next) {
+router.get('/eapps/count', function(req, res, next) {
 	setHeaders(res);
 	try{
 		var db =  DB.connection;
@@ -1118,7 +975,8 @@ router.get('/block/eapps/count', function(req, res, next) {
 		console.log(err)
 	}
 });
-router.get('/block/eapp/eapp_id', function(req, res, next) {
+
+router.get('/eapp/appName', function(req, res, next) {
 	setHeaders(res);
 	try{
 		var db =  DB.connection;
