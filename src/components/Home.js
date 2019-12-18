@@ -1,6 +1,6 @@
 import React from 'react';
 import moment from 'moment'
-import { getBlocks, getBlocksInfo, getTransactionsCount, getTransactions, getTransactionsInfo, getTransactionsCountFromHeight, getServerInfo, getDids, getDidCount, getDidInfo, getEapps, getEappsCount, getDidsIndex,getLastBlocks } from '../request/request';
+import { getBlocks, getBlocksInfo, getTransactionsCount, getTransactions, getTransactionsInfo, getTransactionsCountFromHeight, getServerInfo, getDids, getDidCount, getDidInfo, getEapps, getEappsCount,getLastBlocks } from '../request/request';
 import './home.css'
 import mask from '../public/images/mask1.png'
 import background from '../public/images/background.svg'
@@ -114,19 +114,7 @@ class Home extends React.Component {
     getDid = async () => {
         try{
             const dids = await getDids(0,5);
-            /*const dids_index = await getDidsIndex(50);
-
-            var dids = [];
-            var did_obj = {};
-            dids_index.map((v,k)=>{
-                did_obj[v["did"]] = "0"
-            })
-            for(let k in did_obj){
-                var obj = {"did":k}
-                if(dids.length<5){
-                    dids.push(obj)
-                }
-            }*/
+           
             this.setState({dids:dids})
             var num = []
             Object.keys(dids).map((did,k) => {
@@ -248,7 +236,8 @@ class Home extends React.Component {
             let style = {
                 "right": k*2.55 +"%",
                 "height": typeof v.size === "number" ? v.size * rate : 0 +"px",
-                "background" : k === 0 ? "linear-gradient(180deg, #1DE9B6 0%, #02C67F 100%)" : ""
+                "background" : k === 0 ? "linear-gradient(180deg, #1DE9B6 0%, #02C67F 100%)" : "",
+                "minHeight":"5px"
             }
             return <li className= {click_id === k ? "char_li char_clicked" : "char_li" } key= {k} style={style} 
             onClick={(e)=>{e.nativeEvent.stopImmediatePropagation();}} 

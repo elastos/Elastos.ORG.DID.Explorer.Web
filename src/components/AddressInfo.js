@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { getAddressInfo, getCurrentHeight, getTransactionsCountFromAddress, getDidFromTxid, getValueFromAddressAndTxid, getAddressBalance, getAddressInfoFromNodeApi, getTransactionInfoFromNodeApi} from '../request/request';
+import { getAddressInfo, getCurrentHeight, getTransactionsCountFromAddress, getDidFromTxid, getAddressBalance, getAddressInfoFromNodeApi, getTransactionInfoFromNodeApi} from '../request/request';
 import './transactionDetail.css'
 import Search from './elements/Search'
 import { Pagination } from 'antd';
