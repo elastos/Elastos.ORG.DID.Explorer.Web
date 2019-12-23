@@ -28,11 +28,21 @@ class Reporting extends React.Component {
            	this.initDidReport(startTime,data_new,data_total);
            	const result_total = await getReportTotal(type,range);
            	var total =  result_total[0].count;
-           	result.data_new.map((v,k)=>{
-           		total += v.count;
-           		data_total.push(total)
-           	});
-           	this.initDidReport(startTime,data_new,data_total);
+           	for(var i = result.data_new.length -1; i >=0 ;i--){
+           		
+           		data_total.push(total);
+				total = total - result.data_new[i].count;
+           	}
+           	/*result.data_new.map((v,k)=>{
+           		console.log("total1 = "+total)
+           		console.log("v.count = "+v.count)
+           		data_total.push(total);
+           		total = total - v.count;
+
+           		console.log("total2 = "+total)
+           	});*/
+           	console.log(data_total)
+           	this.initDidReport(startTime,data_new,data_total.reverse());
            	jQuery(".highcharts-credits").remove()
         }catch(err){
           console.log(err)
@@ -49,11 +59,19 @@ class Reporting extends React.Component {
            	this.initTransactionsReport(startTime,data_new,data_total);
            	const result_total = await getReportTotal(type,range);
            	var total =  result_total[0].count;
+           	for(var i = result.data_new.length -1; i >=0 ;i--){
+           		
+           		data_total.push(total);
+				total = total - result.data_new[i].count;
+           	}
+           	/*
            	result.data_new.map((v,k)=>{
-           		total += v.count;
+           		
            		data_total.push(total)
-           	});
-           	this.initTransactionsReport(startTime,data_new,data_total);
+           		total = total - v.count;
+           	});*/
+
+           	this.initTransactionsReport(startTime,data_new,data_total.reverse());
            	jQuery(".highcharts-credits").remove()
         }catch(err){
           console.log(err)
@@ -80,11 +98,17 @@ class Reporting extends React.Component {
            	this.initEappsReport(startTime,data_new,data_total);
            	const result_total = await getReportTotal(type,range);
            	var total =  result_total[0].count;
+           	for(var i = result.data_new.length -1; i >=0 ;i--){
+           		
+           		data_total.push(total);
+				total = total - result.data_new[i].count;
+           	}
+           	/*
            	result.data_new.map((v,k)=>{
-           		total += v.count;
-           		data_total.push(total)
-           	});
-           	this.initEappsReport(startTime,data_new,data_total);
+           		data_total.push(total);
+           		total = total - v.count;
+           	});*/
+           	this.initEappsReport(startTime,data_new,data_total.reverse());
            	jQuery(".highcharts-credits").remove()
         }catch(err){
           console.log(err)
