@@ -912,10 +912,13 @@ router.get('/getReportTotal', function(req, res, next) {
 			if(type === "transactions"){
 				type = "txid"
 			}
-			var query = 'SELECT count(distinct `'+type+'` ) AS count FROM `chain_did_property` where `block_time` < '+option.startTime;
+			//var query = 'SELECT count(distinct `'+type+'` ) AS count FROM `chain_did_property` where `block_time` < '+option.startTime;
+			var query = 'SELECT count(distinct `'+type+'` ) AS count FROM `chain_did_property`';
 			
 			if(type === "apps"){
-				query ='SELECT count(distinct `info_value` ) AS count FROM `chain_did_app` WHERE `info_type` = "app_name" AND `property_key` LIKE "%AppID" AND `block_time` < '+option.startTime;
+				//query ='SELECT count(distinct `info_value` ) AS count FROM `chain_did_app` WHERE `info_type` = "app_name" AND `property_key` LIKE "%AppID" AND `block_time` < '+option.startTime;
+			
+				query ='SELECT count(distinct `info_value` ) AS count FROM `chain_did_app` WHERE `info_type` = "app_name" AND `property_key` LIKE "%AppID" ';
 			}
 			conn.query(query, function (error, results, fields) {
 				conn.release();
