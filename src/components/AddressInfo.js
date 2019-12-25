@@ -26,7 +26,7 @@ class AddressInfo extends React.Component {
           current:1,
           did:null,
           balance:null,
-          isNodeApi:true
+          isNodeApi:false
           
         }
         this.onChange = this.onChange.bind(this);
