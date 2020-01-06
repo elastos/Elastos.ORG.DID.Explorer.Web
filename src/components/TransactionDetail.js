@@ -15,7 +15,7 @@ class TransactionDetail extends React.Component {
         super(props);
         this.state = {
             txid:"",
-            transactions:[],
+            transaction:null,
             currentHeight:0,
             isEvent:true,
             loading:true,
@@ -32,19 +32,41 @@ class TransactionDetail extends React.Component {
          try{
             const transactions = await getTransactionsFromTxid(txid);
             const properties = await getTxDetailFromTxid(txid);
-            const isEvent = properties.length > 0 ? true : false
-            const values = await getValuesFromTxid(txid)
-            console.log(transactions)
-            console.log(properties)
-            
-                transactions[0].properties = properties;
+            const isEvent = properties.length > 0 ? true : false;
+            const values = await getValuesFromTxid(txid);
+            var transaction = null;
+            if(transactions.length == 1){
+                transaction = transactions[0];
+                transaction.values = transactions[0].value
+            }else if(transactions.length == 2){
+                transactions.map((v,k)=>{
+                    if(transactions[k].type == "spend"){
+                        transaction = transactions[k];
+                        transaction.values = values[0].value;
+                    }
+                })
+            }
+            /*
+            transactions[0].properties = properties;
             if(properties.length > 0){
                 transactions[0].did = properties[0].did;
                 transactions[0].didstatus = properties[0].did_status;
             }
             transactions[0].values = values[0].value;
+
+*/
+
+            if(transaction){
+                transaction.properties = properties;
+                if(properties.length > 0){
+                    transaction.did = properties[0].did;
+                    transaction.didstatus = properties[0].did_status;
+                }
+            }
+            
+
             this.setState({
-                transactions:transactions,
+                transaction:transaction,
                 isEvent:isEvent,
                 loading:false
             })
@@ -83,12 +105,13 @@ class TransactionDetail extends React.Component {
     render() {
         const txid = this.props.match.params.txid;
         const lang = this.props.lang;
-        const { transactions, isEvent, loading, currentHeight } = this.state;
-        const proHtml = (transactions.length >0 && typeof transactions[0].properties != "undefined" && transactions[0].properties.length > 0) ? (transactions[0].properties.map((property,k)=>{
+        const { transaction, isEvent, loading, currentHeight } = this.state;
+        console.log("transaction = " + JSON.stringify(transaction))
+        const proHtml = (transaction && typeof transaction.properties != "undefined" && transaction.properties.length > 0) ? (transaction.properties.map((property,k)=>{
              if( k % 2 == 0){ return(
                     <li  key={k}>
                         <div style={{"width":"50%","display":"inline-block","verticalAlign":"top"}}>
-                            <span className="detail_key wordBreak">{ property.property_key} <a href={"/history/"+transactions[0].did+"/"+U(property.property_key)} className="did_history">{lang.history}</a></span>
+                            <span className="detail_key wordBreak">{ property.property_key} <a href={"/history/"+transaction.did+"/"+U(property.property_key)} className="did_history">{lang.history}</a></span>
                             <span className="detail_value wordBreak">{ property.property_value}</span>
                             {property.property_key_status === 1 ? (
                                 <span className="detail_status" ><img src={iconNormal} alt="iconNormal"/>{lang.normal}</span>
@@ -96,11 +119,11 @@ class TransactionDetail extends React.Component {
                                 <span className="detail_status" style={{"color":"#E25757"}}><img src={iconDeprecated} alt="iconDeprecated"/> {lang.deprecated}</span>
                                 )}
                         </div>
-                        {transactions[0].properties[k+1] ? (
+                        {transaction.properties[k+1] ? (
                             <div style={{"width":"50%","display":"inline-block","verticalAlign":"top"}}>
-                            <span className="detail_key wordBreak">{ transactions[0].properties[k+1].property_key} <a href={"/history/"+transactions[0].did+"/"+transactions[0].properties[k+1].property_key} className="did_history">{lang.history}</a></span>
-                            <span className="detail_value wordBreak">{ transactions[0].properties[k+1].property_value}</span>
-                            {transactions[0].properties[k+1].property_key_status === 1 ? (
+                            <span className="detail_key wordBreak">{ transaction.properties[k+1].property_key} <a href={"/history/"+transaction.did+"/"+transaction.properties[k+1].property_key} className="did_history">{lang.history}</a></span>
+                            <span className="detail_value wordBreak">{ transaction.properties[k+1].property_value}</span>
+                            {transaction.properties[k+1].property_key_status === 1 ? (
                                 <span className="detail_status" ><img src={iconNormal} alt="iconNormal"/>{lang.normal}</span>
                                 ) :(
                                 <span className="detail_status" style={{"color":"#E25757"}}><img src={iconDeprecated} alt="iconDeprecated"/> {lang.deprecated}</span>
@@ -110,10 +133,11 @@ class TransactionDetail extends React.Component {
                     </li> 
             ) }
         })) : <li style={{"textAlign":"center"}}>{loading ? <img src={loadingImg} alt="loading"/> : <span>{lang.not_found}</span>}</li> ;
-        const transHtml = (transactions.length > 0) ? (transactions.map((transaction,k)=>{
-            const outputs_arr = transaction.outputs.split(',');
-            const inputs_arr = transaction.inputs.split(',');
+            
+            const outputs_arr = transaction && transaction.outputs ? transaction.outputs.split(',') : [];
+            const inputs_arr = transaction && transaction.inputs ? transaction.inputs.split(',') : [] ;
             //console.log(inputs_arr)
+            
             const outputHtml = (outputs_arr.length > 0 ) ? (outputs_arr.map((output,k)=>{
                 if(output){
                     return(
@@ -135,9 +159,13 @@ class TransactionDetail extends React.Component {
                             
                         )
                 }
-            })) : <li style={{"textAlign":"center"}}>{loading ? <img src={loadingImg} alt="loading"/> : <span>{lang.not_found}</span>}</li>;
-           return(
-                <div className="transaction_summery" key = {k}>
+             })) : <li style={{"textAlign":"center"}}>{loading ? <img src={loadingImg} alt="loading"/> : <span>{lang.not_found}</span>}</li>;
+           
+            
+          
+        const transHtml = (transaction) ? 
+            
+                <div className="transaction_summery" >
                     <ul>
                         <li style={{"width":"100%","border":"none"}}>
                             <a href={"/transaction_detail/"+ transaction.txid}><span className="detail_key wordBreak">TxID: {transaction.txid}</span></a>
@@ -156,8 +184,7 @@ class TransactionDetail extends React.Component {
                         </li>
                     </ul>
                 </div> 
-            )
-        })) : <li style={{"textAlign":"center"}}>{loading ? <img src={loadingImg} alt="loading"/> : <span>{lang.not_found}</span>}</li> ;;
+        : <li style={{"textAlign":"center"}}>{loading ? <img src={loadingImg} alt="loading"/> : <span>{lang.not_found}</span>}</li> ;
         return (
             <div className="container">
                 <div className = "list_top" >
@@ -173,23 +200,23 @@ class TransactionDetail extends React.Component {
                     <ul>
                         <li>
                             <span className="detail_key wordBreak">{lang.confirmations}</span>
-                            <span className="detail_value wordBreak" style={{"color":"#31B59D"}}>{transactions.length ? (currentHeight - transactions[0].height + 1) : '...' } </span>
+                            <span className="detail_value wordBreak" style={{"color":"#31B59D"}}>{transaction ? (currentHeight - transaction.height + 1) : '...' } </span>
                         </li>
                         <li>
                             <span className="detail_key wordBreak">{lang.did_event_included}</span>
-                            <span className="detail_value wordBreak">{transactions.length ?( isEvent ? lang.yes : lang.no) :'...'}</span>
+                            <span className="detail_value wordBreak">{transaction ?( isEvent ? lang.yes : lang.no) :'...'}</span>
                         </li>
                         <li>
                             <span className="detail_key wordBreak">{lang.time}</span>
-                            <span className="detail_value wordBreak">{transactions.length ? this.timestampToTime(transactions[0].createTime) : "..."}</span>
+                            <span className="detail_value wordBreak">{transaction ? this.timestampToTime(transaction.createTime) : "..."}</span>
                         </li>
                         <li>
                             <span className="detail_key wordBreak">{lang.block_height}</span>
-                            <span className="detail_value wordBreak"> {transactions.length ? transactions[0].height : "..."}</span>
+                            <span className="detail_value wordBreak"> {transaction ? transaction.height : "..."}</span>
                         </li>
                         <li>
                             <span className="detail_key wordBreak">{lang.fee}</span>
-                            <span className="detail_value wordBreak">{transactions.length ? transactions[0].fee / 100000000 : "..."} ELA</span>
+                            <span className="detail_value wordBreak">{transaction ? transaction.fee / 100000000 : "..."} ELA</span>
                         </li>
                     </ul>
                 </div>
@@ -201,8 +228,8 @@ class TransactionDetail extends React.Component {
                     <ul>
                         <li>
                             <span className="detail_key wordBreak">DID</span>
-                            {transactions.length ?
-                                <a style={{"color":"rgb(49, 181, 157)"}} href = {"/did_detail/"+ transactions[0].did}><span  className=" wordBreak">{transactions[0].did}</span></a>
+                            {transaction ?
+                                <a style={{"color":"rgb(49, 181, 157)"}} href = {"/did_detail/"+ transaction.did}><span  className=" wordBreak">{transaction.did}</span></a>
 
                                 : "..."}
                         </li>
@@ -223,7 +250,7 @@ class TransactionDetail extends React.Component {
                 </div>
                 <div className="did_content">
                     <ul>
-                        <li className="wordBreak">{transactions.length ? transactions[0].memo : "..."}</li>
+                        <li className="wordBreak">{transaction ? transaction.memo : "..."}</li>
                     </ul>
                 </div>  
 

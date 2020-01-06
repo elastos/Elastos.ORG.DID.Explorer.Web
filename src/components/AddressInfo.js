@@ -135,8 +135,7 @@ class AddressInfo extends React.Component {
             transactions[k].value_input = 0;
             var value_fee = parseFloat(transactions[k].Fee)
             transactions[k].vout.map((v1,k1)=>{
-                
-                transactions[k].value_output = (transactions[k].value_output + parseFloat(v1.value) * 100000000);
+                transactions[k].value_output = (transactions[k].value_output + parseFloat(v1.value) * 100000000).toFixed(8);
             })
             
            
