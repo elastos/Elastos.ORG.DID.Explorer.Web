@@ -139,8 +139,6 @@ class AddressInfo extends React.Component {
             transactions[k].vout.map((v1,k1)=>{
                 transactions[k].value_output = (parseFloat(transactions[k].value_output) + parseFloat(v1.value) * 100000000).toFixed(8);
             })
-            
-           
             if(transactions[k].Type === "income" ){
                 transactions[k].inputs_arr = []
                 transactions[k].vin.map((v3,k3)=>{
@@ -169,7 +167,7 @@ class AddressInfo extends React.Component {
                 })
                 
             }else{
-                transactions[k].value_input = value_fee + transactions[k].value_output;
+                transactions[k].value_input = (parseFloat(value_fee) + parseFloat(transactions[k].value_output)).toFixed(8);
                 inputs_arr.push({"address":address,"value":(parseFloat(transactions[k].value_input)).toFixed(8) / 100000000})
                 transactions[k].inputs_arr = inputs_arr
                 this.setState({});  
@@ -345,11 +343,11 @@ class AddressInfo extends React.Component {
                     </ul>
                     <ul>
                         <li style={{"width":"20%","borderBottom":"none","verticalAlign":"top"}}>
-                            <span className="trx_bottom" style={{"float":"left","background":"#EAEEF4","color":"#364458"}}>{lang.fee} : { transaction.Fee ? transaction.Fee / 100000000 : "..."} ELA</span>
+                            <span className="trx_bottom" style={{"float":"left","background":"#EAEEF4","color":"#364458"}}>{lang.fee} : { transaction.Fee ? parseFloat((transaction.Fee / 100000000).toFixed(8)) : "..."} ELA</span>
                             
                         </li>
                         <li style={{"width":"40%","borderBottom":"none","verticalAlign":"top","float":"right"}}>
-                            <span className="trx_bottom">{lang.number} : {transaction.value_output  ? transaction.value_output / 100000000: "..." } ELA</span>
+                            <span className="trx_bottom">{lang.number} : {transaction.value_output  ? parseFloat((transaction.value_output / 100000000).toFixed(8)) : "..." } ELA</span>
                             <span style={{"marginRight":"20px"}}className="trx_bottom">{lang.confirmations} : {transaction.confirmations ? transaction.confirmations  : '...' }</span>
                         </li>
                     </ul>
