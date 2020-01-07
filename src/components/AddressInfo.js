@@ -48,14 +48,14 @@ class AddressInfo extends React.Component {
                 var transactions = addressInfo  
             }
 
-            //
-            console.log(addressInfo)
-            
+          
             this.setState({
                 transactions:transactions,
             })
+            
             if(transactions.length > 0){
-                const getDid = await getDidFromTxid(transactions[0].Txid)
+                const getDid = this.state.isNodeApi ?  await getDidFromTxid(transactions[0].Txid) : await getDidFromTxid(transactions[0].txid) ;
+             
                 if(getDid.length > 0){
                      this.setState({
                         did:getDid[0].did,
@@ -103,6 +103,7 @@ class AddressInfo extends React.Component {
                 var address_arr =transactions[k].Inputs;
                 
             }else{
+                
                 var txInfo = await getTransactionInfoFromNodeApi(transactions[k].txid);
                 transactions[k].Txid = transactions[k].txid;
                 transactions[k].Height = transactions[k].height
@@ -111,7 +112,8 @@ class AddressInfo extends React.Component {
                 transactions[k].Type =transactions[k].type
                 transactions[k].Value =transactions[k].value
                 var address = transactions[k].inputs.split(',')[0];
-                var address_arr = transactions[k].Inputs;
+                var address_arr = transactions[k].inputs.split(',');
+                
             }
             transactions[k].vout = txInfo.result.vout;
             transactions[k].vin = txInfo.result.vin;
@@ -135,7 +137,7 @@ class AddressInfo extends React.Component {
             transactions[k].value_input = 0;
             var value_fee = parseFloat(transactions[k].Fee)
             transactions[k].vout.map((v1,k1)=>{
-                transactions[k].value_output = (transactions[k].value_output + parseFloat(v1.value) * 100000000).toFixed(8);
+                transactions[k].value_output = (parseFloat(transactions[k].value_output) + parseFloat(v1.value) * 100000000).toFixed(8);
             })
             
            
@@ -151,7 +153,7 @@ class AddressInfo extends React.Component {
                                 var value_input = parseFloat(v2.value) * 100000000
                                 transactions[k].value_input += parseFloat(v2.value) * 100000000
                                 transactions[k].inputs_arr.push({"address":address,"value":(value_input).toFixed(8) / 100000000})
-                                transactions[k].Fee = parseFloat((transactions[k].value_input).toFixed(8) - (transactions[k].value_output).toFixed(8));
+                                transactions[k].Fee = parseFloat(transactions[k].value_input - transactions[k].value_output).toFixed(8);
                                 /////////////////////
                                 transactions[k].inputs_arr.map((v4,k4)=>{
                                     if(transactions[k].inputs_arr[k4] && transactions[k].inputs_arr[k4-1] && transactions[k].inputs_arr[k4-1].address === transactions[k].inputs_arr[k4].address){
@@ -168,7 +170,7 @@ class AddressInfo extends React.Component {
                 
             }else{
                 transactions[k].value_input = value_fee + transactions[k].value_output;
-                inputs_arr.push({"address":address,"value":(transactions[k].value_input).toFixed(8) / 100000000})
+                inputs_arr.push({"address":address,"value":(parseFloat(transactions[k].value_input)).toFixed(8) / 100000000})
                 transactions[k].inputs_arr = inputs_arr
                 this.setState({});  
             }
