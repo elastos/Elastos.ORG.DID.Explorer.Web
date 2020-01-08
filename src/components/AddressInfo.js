@@ -123,7 +123,7 @@ class AddressInfo extends React.Component {
             /////////////////
             outputs_arr.map((v,k)=>{
                 if(outputs_arr[k-1] && outputs_arr[k-1].address === outputs_arr[k].address){
-                    outputs_arr[k].value = (parseFloat(outputs_arr[k].value) + parseFloat(outputs_arr[k-1].value)).toFixed(8)
+                    outputs_arr[k].value = parseFloat(outputs_arr[k].value) + parseFloat(outputs_arr[k-1].value)
                     delete outputs_arr[k-1]
                 }
 
@@ -137,7 +137,7 @@ class AddressInfo extends React.Component {
             transactions[k].value_input = 0;
             var value_fee = parseFloat(transactions[k].Fee)
             transactions[k].vout.map((v1,k1)=>{
-                transactions[k].value_output = (parseFloat(transactions[k].value_output) + parseFloat(v1.value) * 100000000).toFixed(8);
+                transactions[k].value_output = parseFloat(transactions[k].value_output) + parseFloat(v1.value) * 100000000;
             })
             if(transactions[k].Type === "income" ){
                 transactions[k].inputs_arr = []
@@ -150,8 +150,8 @@ class AddressInfo extends React.Component {
                                 
                                 var value_input = parseFloat(v2.value) * 100000000
                                 transactions[k].value_input += parseFloat(v2.value) * 100000000
-                                transactions[k].inputs_arr.push({"address":address,"value":(value_input).toFixed(8) / 100000000})
-                                transactions[k].Fee = parseFloat(transactions[k].value_input - transactions[k].value_output).toFixed(8);
+                                transactions[k].inputs_arr.push({"address":address,"value":(parseFloat(value_input / 100000000))});
+                                transactions[k].Fee = parseFloat(transactions[k].value_input - transactions[k].value_output);
                                 /////////////////////
                                 transactions[k].inputs_arr.map((v4,k4)=>{
                                     if(transactions[k].inputs_arr[k4] && transactions[k].inputs_arr[k4-1] && transactions[k].inputs_arr[k4-1].address === transactions[k].inputs_arr[k4].address){
@@ -167,8 +167,8 @@ class AddressInfo extends React.Component {
                 })
                 
             }else{
-                transactions[k].value_input = (parseFloat(value_fee) + parseFloat(transactions[k].value_output)).toFixed(8);
-                inputs_arr.push({"address":address,"value":(parseFloat(transactions[k].value_input)).toFixed(8) / 100000000})
+                transactions[k].value_input = parseFloat(value_fee) + parseFloat(transactions[k].value_output);
+                inputs_arr.push({"address":address,"value":(parseFloat(transactions[k].value_input / 100000000))});
                 transactions[k].inputs_arr = inputs_arr
                 this.setState({});  
             }
@@ -244,7 +244,7 @@ class AddressInfo extends React.Component {
                                 <span style={{"float": "right",
         "padding": "0",
         "color": "#31B59D",
-        "marginRight":"10px"}}>{parseFloat(output.value) } ELA</span>
+        "marginRight":"10px"}}> {parseFloat(parseFloat(output.value).toFixed(8))} ELA</span>
                             </li>
                         )
                     }
@@ -263,7 +263,7 @@ class AddressInfo extends React.Component {
                                     <span style={{"float": "right",
         "padding": "0",
         "color": "#31B59D",
-    "marginRight":"10px"}}>{parseFloat(input.value)  } ELA</span>
+    "marginRight":"10px"}}>{parseFloat(parseFloat(input.value).toFixed(8))} ELA</span>
                             </li>
                         )
                     }
@@ -273,11 +273,11 @@ class AddressInfo extends React.Component {
                 <div className="transaction_summery" key = {k}>
                     <ul>
                         <li style={{"width":"100%","border":"none"}}>
-                            <span style={{"display":"inline"}}>TxID:</span><a href={"/transaction_detail/"+ transaction.txid}><span style={{"display":"inline","color":"rgb(49, 181, 157)"}} className="detail_key wordBreak">{transaction.Txid ? transaction.Txid : "..."}</span></a>
+                            <span style={{"display":"inline"}}>TxID:</span><a href={"/transaction_detail/"+ transaction.Txid}><span style={{"display":"inline","color":"rgb(49, 181, 157)"}} className="detail_key wordBreak">{transaction.Txid ? transaction.Txid : "..."}</span></a>
                         </li>
                         <li style={{"padding":"0px 0px 20px 0px"}}>
                             <span style={{"color":"#364458","display":"inline","background":"#E7F1FF","borderRadius":"4px","padding":"4px 10px","marginRight":"20px"}}>{lang.block_height}: {transaction.Height ? transaction.Height : "..."}</span>
-                            <span style={{"color":"#364458","display":"inline","background":"#E7F1FF","borderRadius":"4px","padding":"4px 10px"}}>{lang.timestamp}: {transaction.CreateTime ? moment.unix(transaction.CreateTime).format('YYYY-MM-DD hh:mm:ss') : "..."}</span>
+                            <span style={{"color":"#364458","display":"inline","background":"#E7F1FF","borderRadius":"4px","padding":"4px 10px"}}>{lang.timestamp}: {transaction.CreateTime ? moment.unix(transaction.CreateTime).format('YYYY-MM-DD HH:mm:ss') : "..."}</span>
                         </li>
                     </ul>
                     
