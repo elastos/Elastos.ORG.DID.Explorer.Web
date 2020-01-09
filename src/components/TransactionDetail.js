@@ -58,32 +58,48 @@ class TransactionDetail extends React.Component {
                 })
                
                 transaction.inputs_arr = []
-                transaction.vin.map((v3,k3)=>{
-                    
-                    (async()=>{ const inputInfo = await getTransactionInfoFromNodeApi(transaction.vin[k3].txid)
-                        var lastVout = inputInfo.result.vout[transaction.vin[k3].vout]
-                        var address =  lastVout.address
-                        
-                        var value_input = parseFloat(lastVout.value) * 100000000
-                        transaction.value_input += parseFloat(lastVout.value) * 100000000
-                        transaction.inputs_arr.push({"address":address,"value":(parseFloat(value_input / 100000000))});
-                        transaction.fee = parseFloat(transaction.value_input - transaction.value_output);
-                        /////////////////////
-                        transaction.inputs_arr.map((v4,k4)=>{
-                            if(transaction.inputs_arr[k4] && transaction.inputs_arr[k4-1] && transaction.inputs_arr[k4-1].address === transaction.inputs_arr[k4].address){
-                                transaction.inputs_arr[k4].value = parseFloat(transaction.inputs_arr[k4].value) + parseFloat(transaction.inputs_arr[k4-1].value)
-                                delete transaction.inputs_arr[k4-1]
-                            }
-                        })
-                        /////////////////
+                var transactions = await getTransactionsFromTxid(txid);
+
+                //if(true ){
+                if(transactions.length > 0 && transactions[0].txType === "TransferCrossChainAsset" ){
+                        let value_input = parseFloat(transactions[0].fee) + parseFloat(transaction.value_output);
+                        console.log("TransferCrossChainAsset")
+                        transaction.inputs_arr = [{"address":transaction.inputs_arr[0].address,"value":(parseFloat(value_input / 100000000))}];
                         this.setState({});
-                         
-                    })()
-                })
-                var getBlockHeight = await getTransactionsFromTxid(txid);
-                if(getBlockHeight.length > 0){
-                    transaction.height = getBlockHeight[0].height
+                }else{
+
+                    transaction.vin.map((v3,k3)=>{
+                        (async()=>{ const inputInfo = await getTransactionInfoFromNodeApi(transaction.vin[k3].txid)
+                            var lastVout = inputInfo.result.vout[transaction.vin[k3].vout]
+                            var address =  lastVout.address
+                            
+                            var value_input = parseFloat(lastVout.value) * 100000000
+                            
+                            transaction.inputs_arr.push({"address":address,"value":(parseFloat(value_input / 100000000))});
+                            if(transactions.length == 0){
+                                transaction.value_input += parseFloat(lastVout.value) * 100000000
+                                transaction.fee = parseFloat(transaction.value_input - transaction.value_output);
+                            }
+                            
+                            /////////////////////
+                            transaction.inputs_arr.map((v4,k4)=>{
+                                if(transaction.inputs_arr[k4] && transaction.inputs_arr[k4-1] && transaction.inputs_arr[k4-1].address === transaction.inputs_arr[k4].address){
+                                    transaction.inputs_arr[k4].value = parseFloat(transaction.inputs_arr[k4].value) + parseFloat(transaction.inputs_arr[k4-1].value)
+                                    delete transaction.inputs_arr[k4-1]
+                                }
+                            })
+                            /////////////////
+                            this.setState({});
+                        })()
+                       
+                    })
                 }
+                if(transactions.length > 0){
+                    transaction.height = transactions[0].height;
+                    transaction.fee = transactions[0].fee;
+                }
+                
+                this.setState({});
             }else{
                 var transactions = await getTransactionsFromTxid(txid);
                 const values = await getValuesFromTxid(txid);
