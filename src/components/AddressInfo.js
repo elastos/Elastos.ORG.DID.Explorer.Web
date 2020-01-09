@@ -52,7 +52,7 @@ class AddressInfo extends React.Component {
             this.setState({
                 transactions:transactions,
             })
-            
+            console.log(transactions)
             if(transactions.length > 0){
                 const getDid = this.state.isNodeApi ?  await getDidFromTxid(transactions[0].Txid) : await getDidFromTxid(transactions[0].txid) ;
              
@@ -151,7 +151,7 @@ class AddressInfo extends React.Component {
                                 var value_input = parseFloat(v2.value) * 100000000
                                 transactions[k].value_input += parseFloat(v2.value) * 100000000
                                 transactions[k].inputs_arr.push({"address":address,"value":(parseFloat(value_input / 100000000))});
-                                transactions[k].Fee = parseFloat(transactions[k].value_input - transactions[k].value_output);
+                                //transactions[k].Fee = parseFloat(transactions[k].value_input - transactions[k].value_output);
                                 /////////////////////
                                 transactions[k].inputs_arr.map((v4,k4)=>{
                                     if(transactions[k].inputs_arr[k4] && transactions[k].inputs_arr[k4-1] && transactions[k].inputs_arr[k4-1].address === transactions[k].inputs_arr[k4].address){
