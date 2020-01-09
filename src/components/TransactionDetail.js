@@ -59,12 +59,11 @@ class TransactionDetail extends React.Component {
                
                 transaction.inputs_arr = []
                 var transactions = await getTransactionsFromTxid(txid);
-
-                //if(true ){
                 if(transactions.length > 0 && transactions[0].txType === "TransferCrossChainAsset" ){
                         let value_input = parseFloat(transactions[0].fee) + parseFloat(transaction.value_output);
                         console.log("TransferCrossChainAsset")
-                        transaction.inputs_arr = [{"address":transaction.inputs_arr[0].address,"value":(parseFloat(value_input / 100000000))}];
+                        var address = transactions[0].inputs.split(',')[0];
+                        transaction.inputs_arr = [{"address":address,"value":(parseFloat(value_input / 100000000))}];
                         this.setState({});
                 }else{
 
