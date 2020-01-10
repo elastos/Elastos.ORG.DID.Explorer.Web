@@ -343,7 +343,7 @@ class AddressInfo extends React.Component {
                     </ul>
                     <ul>
                         <li style={{"width":"20%","borderBottom":"none","verticalAlign":"top"}}>
-                            <span className="trx_bottom" style={{"float":"left","background":"#EAEEF4","color":"#364458"}}>{lang.fee} : { transaction.Fee ? parseFloat((transaction.Fee / 100000000).toFixed(8)) : "..."} ELA</span>
+                            <span className="trx_bottom" style={{"float":"left","background":"#EAEEF4","color":"#364458"}}>{lang.fee} : { transaction.Fee != null ? parseFloat((transaction.Fee / 100000000).toFixed(8)) : "..."} ELA</span>
                             
                         </li>
                         <li style={{"width":"40%","borderBottom":"none","verticalAlign":"top","float":"right"}}>
