@@ -96,6 +96,11 @@ class TransactionDetail extends React.Component {
                 if(transactions.length > 0){
                     transaction.height = transactions[0].height;
                     transaction.fee = transactions[0].fee;
+                    transactions.map((v,k)=>{
+                        if(transactions[k].type == "spend"){
+                           transaction.fee = v.fee;
+                        }
+                    })
                 }
                 
                 this.setState({});
@@ -371,7 +376,7 @@ class TransactionDetail extends React.Component {
                         </li>
                         <li>
                             <span className="detail_key wordBreak">{lang.fee}</span>
-                            <span className="detail_value wordBreak">{transaction && transaction.fee ? parseFloat((transaction.fee / 100000000).toFixed(8)) : "..."} ELA</span>
+                            <span className="detail_value wordBreak">{transaction && transaction.fee != null ? parseFloat((transaction.fee / 100000000).toFixed(8)) : "..."} ELA</span>
                         </li>
                     </ul>
                 </div>
