@@ -1,6 +1,7 @@
 import React from 'react';
 import moment from 'moment'
-import { getBlocks, getBlocksInfo, getTransactionsCount, getTransactions, getTransactionsInfo, getTransactionsCountFromHeight, getServerInfo, getDids, getDidCount, getDidInfo, getEapps, getEappsCount,getLastBlocks } from '../request/request';
+import { getDidInfo, getEapps, getEappsCount,getLastBlocks } from '../request/request';
+import { getBlocks, getBlocksInfo, getTransactionsCount, getTransactions, getTransactionsInfo, getTransactionsCountFromHeight, getServerInfo, getDids, getDidCount } from '../request/request_elaphant';
 import './home.css'
 import mask from '../public/images/mask1.png'
 import background from '../public/images/background.svg'
@@ -28,7 +29,7 @@ class Home extends React.Component {
     } 
     getInfo = async () => {
         try{
-            const info = await getServerInfo();
+           const info = await getServerInfo();
             this.setState({
                 s_time:info.s_time
             })
@@ -114,6 +115,7 @@ class Home extends React.Component {
     getDid = async () => {
         try{
             const dids = await getDids(0,5);
+
            
             this.setState({dids:dids})
             var num = []
@@ -122,7 +124,7 @@ class Home extends React.Component {
             });
             const count = await getDidCount();
             this.setState({
-                didCount:count[0].count,
+                didCount:count.count,
             })
         }catch(err){
           console.log(err)

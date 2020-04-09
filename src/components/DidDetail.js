@@ -1,5 +1,6 @@
 import React from 'react';
-import { getPropertiesFromDid, getAddressFromTxid } from '../request/request';
+
+import { getPropertiesFromDid } from '../request/request_elaphant';
 import './didDetail.css';
 import U from 'urlencode';
 import Search from './elements/Search';
@@ -28,17 +29,18 @@ class DidDetail extends React.Component {
     GetInfo = async (did) => {
         try{
             const properties = await getPropertiesFromDid(did);
+
             console.log(properties)
             this.setState({
                 properties:properties
             })
-            if(properties.length > 0 ){
+           /* if(properties.length > 0 ){
                 const getAddress = await getAddressFromTxid(properties[0].txid)
                 console.log(getAddress)
                 this.setState({
                     address:getAddress[0].address
                 })
-            }
+            }*/
             
 
         }catch(err){
@@ -74,21 +76,21 @@ class DidDetail extends React.Component {
         const propertyHtml = properties.map((property,k) => {
             if( k % 2 == 0){return(
                 <li  key={k}>
-                    {property.property_key ? (<div style={{"width":"50%","display":"inline-block","verticalAlign":"top"}}>
-                        <span className="detail_key wordBreak">{ property.property_key} <a href={"/history/"+did+"/"+U(property.property_key)} className="did_history">{lang.history}</a></span>
-                        <span className="detail_value wordBreak">{ property.property_value}</span>
-                        {property.property_key_status === 1 ? (
+                    {property.propertyKey ? (<div style={{"width":"50%","display":"inline-block","verticalAlign":"top"}}>
+                        <span className="detail_key wordBreak">{ property.propertyKey} <a href={"/history/"+did+"/"+U(property.propertyKey)} className="did_history">{lang.history}</a></span>
+                        <span className="detail_value wordBreak">{ property.propertyValue}</span>
+                        {property.didStatus === 1 ? (
                             <span className="detail_status" ><img src={iconNormal} alt="iconNormal"/>{lang.normal}</span>
                             ) :(
                             <span className="detail_status" style={{"color":"#E25757"}}><img src={iconDeprecated} alt="iconDeprecated"/>{lang.deprecated} </span>
                             )}
                     </div>)
                 :("") }
-                    {  properties[k+1] && properties[k+1].property_key ? (
+                    {  properties[k+1] && properties[k+1].propertyKey ? (
                         <div style={{"width":"50%","display":"inline-block","verticalAlign":"top"}}>
-                        <span className="detail_key wordBreak">{ properties[k+1].property_key} <a href={"/history/"+did+"/"+U(properties[k+1].property_key)} className="did_history">{lang.history}</a></span>
-                        <span className="detail_value wordBreak">{ properties[k+1].property_value}</span>
-                        {properties[k+1].property_key_status === 1 ? (
+                        <span className="detail_key wordBreak">{ properties[k+1].propertyKey} <a href={"/history/"+did+"/"+U(properties[k+1].propertyKey)} className="did_history">{lang.history}</a></span>
+                        <span className="detail_value wordBreak">{ properties[k+1].propertyValue}</span>
+                        {properties[k+1].didStatus === 1 ? (
                             <span className="detail_status" ><img src={iconNormal} alt="iconNormal"/>{lang.normal}</span>
                             ) :(
                             <span className="detail_status" style={{"color":"#E25757"}}><img src={iconDeprecated} alt="iconDeprecated"/> {lang.deprecated}</span>
@@ -116,7 +118,7 @@ class DidDetail extends React.Component {
                 	<ul>
                 		<li>
                 			<span className="detail_key wordBreak">{lang.public_key}</span>
-                			<span  className="detail_value wordBreak">{properties.length > 0 ? properties[0].public_key : '...'}</span>
+                			<span  className="detail_value wordBreak">{properties.length > 0 ? properties[0].publicKey : '...'}</span>
                 		</li>
                 	</ul>
                 </div>

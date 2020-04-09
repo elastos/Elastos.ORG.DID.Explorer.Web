@@ -1,5 +1,7 @@
 import React from 'react';
-import { getTxDetailFromTxid, getTransactionsFromTxid, getValuesFromTxid, getCurrentHeight, getTransactionInfoFromNodeApi} from '../request/request';
+import {  getTransactionInfoFromNodeApi} from '../request/request';
+import { getTxDetailFromTxid, getTransactionsFromTxid, getValuesFromTxid, getCurrentHeight} from '../request/request_elaphant';
+
 import './transactionDetail.css'
 import U from 'urlencode';
 import Search from './elements/Search'
@@ -96,6 +98,7 @@ class TransactionDetail extends React.Component {
                 if(transactions.length > 0){
                     transaction.height = transactions[0].height;
                     transaction.fee = transactions[0].fee;
+                    transaction.memo = transactions[0].memo;
                     transactions.map((v,k)=>{
                         if(transactions[k].type == "spend"){
                            transaction.fee = v.fee;
@@ -104,6 +107,7 @@ class TransactionDetail extends React.Component {
                 }
                 
                 this.setState({});
+                console.log(transaction)
             }else{
                 var transactions = await getTransactionsFromTxid(txid);
                 const values = await getValuesFromTxid(txid);
@@ -123,10 +127,6 @@ class TransactionDetail extends React.Component {
                 transaction.inputs_arr =  transaction.inputs.split(',')  ;
             }
 
-
-
-            
-             
             const properties = await getTxDetailFromTxid(txid);
             const isEvent = properties.length > 0 ? true : false;
             if(transaction){

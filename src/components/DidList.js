@@ -1,5 +1,7 @@
 import React from 'react';
-import { getDids, getDidCount, getDidInfo, getDidsWithProperty, getDidCountWidthProperty } from '../request/request';
+import { getDidInfo } from '../request/request';
+import { getDids, getDidCount, getDidsWithProperty, getDidCountWidthProperty } from '../request/request_elaphant';
+
 import {Link} from 'react-router-dom';
 import { Pagination } from 'antd';
 import './didList.css';
@@ -34,7 +36,16 @@ class DidList extends React.Component {
     getInfo = async (current,size,property) => {
         try{
             const start = ( current - 1) * size;
-            const dids = property ? await getDidsWithProperty(start,size,property) : await getDids(start,size);
+            var dids = null;
+            if (property) {
+               const dids_property = await getDidsWithProperty(start,size,property)
+                dids = dids_property.data ;
+            }else{
+                 dids = await getDids(start,size);
+            }
+            
+            
+            console.log(dids)
             this.setState({dids:dids})
             console.log(dids)
             var number = []
@@ -45,9 +56,15 @@ class DidList extends React.Component {
             }
             const count = property ? await getDidCountWidthProperty(property) : await getDidCount();
             this.setState({
-                count:count[0].count,
+                count:count.count,
                 loading:false
             })
+
+
+
+
+
+
         }catch(err){
           console.log(err)
         }
@@ -102,6 +119,7 @@ class DidList extends React.Component {
         const { dids, count, size, current, loading } = this.state;
         const  lang  = this.props.lang;
         const txHtml = dids.map((did,k) => {
+            if(did.blockTime) did.block_time = did.blockTime;
             return(
                 <tr className="ant-table-row ant-table-row-level-0 table_tr" data-row-key="1" key={k}>
                     <td width="30%"><Link to={'/did_detail/'+did.did}>{did.did}</Link></td>
