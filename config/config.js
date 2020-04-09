@@ -1,3 +1,3 @@
 module.exports = {
-  apiUrl:"https://idchain.elastos.org"
+  apiUrl:"https://explorer.elaphant.app"
 };

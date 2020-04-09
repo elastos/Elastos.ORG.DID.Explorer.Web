@@ -1,5 +1,7 @@
 import React from 'react';
-import { getCurrentBlock, getBlockInfo} from '../request/request';
+import { getCurrentBlock} from '../request/request';
+
+import { getBlockInfo } from '../request/request_elaphant';
 import TransactionList from './TransactionList'
 import './transactionDetail.css'
 import Search from './elements/Search'

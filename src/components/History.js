@@ -4,7 +4,8 @@ import loadingImg from '../public/images/loading.gif';
 import U from 'urlencode';
 import iconRight from '../public/images/icon-right.svg'
 import { Pagination } from 'antd';
-import { getPropertyChanges ,getPropertiesHistoryCount} from '../request/request';
+//import { getPropertiesHistoryCount} from '../request/request';
+import { getPropertyChanges, getPropertiesHistoryCount } from '../request/request_elaphant';
 class History extends React.Component {
 	constructor(props){
         super(props);
@@ -37,7 +38,7 @@ class History extends React.Component {
             console.log(propertyChanges)
             this.setState({
                 count:count[0].count,
-                propertyChanges:propertyChanges,
+                propertyChanges:propertyChanges.data,
                 loading:false
             })
             
@@ -88,8 +89,8 @@ class History extends React.Component {
         const propertyHtml = propertyChanges.map((property,k) => {
             return(
                 <tr className="ant-table-row ant-table-row-level-0 table_tr1" data-row-key="1" key = {k}>
-                    <td >{property.property_value}</td>
-                    <td >{this.timestampToTime(property.block_time)}</td>
+                    <td >{property.propertyValue}</td>
+                    <td >{this.timestampToTime(property.blockTime)}</td>
                     <td >{property.txid}</td>
                 </tr>
             )

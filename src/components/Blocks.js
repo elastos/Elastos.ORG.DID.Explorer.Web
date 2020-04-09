@@ -1,5 +1,8 @@
 import React from 'react';
-import { getBlocks, getBlocksCount, getBlocksInfo, getTransactionsCountFromHeight,getLastBlocks,getFirstBlocks} from '../request/request';
+import {getTransactionsCountFromHeight,getLastBlocks,getFirstBlocks} from '../request/request';
+import { getBlocks,  getBlocksInfo} from '../request/request_elaphant';
+
+
 import {Link} from 'react-router-dom';
 import { Pagination } from 'antd';
 import './Blocks.css';
@@ -38,7 +41,9 @@ class Blocks extends React.Component {
             const start = ( current - 1) * size;
             //const block_last = await getBlocks(0,1);
             const block_last = await getLastBlocks();
+            
             const block_first = await getFirstBlocks();
+           
             const block_height = block_last[0].height - block_first[0].height + 1 ;
             let blocks = []
             for(var i=0;i<=size;i++){
