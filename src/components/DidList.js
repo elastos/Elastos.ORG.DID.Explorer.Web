@@ -35,7 +35,8 @@ class DidList extends React.Component {
     }
     getInfo = async (current,size,property) => {
         try{
-            const start = ( current - 1) * size;
+            const count = property ? await getDidCountWidthProperty(property) : await getDidCount();
+            const start = count.count - current * size;
             var dids = null;
             if (property) {
                const dids_property = await getDidsWithProperty(start,size,property)
@@ -43,8 +44,7 @@ class DidList extends React.Component {
             }else{
                  dids = await getDids(start,size);
             }
-            
-            
+            dids.reverse();
             console.log(dids)
             this.setState({dids:dids})
             console.log(dids)
@@ -54,16 +54,11 @@ class DidList extends React.Component {
                     return this.getDidsInfo(k,number,dids)                
                 });
             }
-            const count = property ? await getDidCountWidthProperty(property) : await getDidCount();
+            
             this.setState({
                 count:count.count,
                 loading:false
             })
-
-
-
-
-
 
         }catch(err){
           console.log(err)
