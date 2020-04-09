@@ -27,8 +27,9 @@ const publicPath = '/';
 // Omit trailing slash as %PUBLIC_PATH%/xyz looks better than %PUBLIC_PATH%xyz.
 const publicUrl = '';
 const apiUrl = '';
+const apiElaphantUrl = '';
 // Get environment variables to inject into our app.
-const env = getClientEnvironment(publicUrl,apiUrl);
+const env = getClientEnvironment(publicUrl,apiUrl,apiElaphantUrl);
 
 // Check if TypeScript is setup
 const useTypeScript = fs.existsSync(paths.appTsConfig);

@@ -1,6 +1,5 @@
-const addr = "https://api-explorer.elaphant.app"
+const addr = process.env.API_ELAPHANT_URL
 const current_version = "2/didexplorer"
-
 export function getServerInfo(){
 	return new Promise(function(resolve, reject) {
 	   	let path = addr + '/api/'+current_version+'/serverInfo'
