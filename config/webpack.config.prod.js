@@ -39,8 +39,9 @@ const shouldInlineRuntimeChunk = process.env.INLINE_RUNTIME_CHUNK !== 'false';
 // Omit trailing slash as %PUBLIC_URL%/xyz looks better than %PUBLIC_URL%xyz.
 const publicUrl = publicPath.slice(0, -1);
 const apiUrl = config.apiUrl;
+const apiElaphantUrl = config.apiElaphantUrl;
 // Get environment variables to inject into our app.
-const env = getClientEnvironment(publicUrl,apiUrl);
+const env = getClientEnvironment(publicUrl,apiUrl,apiElaphantUrl);
 
 // Assert this just to be safe.
 // Development builds of React are slow and not intended for production.
