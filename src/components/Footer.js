@@ -20,7 +20,7 @@ class Footer extends React.Component {
 								<li><a href="https://www.elastos.org/" target="_blank"><span>Elastos.org</span></a></li>
 								<li>
 									<div className="tips">{lang.create_an_eapp}</div>
-									<a href="https://developer.elastos.org/" target="_blank"><span>Developer</span></a>
+									<a href="https://github.com/elaphantapp/MiniApps.MiniApp/blob/master/README.md" target="_blank"><span>Developer</span></a>
 								</li>
 							</ul>
 						</div>
